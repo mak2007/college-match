@@ -221,7 +221,7 @@ export default function LiveMatcher() {
 
         <div className={styles.layoutGrid}>
           {/* LEFT: Live Controls Panel */}
-          <aside className={`${styles.sidebar} glass-card`}>
+          <aside className={styles.sidebar}>
             <h3 className={styles.panelTitle}>⚙️ Match Filters</h3>
 
             {/* Academics Section */}
@@ -422,7 +422,7 @@ export default function LiveMatcher() {
             </div>
 
             {matches.length === 0 ? (
-              <div className="glass-card text-center" style={{ padding: "4rem 2rem" }}>
+              <div style={{ background: "white", border: "1px solid #e6e4dc", borderRadius: "16px", padding: "4rem 2rem", textAlign: "center" }}>
                 <h3>No Colleges Match Your Filters</h3>
                 <p style={{ color: "var(--text-secondary)", marginTop: "1rem" }}>
                   Try relaxing your budget, adding more locations, or selecting other preferred branches.
@@ -443,7 +443,7 @@ export default function LiveMatcher() {
                   const totalCost = item.feeInfo.total4YrCost;
 
                   return (
-                    <article key={`${item.collegeId}-${item.branchCode}`} className={`${styles.collegeCard} glass-card glow-effect animate-scale`}>
+                    <article key={`${item.collegeId}-${item.branchCode}`} className={`${styles.collegeCard} animate-scale`}>
                       
                       {/* Card Top Row: Name and Score */}
                       <div className={styles.cardHeader}>

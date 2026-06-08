@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import styles from "./login.module.css";
@@ -23,7 +23,7 @@ const AsteriskIcon = () => (
   </svg>
 );
 
-export default function StudentLogin() {
+function StudentLoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/dashboard/student";
@@ -266,5 +266,21 @@ export default function StudentLogin() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function StudentLogin() {
+  return (
+    <Suspense fallback={
+      <div className={styles.wrapper}>
+        <div className={styles.container}>
+          <div className={styles.card} style={{ textAlign: "center" }}>
+            <h2 style={{ color: "#0c2e1b", marginBottom: "0.5rem" }}>Loading...</h2>
+          </div>
+        </div>
+      </div>
+    }>
+      <StudentLoginContent />
+    </Suspense>
   );
 }

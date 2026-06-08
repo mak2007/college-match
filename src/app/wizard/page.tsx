@@ -216,7 +216,7 @@ export default function Wizard() {
       </div>
 
       <div className={styles.cardContainer}>
-        <div className="glass-card animate-slide">
+        <div className={`${styles.wizardCard} animate-slide`}>
           {error && <div className={styles.errorAlert}>{error}</div>}
 
           {/* STEP 1: LOCATION PREFERENCES */}

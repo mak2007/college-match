@@ -239,7 +239,7 @@ export default function StudentDashboard() {
         </header>
 
         <div className={styles.gatePage}>
-          <div className={`${styles.gateCard} glass-card`}>
+          <div className={styles.gateCard}>
             <div className={styles.gateIcon}>🎓</div>
             <h1 className={styles.gateTitle}>Student Dashboard</h1>
             <p className={styles.gateSubtitle}>
@@ -307,7 +307,7 @@ export default function StudentDashboard() {
 
         {/* ── KPI Stats Row ── */}
         <div className={styles.kpiRow}>
-          <div className={`${styles.kpiCard} glass-card`}>
+          <div className={styles.kpiCard}>
             <div className={styles.kpiIcon}>🏆</div>
             <div className={styles.kpiValue}>{stats.topMatchScore}%</div>
             <div className={styles.kpiLabel}>Top Match Score</div>
@@ -315,19 +315,19 @@ export default function StudentDashboard() {
               <div className={styles.kpiSub}>{stats.topCollegeName}</div>
             )}
           </div>
-          <div className={`${styles.kpiCard} glass-card`}>
+          <div className={styles.kpiCard}>
             <div className={styles.kpiIcon}>📊</div>
             <div className={styles.kpiValue}>{stats.avgMatchScore}%</div>
             <div className={styles.kpiLabel}>Avg Match Score</div>
             <div className={styles.kpiSub}>across {stats.totalRecommendations} colleges</div>
           </div>
-          <div className={`${styles.kpiCard} glass-card`}>
+          <div className={styles.kpiCard}>
             <div className={styles.kpiIcon}>🎯</div>
             <div className={styles.kpiValue}>{stats.totalRecommendations}</div>
             <div className={styles.kpiLabel}>Colleges Matched</div>
             <div className={styles.kpiSub}>in your last run</div>
           </div>
-          <div className={`${styles.kpiCard} glass-card`}>
+          <div className={styles.kpiCard}>
             <div className={styles.kpiIcon}>📬</div>
             <div className={styles.kpiValue}>{stats.totalLeads}</div>
             <div className={styles.kpiLabel}>Applications Tracked</div>
@@ -358,7 +358,7 @@ export default function StudentDashboard() {
             <div className={styles.overviewGrid}>
 
               {/* Academic Profile */}
-              <div className={`${styles.infoCard} glass-card`}>
+              <div className={styles.infoCard}>
                 <h3 className={styles.cardTitle}>🎓 Academic Profile</h3>
                 <div className={styles.infoRows}>
                   <div className={styles.infoRow}>
@@ -389,7 +389,7 @@ export default function StudentDashboard() {
               </div>
 
               {/* Contact Info */}
-              <div className={`${styles.infoCard} glass-card`}>
+              <div className={styles.infoCard}>
                 <h3 className={styles.cardTitle}>📞 Contact Details</h3>
                 <div className={styles.infoRows}>
                   <div className={styles.infoRow}>
@@ -412,7 +412,7 @@ export default function StudentDashboard() {
               </div>
 
               {/* Priority Rankings */}
-              <div className={`${styles.infoCard} glass-card`}>
+              <div className={styles.infoCard}>
                 <h3 className={styles.cardTitle}>⚖️ Your Priority Rankings</h3>
                 {student.priorities.length === 0 ? (
                   <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>No priorities set yet.</p>
@@ -431,7 +431,7 @@ export default function StudentDashboard() {
               </div>
 
               {/* Location Preferences */}
-              <div className={`${styles.infoCard} glass-card`}>
+              <div className={styles.infoCard}>
                 <h3 className={styles.cardTitle}>📍 Preferred Locations</h3>
                 {student.locations.length === 0 ? (
                   <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>
@@ -461,7 +461,7 @@ export default function StudentDashboard() {
         {activeTab === "matches" && (
           <div className={styles.tabContent}>
             {recommendations.length === 0 ? (
-              <div className="glass-card text-center" style={{ padding: "4rem 2rem" }}>
+              <div style={{ background: "white", border: "1px solid #e6e4dc", borderRadius: "20px", padding: "4rem 2rem", textAlign: "center" }}>
                 <h3>No match results yet</h3>
                 <p style={{ color: "var(--text-secondary)", margin: "1rem 0 2rem" }}>
                   Run the CollegeMatch wizard or Live Matcher to generate your personalised recommendations.
@@ -471,7 +471,7 @@ export default function StudentDashboard() {
             ) : (
               <div className={styles.matchesList}>
                 {recommendations.map((rec) => (
-                  <article key={rec.id} className={`${styles.matchCard} glass-card glow-effect`}>
+                  <article key={rec.id} className={styles.matchCard}>
                     <div className={styles.matchHeader}>
                       <div className={styles.matchMeta}>
                         <span className={styles.matchRank}>#{rec.rankPosition}</span>
@@ -596,7 +596,7 @@ export default function StudentDashboard() {
         {activeTab === "leads" && (
           <div className={styles.tabContent}>
             {leads.length === 0 ? (
-              <div className="glass-card text-center" style={{ padding: "4rem 2rem" }}>
+              <div style={{ background: "white", border: "1px solid #e6e4dc", borderRadius: "20px", padding: "4rem 2rem", textAlign: "center" }}>
                 <h3>No applications tracked yet</h3>
                 <p style={{ color: "var(--text-secondary)", margin: "1rem 0 2rem" }}>
                   Click "Apply via CollegeMatch" on any matched college to start tracking your application pipeline.

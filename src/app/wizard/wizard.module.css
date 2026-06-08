@@ -1,9 +1,9 @@
 .container {
   min-height: 100vh;
-  background-color: var(--background-dark);
+  background-color: #faf9f5;
   display: flex;
   flex-direction: column;
-  color: var(--text-primary);
+  color: #0c2e1b;
   animation: fadeIn 0.4s ease forwards;
 }
 
@@ -13,34 +13,32 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  border-bottom: 1px solid var(--glass-border);
-  background-color: rgba(17, 24, 39, 0.4);
+  border-bottom: 1px solid #e6e4dc;
+  background-color: rgba(255, 255, 255, 0.85);
 }
 
 .logo {
   font-size: 1.25rem;
   font-weight: 800;
-  background: var(--brand-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #0c2e1b;
+  text-decoration: none;
 }
 
 .stepIndicator {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: #4a5d4e;
   font-weight: 500;
 }
 
 .progressTrack {
   width: 100%;
   height: 4px;
-  background-color: var(--surface-light);
+  background-color: #e6e4dc;
 }
 
 .progressBar {
   height: 100%;
-  background: var(--brand-gradient);
+  background: linear-gradient(135deg, #0c2e1b 0%, #10b981 100%);
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -62,10 +60,11 @@
   font-weight: 700;
   margin-bottom: 0.5rem;
   letter-spacing: -0.02em;
+  color: #0c2e1b;
 }
 
 .stepDesc {
-  color: var(--text-secondary);
+  color: #4a5d4e;
   font-size: 0.95rem;
   line-height: 1.5;
   margin-bottom: 2rem;
@@ -85,13 +84,13 @@
 .checkboxWrapper input[type="checkbox"] {
   width: 1.15rem;
   height: 1.15rem;
-  accent-color: var(--primary-color);
+  accent-color: #10b981;
   margin-top: 0.15rem;
   cursor: pointer;
 }
 
 .checkboxWrapper label {
-  color: var(--text-primary);
+  color: #0c2e1b;
   font-size: 0.95rem;
   cursor: pointer;
   line-height: 1.4;
@@ -106,9 +105,9 @@
 }
 
 .tag {
-  background-color: var(--surface-light);
-  border: 1px solid var(--glass-border);
-  color: var(--text-primary);
+  background-color: #ffffff;
+  border: 1px solid #e6e4dc;
+  color: #0c2e1b;
   padding: 0.35rem 0.75rem;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -121,7 +120,7 @@
 .tag button {
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: #8c9e90;
   font-size: 1.1rem;
   cursor: pointer;
   display: flex;
@@ -130,22 +129,22 @@
 }
 
 .tag button:hover {
-  color: var(--accent-color);
+  color: #ef4444;
 }
 
 .infoBox {
-  background-color: rgba(99, 102, 241, 0.08);
-  border: 1px dashed rgba(99, 102, 241, 0.3);
+  background-color: rgba(16, 185, 129, 0.08);
+  border: 1px dashed rgba(16, 185, 129, 0.3);
   padding: 1rem;
   border-radius: 8px;
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #c7d2fe;
+  color: #059669;
 }
 
 .selectionRow {
-  background-color: rgba(17, 24, 39, 0.4);
-  border: 1px solid var(--glass-border);
+  background-color: #ffffff;
+  border: 1px solid #e6e4dc;
   padding: 1.25rem;
   border-radius: 8px;
   cursor: pointer;
@@ -153,13 +152,13 @@
 }
 
 .selectionRow:hover {
-  background-color: rgba(255, 255, 255, 0.03);
-  border-color: var(--text-muted);
+  background-color: #fcfbfa;
+  border-color: #c5d6c9;
 }
 
 .selectionRowActive {
-  background-color: rgba(99, 102, 241, 0.08);
-  border-color: var(--primary-color);
+  background-color: rgba(52, 211, 153, 0.15);
+  border-color: #10b981;
 }
 
 .priorityList {
@@ -172,8 +171,8 @@
 .priorityItem {
   display: flex;
   align-items: center;
-  background-color: rgba(17, 24, 39, 0.6);
-  border: 1px solid var(--glass-border);
+  background-color: #ffffff;
+  border: 1px solid #e6e4dc;
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
   gap: 1rem;
@@ -183,25 +182,27 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background-color: var(--surface-light);
+  background-color: #faf9f5;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--text-secondary);
-  border: 1px solid var(--glass-border);
+  color: #4a5d4e;
+  border: 1px solid #e6e4dc;
 }
 
 .priorityItem:nth-child(1) .priorityRank {
-  background: var(--brand-gradient);
+  background: linear-gradient(135deg, #0c2e1b 0%, #10b981 100%);
   color: white;
+  border-color: #0c2e1b;
 }
 
 .priorityLabel {
   flex: 1;
   font-weight: 500;
   font-size: 0.95rem;
+  color: #0c2e1b;
 }
 
 .priorityControls {
@@ -213,9 +214,9 @@
   width: 32px;
   height: 32px;
   border-radius: 4px;
-  background-color: var(--surface-light);
-  border: 1px solid var(--glass-border);
-  color: var(--text-primary);
+  background-color: #ffffff;
+  border: 1px solid #e6e4dc;
+  color: #0c2e1b;
   font-size: 0.7rem;
   cursor: pointer;
   display: flex;
@@ -225,7 +226,7 @@
 }
 
 .arrowBtn:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #faf9f5;
 }
 
 .arrowBtn:disabled {
@@ -238,19 +239,24 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 2rem;
-  border-top: 1px solid var(--glass-border);
+  border-top: 1px solid #e6e4dc;
   padding-top: 1.5rem;
 }
 
 .errorAlert {
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid var(--color-danger);
-  color: #fca5a5;
+  background-color: rgba(239, 68, 68, 0.08);
+  border: 1px solid #ef4444;
+  color: #dc2626;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
   animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (max-width: 500px) {
@@ -262,3 +268,12 @@
     width: 100%;
   }
 }
+
+.wizardCard {
+  background: #ffffff;
+  border: 1px solid #e6e4dc;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  padding: 2.5rem;
+}
+
