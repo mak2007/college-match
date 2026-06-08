@@ -1,0 +1,249 @@
+.wrapper {
+  background-color: var(--light-bg);
+  color: var(--light-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-family);
+}
+
+.header {
+  border-bottom: 1px solid var(--light-border);
+  background-color: var(--light-surface);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.headerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--brand-green);
+  letter-spacing: -0.04em;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navLink {
+  color: var(--light-text-secondary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover, .navLinkActive {
+  color: var(--brand-green);
+}
+
+.navLinkActive {
+  font-weight: 700;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ctaBtn {
+  background-color: var(--brand-green);
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.ctaBtn:hover {
+  background-color: var(--brand-green-hover);
+}
+
+/* Compare Content */
+.container {
+  max-width: 1100px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+  flex: 1;
+}
+
+.pageHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.pageHeader h2 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--brand-green);
+  letter-spacing: -0.02em;
+}
+
+.pageHeader p {
+  color: var(--light-text-secondary);
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+/* Selector Grid */
+.selectorGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.selectorCard {
+  background-color: var(--light-surface);
+  border: 1.5px dashed var(--light-border);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selectorCard:hover {
+  border-color: var(--brand-green);
+  background-color: #fafdfb;
+}
+
+.selectorCardFilled {
+  border-style: solid;
+  border-color: var(--light-border);
+  cursor: default;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.selectorCardFilled:hover {
+  background-color: var(--light-surface);
+}
+
+.selectInput {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--light-border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--light-text);
+  background-color: var(--light-surface);
+  margin-top: 1rem;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: auto;
+  align-self: flex-end;
+}
+
+.removeBtn:hover {
+  text-decoration: underline;
+}
+
+/* Comparison Grid */
+.comparisonGrid {
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.015);
+}
+
+.compareRow {
+  display: grid;
+  grid-template-columns: 200px 1fr 1fr 1fr;
+  border-bottom: 1px solid var(--light-border);
+}
+
+.compareRow:last-child {
+  border-bottom: none;
+}
+
+.labelCell {
+  background-color: #f8fafc;
+  color: var(--light-text-secondary);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--light-border);
+}
+
+.valueCell {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 0.95rem;
+  color: var(--light-text);
+  border-right: 1px solid var(--light-border);
+}
+
+.valueCell:last-child {
+  border-right: none;
+}
+
+.valueCellHighlight {
+  background-color: var(--brand-green-light);
+  font-weight: 700;
+}
+
+.emptyCell {
+  color: var(--light-text-muted);
+  font-style: italic;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .selectorGrid {
+    grid-template-columns: 1fr;
+  }
+  .compareRow {
+    grid-template-columns: 120px 1fr 1fr 1fr;
+    font-size: 0.8rem;
+  }
+  .labelCell {
+    font-size: 0.75rem;
+    padding: 0.75rem;
+  }
+  .valueCell {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+}

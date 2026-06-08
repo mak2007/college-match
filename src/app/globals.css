@@ -6,6 +6,20 @@
   --secondary-hover: #0891b2;
   --accent-color: #f43f5e; /* Rose */
   
+  /* Soft Light Green-Blue Discovery Theme Tokens */
+  --light-bg: #fafafa;
+  --light-surface: #ffffff;
+  --light-border: #e2e8f0;
+  --brand-green: #0d5c3a; /* Trust Green */
+  --brand-green-hover: #0a492d;
+  --brand-green-light: #e6f4ea;
+  --brand-blue: #1e40af; /* Trust Blue */
+  --brand-blue-hover: #1d4ed8;
+  --brand-blue-light: #eff6ff;
+  --light-text: #0f172a;
+  --light-text-secondary: #475569;
+  --light-text-muted: #94a3b8;
+
   /* Slate Dark Palette */
   --background-dark: #0b0f19;
   --surface-dark: #111827;

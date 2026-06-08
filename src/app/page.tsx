@@ -33,40 +33,26 @@ export default function Home() {
           </Link>
           
           <nav className={styles.nav}>
-            {/* For Students Dropdown Menu */}
-            <div className={styles.navItem}>
-              <button className={styles.navLink}>
-                For Students <span style={{ fontSize: "0.75rem" }}>▼</span>
-              </button>
-              <div className={styles.dropdownMenu}>
-                <Link href="/match" className={styles.dropdownLink}>
-                  <span className={styles.dropdownTitle}>⚡ Live Matcher</span>
-                  <span className={styles.dropdownDesc}>Real-time college scoring & optimization</span>
-                </Link>
-                <Link href="/wizard" className={styles.dropdownLink}>
-                  <span className={styles.dropdownTitle}>📋 B.Tech Wizard</span>
-                  <span className={styles.dropdownDesc}>Step-by-step priority ranking guide</span>
-                </Link>
-                <Link href="/dashboard/student" className={styles.dropdownLink}>
-                  <span className={styles.dropdownTitle}>🎓 Student Profile</span>
-                  <span className={styles.dropdownDesc}>Track your referrals, shortlist & offers</span>
-                </Link>
-              </div>
-            </div>
-            
-            <div className={styles.navItem}>
-              <Link href="/admin/login" className={styles.navLink}>
-                For Colleges
-              </Link>
-            </div>
+            <Link href="/discover" className={styles.navLink}>
+              Discover Colleges
+            </Link>
+            <Link href="/predict" className={styles.navLink}>
+              Predictor
+            </Link>
+            <Link href="/rankings" className={styles.navLink}>
+              Rankings
+            </Link>
+            <Link href="/compare" className={styles.navLink}>
+              Compare
+            </Link>
           </nav>
           
           <div className={styles.headerActions}>
             <Link href="/admin/login" className={styles.loginLink}>
               Login
             </Link>
-            <Link href="/match" className={styles.signUpBtn}>
-              Sign Up <span style={{ fontSize: "0.85rem" }}>→</span>
+            <Link href="/predict" className={styles.signUpBtn}>
+              Get My Matches <span style={{ fontSize: "0.85rem" }}>→</span>
             </Link>
           </div>
         </div>
@@ -83,50 +69,55 @@ export default function Home() {
           </div>
           
           <div className={styles.heroContent}>
-            <div className={styles.badge}>Trusted by ~300k+ students & families</div>
+            <div className={styles.badge}>Data-backed college selection engine</div>
             <h1 className={styles.title}>
               Your one-stop solution for all things college apps
             </h1>
             <p className={styles.subtitle}>
               Get matched. Score scholarships. Ace essays. Get admission offers.
             </p>
-            <Link href="/match" className={styles.ctaBtn}>
-              Sign Me Up <span style={{ fontSize: "1.1rem" }}>→</span>
-            </Link>
+            <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", justifyContent: "center" }}>
+              <Link href="/predict" className={styles.ctaBtn}>
+                Get My Matches <span style={{ fontSize: "1.1rem" }}>→</span>
+              </Link>
+              <Link href="/discover" className={styles.ctaBtn} style={{ backgroundColor: "transparent", color: "#ffffff", border: "2px solid #ffffff" }}>
+                Explore Colleges
+              </Link>
+            </div>
           </div>
         </section>
 
         {/* Tilted Peeking Cards Section */}
         <section className={styles.peekingCardsContainer}>
-          <Link href="/match" className={styles.peekingCard}>
-            <div className={styles.cardIconWrapper}>🏆</div>
-            <div className={styles.cardMeta}>
-              <h4 className={styles.cardTitle}>Live Matcher</h4>
-              <p className={styles.cardText}>Score & Optimize</p>
-            </div>
-          </Link>
-          
-          <Link href="/wizard" className={styles.peekingCard}>
-            <div className={styles.cardIconWrapper}>✉️</div>
-            <div className={styles.cardMeta}>
-              <h4 className={styles.cardTitle}>College Wizard</h4>
-              <p className={styles.cardText}>Interactive Guide</p>
-            </div>
-          </Link>
-          
-          <Link href="/dashboard/student" className={styles.peekingCard}>
+          <Link href="/discover" className={styles.peekingCard}>
             <div className={styles.cardIconWrapper}>🔍</div>
             <div className={styles.cardMeta}>
-              <h4 className={styles.cardTitle}>Lookup Status</h4>
-              <p className={styles.cardText}>Track Placements</p>
+              <h4 className={styles.cardTitle}>Discover Colleges</h4>
+              <p className={styles.cardText}>Filter by Placements & ROI</p>
             </div>
           </Link>
           
-          <Link href="/admin/login" className={styles.peekingCard}>
+          <Link href="/predict" className={styles.peekingCard}>
+            <div className={styles.cardIconWrapper}>🏆</div>
+            <div className={styles.cardMeta}>
+              <h4 className={styles.cardTitle}>Predictor Quiz</h4>
+              <p className={styles.cardText}>Admissions Competitiveness</p>
+            </div>
+          </Link>
+          
+          <Link href="/rankings" className={styles.peekingCard}>
+            <div className={styles.cardIconWrapper}>📊</div>
+            <div className={styles.cardMeta}>
+              <h4 className={styles.cardTitle}>Colleges Rankings</h4>
+              <p className={styles.cardText}>ROI Flagship Analysis</p>
+            </div>
+          </Link>
+          
+          <Link href="/compare" className={styles.peekingCard}>
             <div className={styles.cardIconWrapper}>📄</div>
             <div className={styles.cardMeta}>
-              <h4 className={styles.cardTitle}>Partner Portal</h4>
-              <p className={styles.cardText}>Manage Referrals</p>
+              <h4 className={styles.cardTitle}>Compare Colleges</h4>
+              <p className={styles.cardText}>Compare Side-by-Side</p>
             </div>
           </Link>
         </section>
@@ -152,10 +143,10 @@ export default function Home() {
             </div>
 
             <div className={styles.featureCard}>
-              <div className={styles.featureIcon}>🌴</div>
-              <h3 className={styles.featureTitle}>Campus Vibe & Hostels</h3>
+              <div className={styles.featureIcon}>🎪</div>
+              <h3 className={styles.featureTitle}>Campus Life & Crowd</h3>
               <p className={styles.featureText}>
-                Explore real college life indicators. Rate campus size, activities, sports facilities, and hostel infrastructure.
+                Explore real college life indicators. Rate campus size, activities, student crowd demographics, and hostel infrastructure.
               </p>
             </div>
 

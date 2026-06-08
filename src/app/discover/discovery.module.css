@@ -1,0 +1,411 @@
+.wrapper {
+  background-color: var(--light-bg);
+  color: var(--light-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-family);
+}
+
+.header {
+  border-bottom: 1px solid var(--light-border);
+  background-color: var(--light-surface);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.headerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--brand-green);
+  letter-spacing: -0.04em;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navLink {
+  color: var(--light-text-secondary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover, .navLinkActive {
+  color: var(--brand-green);
+}
+
+.navLinkActive {
+  font-weight: 700;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ctaBtn {
+  background-color: var(--brand-green);
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.ctaBtn:hover {
+  background-color: var(--brand-green-hover);
+}
+
+/* Main Layout */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  flex: 1;
+}
+
+/* Sidebar Filters */
+.sidebar {
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  height: fit-content;
+  position: sticky;
+  top: 90px;
+}
+
+.filterHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--light-border);
+  padding-bottom: 0.75rem;
+}
+
+.filterHeader h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--brand-green);
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  color: var(--brand-blue);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.clearBtn:hover {
+  text-decoration: underline;
+}
+
+.filterGroup {
+  margin-bottom: 1.5rem;
+}
+
+.filterGroup:last-child {
+  margin-bottom: 0;
+}
+
+.filterTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--light-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--light-text-secondary);
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.checkboxLabel input {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--light-border);
+  accent-color: var(--brand-green);
+}
+
+.selectInput {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--light-border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--light-text-secondary);
+  background-color: var(--light-surface);
+}
+
+.rangeInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rangeText {
+  font-size: 0.85rem;
+  color: var(--light-text-secondary);
+  font-weight: 600;
+}
+
+/* Content Area */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.searchBar {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--light-border);
+  border-radius: 12px;
+  font-size: 1rem;
+  color: var(--light-text);
+  background-color: var(--light-surface);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.searchBar:focus {
+  border-color: var(--brand-green);
+}
+
+.resultsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  color: var(--light-text-secondary);
+}
+
+/* College Grid & Cards */
+.collegeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.collegeCard {
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+  transition: all 0.2s ease;
+}
+
+.collegeCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+  border-color: #cbd5e1;
+}
+
+.cardTop {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.logoPlaceholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background-color: var(--brand-green-light);
+  color: var(--brand-green);
+  font-weight: 800;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoImage {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.cardHeaderInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.collegeName {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--brand-green);
+}
+
+.collegeLocation {
+  font-size: 0.85rem;
+  color: var(--light-text-secondary);
+  margin-top: 0.15rem;
+}
+
+.partnerBadge {
+  background-color: var(--brand-blue-light);
+  color: var(--brand-blue);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.cardStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  border-top: 1px solid var(--light-border);
+  border-bottom: 1px solid var(--light-border);
+  padding: 1rem 0;
+  margin-bottom: 1.25rem;
+}
+
+.statBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: var(--light-text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.statValue {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--light-text);
+  margin-top: 0.15rem;
+}
+
+.cardBranches {
+  margin-bottom: 1.25rem;
+}
+
+.branchTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--light-text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.branchTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.branchTag {
+  background-color: #f1f5f9;
+  color: var(--light-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+}
+
+.cardFooter {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.viewBtn, .applyBtn {
+  flex: 1;
+  text-align: center;
+  padding: 0.6rem 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.viewBtn {
+  background-color: var(--light-bg);
+  color: var(--brand-green);
+  border: 1px solid var(--light-border);
+}
+
+.viewBtn:hover {
+  background-color: #f1f5f9;
+}
+
+.applyBtn {
+  background-color: var(--brand-green);
+  color: #ffffff;
+  border: none;
+}
+
+.applyBtn:hover {
+  background-color: var(--brand-green-hover);
+}
+
+@media (max-width: 992px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    position: relative;
+    top: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .collegeGrid {
+    grid-template-columns: 1fr;
+  }
+}
