@@ -1,20 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { cookies } from "next/headers";
-import * as jwt from "jsonwebtoken";
-
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_key_change_me_12345";
+import { verifyToken } from "@/lib/auth";
 
 async function verifySuperadmin() {
   const cookieStore = await cookies();
   const token = cookieStore.get("cm_auth_token")?.value;
   if (!token) return false;
-  try {
-    const decoded: any = jwt.verify(token, JWT_SECRET);
-    return decoded && decoded.role === "SUPERADMIN";
-  } catch (e) {
-    return false;
-  }
+  const decoded = await verifyToken(token);
+  return decoded !== null && decoded.role === "SUPERADMIN";
 }
 
 export async function GET() {

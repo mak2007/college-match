@@ -2,9 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/db";
 import * as bcrypt from "bcryptjs";
-import * as jwt from "jsonwebtoken";
-
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_key_change_me_12345";
+import { signToken } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
@@ -50,7 +48,7 @@ export async function POST(request: Request) {
       collegeId: collegeId,
     };
 
-    const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: "24h" });
+    const token = await signToken(tokenPayload);
 
     // 5. Set HttpOnly Cookie
     const cookieStore = await cookies();

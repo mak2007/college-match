@@ -2,25 +2,16 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import Link from "next/link";
-import * as jwt from "jsonwebtoken";
+import { verifyToken } from "@/lib/auth";
 import LeadsTable from "./LeadsTable";
 import styles from "./college.module.css";
-
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_key_change_me_12345";
 
 export default async function CollegeAdminDashboard() {
   // 1. Verify Authentication & Role
   const cookieStore = await cookies();
   const token = cookieStore.get("cm_auth_token")?.value;
 
-  let decoded: any = null;
-  try {
-    if (token) {
-      decoded = jwt.verify(token, JWT_SECRET);
-    }
-  } catch (e) {
-    // Ignore, will redirect
-  }
+  const decoded = token ? await verifyToken(token) : null;
 
   if (!decoded || decoded.role !== "COLLEGE_ADMIN") {
     redirect("/admin/login");

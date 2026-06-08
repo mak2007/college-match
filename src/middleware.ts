@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { jwtVerify } from "jose";
+import { verifyToken } from "@/lib/auth";
 
 // ============================================================
 // CollegeMatch Edge Middleware — Route Protection Layer
@@ -8,13 +8,8 @@ import { jwtVerify } from "jose";
 // Runs on the Vercel Edge Runtime (or locally via Next.js dev).
 // Validates the `cm_auth_token` JWT cookie before granting
 // access to protected `/admin` and `/dashboard` routes.
-// Uses `jose` for edge-compatible JWT verification (the Node.js
-// `jsonwebtoken` library is NOT compatible with Edge Runtime).
+// Uses `jose` via the unified auth library.
 // ============================================================
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "fallback_secret_key_change_me_12345"
-);
 
 // Routes that require authentication
 const PROTECTED_PREFIXES = ["/admin", "/dashboard"];
@@ -82,11 +77,8 @@ export async function middleware(request: NextRequest) {
   }
 
   // 3. Verify JWT signature and expiration
-  let payload: JWTPayload;
-  try {
-    const { payload: verified } = await jwtVerify(token, JWT_SECRET);
-    payload = verified as unknown as JWTPayload;
-  } catch (err) {
+  const payload = await verifyToken(token);
+  if (!payload) {
     // Invalid or expired token → clear cookie and redirect to login
     const loginUrl = new URL("/admin/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);

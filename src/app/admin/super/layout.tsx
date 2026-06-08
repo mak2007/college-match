@@ -1,10 +1,8 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import * as jwt from "jsonwebtoken";
+import { verifyToken } from "@/lib/auth";
 import Link from "next/link";
 import styles from "./layout.module.css";
-
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_key_change_me_12345";
 
 export default async function SuperadminLayout({
   children,
@@ -15,14 +13,7 @@ export default async function SuperadminLayout({
   const cookieStore = await cookies();
   const token = cookieStore.get("cm_auth_token")?.value;
 
-  let decoded: any = null;
-  try {
-    if (token) {
-      decoded = jwt.verify(token, JWT_SECRET);
-    }
-  } catch (e) {
-    // Ignore, will redirect
-  }
+  const decoded = token ? await verifyToken(token) : null;
 
   if (!decoded || decoded.role !== "SUPERADMIN") {
     redirect("/admin/login");
