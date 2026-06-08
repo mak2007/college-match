@@ -50,7 +50,6 @@ export default function Predictor() {
   const [results, setResults] = useState<MatchResult[]>([]);
 
   // Quiz Form states
-  const [priorityType, setPriorityType] = useState("academics");
   const [jeePercentile, setJeePercentile] = useState(90);
   const [class12Percentage, setClass12Percentage] = useState(85);
   const [budgetLimit, setBudgetLimit] = useState(1600000); // 16 Lakh total budget
@@ -58,7 +57,13 @@ export default function Predictor() {
   const [preferredBranches, setPreferredBranches] = useState<string[]>(["CSE"]);
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
   const [selectedStates, setSelectedStates] = useState<string[]>([]);
-  const [minSalaryLpa, setMinSalaryLpa] = useState(6);
+  const [ranking, setRanking] = useState<string[]>([
+    "placements",
+    "curriculum",
+    "campus_life",
+    "research",
+    "extracurriculars"
+  ]);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -67,14 +72,13 @@ export default function Predictor() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.step !== undefined) setStep(parsed.step);
-        if (parsed.priorityType !== undefined) setPriorityType(parsed.priorityType);
         if (parsed.jeePercentile !== undefined) setJeePercentile(parsed.jeePercentile);
         if (parsed.class12Percentage !== undefined) setClass12Percentage(parsed.class12Percentage);
         if (parsed.budgetLimit !== undefined) setBudgetLimit(parsed.budgetLimit);
         if (parsed.isBudgetConstraint !== undefined) setIsBudgetConstraint(parsed.isBudgetConstraint);
         if (parsed.preferredBranches !== undefined) setPreferredBranches(parsed.preferredBranches);
         if (parsed.selectedRegions !== undefined) setSelectedRegions(parsed.selectedRegions);
-        if (parsed.minSalaryLpa !== undefined) setMinSalaryLpa(parsed.minSalaryLpa);
+        if (parsed.ranking !== undefined) setRanking(parsed.ranking);
       }
     } catch (e) {
       console.error("Error loading progress from localStorage", e);
@@ -83,34 +87,32 @@ export default function Predictor() {
 
   // Save to localStorage when quiz values change
   useEffect(() => {
-    if (step < 7) {
+    if (step < 6) {
       const progress = {
         step,
-        priorityType,
         jeePercentile,
         class12Percentage,
         budgetLimit,
         isBudgetConstraint,
         preferredBranches,
         selectedRegions,
-        minSalaryLpa,
+        ranking,
       };
       localStorage.setItem("cm_predictor_progress", JSON.stringify(progress));
     }
   }, [
     step,
-    priorityType,
     jeePercentile,
     class12Percentage,
     budgetLimit,
     isBudgetConstraint,
     preferredBranches,
     selectedRegions,
-    minSalaryLpa,
+    ranking,
   ]);
 
   const handleNext = () => {
-    if (step < 6) {
+    if (step < 5) {
       setStep(prev => prev + 1);
     } else {
       handleSubmit();
@@ -138,32 +140,19 @@ export default function Predictor() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      // Map priorityTypes to structured ranks
-      let priorities = [
-        { criteria: "placements", rankOrder: 1 },
-        { criteria: "roi", rankOrder: 2 },
-        { criteria: "branch_strength", rankOrder: 3 },
-        { criteria: "college_life", rankOrder: 4 },
-        { criteria: "curriculum", rankOrder: 5 }
-      ];
+      // Map ranking list to engine priorities
+      const CRITERIA_MAPPING: Record<string, string> = {
+        placements: "placements",
+        extracurriculars: "roi",
+        campus_life: "college_life",
+        research: "branch_strength",
+        curriculum: "curriculum"
+      };
 
-      if (priorityType === "value") {
-        priorities = [
-          { criteria: "roi", rankOrder: 1 },
-          { criteria: "placements", rankOrder: 2 },
-          { criteria: "branch_strength", rankOrder: 3 },
-          { criteria: "curriculum", rankOrder: 4 },
-          { criteria: "college_life", rankOrder: 5 }
-        ];
-      } else if (priorityType === "campus") {
-        priorities = [
-          { criteria: "college_life", rankOrder: 1 },
-          { criteria: "placements", rankOrder: 2 },
-          { criteria: "roi", rankOrder: 3 },
-          { criteria: "branch_strength", rankOrder: 4 },
-          { criteria: "curriculum", rankOrder: 5 }
-        ];
-      }
+      const priorities = ranking.map((item, index) => ({
+        criteria: CRITERIA_MAPPING[item],
+        rankOrder: index + 1
+      }));
 
       // Map regions to states
       const REGION_MAP: Record<string, string[]> = {
@@ -203,7 +192,7 @@ export default function Predictor() {
       if (data.success) {
         setResults(data.matches || []);
         localStorage.removeItem("cm_predictor_progress"); // Clear on completion
-        setStep(7); // Show results view
+        setStep(6); // Show results view
       } else {
         alert("Engine failed to compute results: " + (data.error || "Unknown error"));
       }
@@ -215,7 +204,7 @@ export default function Predictor() {
     }
   };
 
-  const STEP_LABELS = ["Academics", "Location", "Priority", "Budget", "Branch", "Placements"];
+  const STEP_LABELS = ["Academics", "Location", "Priorities", "Budget", "Branches"];
 
   const renderStepIndicator = () => {
     return (
@@ -247,7 +236,7 @@ export default function Predictor() {
   // Render Quiz Step
   const renderQuizStep = () => {
     switch (step) {
-      case 1: // Academic Performance (was step 2)
+      case 1: // Academic Performance
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Your Academic Profile</h2>
@@ -286,7 +275,7 @@ export default function Predictor() {
             </div>
           </div>
         );
-      case 2: // Location Preference (was step 5)
+      case 2: // Location Preference
         const regions = [
           { name: "My State Only", desc: "Restrict search to your home state" },
           { name: "South India", desc: "Karnataka, Tamil Nadu, etc." },
@@ -336,55 +325,110 @@ export default function Predictor() {
             </div>
           </div>
         );
-      case 3: // Priority Type (was step 1)
+      case 3: // Priorities Ranking
+        const itemsMap = {
+          placements: { label: "Placements & Salaries", icon: "💼", desc: "Top recruiters, package statistics, and career growth" },
+          extracurriculars: { label: "Extracurricular activities and sports", icon: "⚽", desc: "Clubs, student chapters, athletic events, and active groups" },
+          campus_life: { label: "Campus Life & crowd", icon: "🌴", desc: "Modern hostels, food courts, diverse student body, and events" },
+          research: { label: "Research and opportunities", icon: "🔬", desc: "Academic projects, internships, patent support, and labs" },
+          curriculum: { label: "Modern Course Standards", icon: "📖", desc: "Updated syllabus, industry readiness, and faculty standards" }
+        };
+
+        const moveItem = (index: number, direction: "up" | "down") => {
+          const newRanking = [...ranking];
+          const targetIndex = direction === "up" ? index - 1 : index + 1;
+          if (targetIndex >= 0 && targetIndex < newRanking.length) {
+            const temp = newRanking[index];
+            newRanking[index] = newRanking[targetIndex];
+            newRanking[targetIndex] = temp;
+            setRanking(newRanking);
+          }
+        };
+
         return (
           <div className={styles.questionGroup}>
-            <h2 className={styles.questionTitle}>Which describes you best?</h2>
-            <p className={styles.questionSubtitle}>Select a focus priority that best aligns with your college goals</p>
-            <div className={styles.optionsGrid}>
-              <div
-                className={`${styles.optionCard} ${priorityType === "academics" ? styles.optionCardActive : ""}`}
-                onClick={() => setPriorityType("academics")}
-              >
-                <input type="radio" checked={priorityType === "academics"} readOnly />
-                <span className={styles.optionIcon}>💼</span>
-                <span className={styles.optionTitle}>Academic Focused</span>
-                <span className={styles.optionDesc}>Prioritize top recruiters, branch department rankings, and salaries.</span>
-              </div>
+            <h2 className={styles.questionTitle}>Rank Your Priorities</h2>
+            <p className={styles.questionSubtitle}>Drag items or use the arrows to rank from Most Important (1st) to Least Important (5th)</p>
+            
+            <div className={styles.rankingList}>
+              {ranking.map((itemId, idx) => {
+                const item = itemsMap[itemId as keyof typeof itemsMap];
+                if (!item) return null;
+                const rankNum = idx + 1;
+                
+                return (
+                  <div
+                    key={itemId}
+                    className={styles.rankingCard}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData("text/plain", idx.toString());
+                      e.currentTarget.classList.add(styles.dragging);
+                    }}
+                    onDragEnd={(e) => {
+                      e.currentTarget.classList.remove(styles.dragging);
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const fromIdx = parseInt(e.dataTransfer.getData("text/plain"), 10);
+                      const toIdx = idx;
+                      if (fromIdx !== toIdx) {
+                        const newRanking = [...ranking];
+                        const [movedItem] = newRanking.splice(fromIdx, 1);
+                        newRanking.splice(toIdx, 0, movedItem);
+                        setRanking(newRanking);
+                      }
+                    }}
+                  >
+                    <div className={styles.rankBadge}>
+                      {rankNum}
+                      <span className={styles.rankSuffix}>
+                        {rankNum === 1 ? "st" : rankNum === 2 ? "nd" : rankNum === 3 ? "rd" : "th"}
+                      </span>
+                    </div>
+                    
+                    <div className={styles.rankingDragHandle}>
+                      <span className={styles.dragIcon}>⋮⋮</span>
+                    </div>
 
-              <div
-                className={`${styles.optionCard} ${priorityType === "value" ? styles.optionCardActive : ""}`}
-                onClick={() => setPriorityType("value")}
-              >
-                <input type="radio" checked={priorityType === "value"} readOnly />
-                <span className={styles.optionIcon}>📊</span>
-                <span className={styles.optionTitle}>ROI & Value Seeker</span>
-                <span className={styles.optionDesc}>Focus on placement outcomes relative to total tuition investment.</span>
-              </div>
+                    <div className={styles.rankingContent}>
+                      <div className={styles.rankingTitleRow}>
+                        <span className={styles.rankingIcon}>{item.icon}</span>
+                        <h4 className={styles.rankingItemTitle}>{item.label}</h4>
+                      </div>
+                      <p className={styles.rankingItemDesc}>{item.desc}</p>
+                    </div>
 
-              <div
-                className={`${styles.optionCard} ${priorityType === "campus" ? styles.optionCardActive : ""}`}
-                onClick={() => setPriorityType("campus")}
-              >
-                <input type="radio" checked={priorityType === "campus"} readOnly />
-                <span className={styles.optionIcon}>🎪</span>
-                <span className={styles.optionTitle}>Campus Life & Crowd</span>
-                <span className={styles.optionDesc}>Prioritize vibrant campus spaces, student events, and high-quality crowd.</span>
-              </div>
-
-              <div
-                className={`${styles.optionCard} ${priorityType === "holistic" ? styles.optionCardActive : ""}`}
-                onClick={() => setPriorityType("holistic")}
-              >
-                <input type="radio" checked={priorityType === "holistic"} readOnly />
-                <span className={styles.optionIcon}>🌱</span>
-                <span className={styles.optionTitle}>Holistic Explorer</span>
-                <span className={styles.optionDesc}>Balance campus environment, flex courses, and placement parameters equally.</span>
-              </div>
+                    <div className={styles.rankingActions}>
+                      <button
+                        type="button"
+                        className={styles.rankArrowBtn}
+                        disabled={idx === 0}
+                        onClick={() => moveItem(idx, "up")}
+                        title="Move Up"
+                      >
+                        ▲
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.rankArrowBtn}
+                        disabled={idx === ranking.length - 1}
+                        onClick={() => moveItem(idx, "down")}
+                        title="Move Down"
+                      >
+                        ▼
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         );
-      case 4: // Budget (was step 3)
+      case 4: // Budget
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Tuition & Hostel Budget</h2>
@@ -416,7 +460,7 @@ export default function Predictor() {
             </label>
           </div>
         );
-      case 5: // Branch Preference (was step 4)
+      case 5: // Branch Preference
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Preferred B.Tech Branches</h2>
@@ -439,29 +483,6 @@ export default function Predictor() {
                   </span>
                 </div>
               ))}
-            </div>
-          </div>
-        );
-      case 6: // Placement Expectations (was step 6)
-        return (
-          <div className={styles.questionGroup}>
-            <h2 className={styles.questionTitle}>Placement Expectations</h2>
-            <p className={styles.questionSubtitle}>Set your minimum expected average package package salary (LPA)</p>
-
-            <div className={styles.sliderContainer}>
-              <div className={styles.sliderLabel}>
-                <span>Min Placement Average Package</span>
-                <span style={{ color: "var(--brand-green)" }}>{minSalaryLpa} LPA+</span>
-              </div>
-              <input
-                type="range"
-                min="3"
-                max="18"
-                step="0.5"
-                className={styles.sliderInput}
-                value={minSalaryLpa}
-                onChange={(e) => setMinSalaryLpa(Number(e.target.value))}
-              />
             </div>
           </div>
         );
@@ -605,7 +626,7 @@ export default function Predictor() {
       <Navbar />
 
       {/* Main quiz interface or results panel */}
-      {step === 7 ? (
+      {step === 6 ? (
         renderResults()
       ) : (
         <div className={styles.quizLayout}>
@@ -638,7 +659,7 @@ export default function Predictor() {
                 <div />
               )}
               <button className={styles.nextBtn} onClick={handleNext} disabled={loading}>
-                {loading ? "Calculating..." : step === 6 ? "Generate Results" : "Next →"}
+                {loading ? "Calculating..." : step === 5 ? "Generate Results" : "Next →"}
               </button>
             </div>
           </div>

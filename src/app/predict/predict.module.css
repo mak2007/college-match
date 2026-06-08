@@ -573,3 +573,162 @@
     display: none;
   }
 }
+
+/* Ranking/Prioritization Step Styling */
+.rankingList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.rankingCard {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #e5e3dc;
+  border-radius: 12px;
+  padding: 1.25rem;
+  background-color: #ffffff;
+  cursor: grab;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  box-shadow: 0 2px 8px rgba(12, 46, 27, 0.01);
+  user-select: none;
+}
+
+.rankingCard:hover {
+  border-color: #0d5c3a;
+  background-color: #faf9f5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(12, 46, 27, 0.04);
+}
+
+.rankingCard:active {
+  cursor: grabbing;
+}
+
+.dragging {
+  opacity: 0.5;
+  border-style: dashed;
+  border-color: #0d5c3a;
+  background-color: #f4fcf7;
+}
+
+.rankBadge {
+  background-color: #0d5c3a;
+  color: #ffffff;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1;
+  margin-right: 1.25rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(13, 92, 58, 0.2);
+}
+
+.rankSuffix {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 2px;
+  opacity: 0.9;
+}
+
+.rankingDragHandle {
+  color: #c5c3bc;
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rankingCard:hover .rankingDragHandle {
+  color: #72816f;
+}
+
+.rankingContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rankingTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rankingIcon {
+  font-size: 1.25rem;
+}
+
+.rankingItemTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0c2e1b;
+  margin: 0;
+}
+
+.rankingItemDesc {
+  font-size: 0.85rem;
+  color: #72816f;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.rankingActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-left: 1.5rem;
+}
+
+.rankArrowBtn {
+  background-color: #f4f3ed;
+  color: #556052;
+  border: 1px solid #e5e3dc;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: all 0.15s ease;
+}
+
+.rankArrowBtn:hover:not(:disabled) {
+  background-color: #0d5c3a;
+  color: #ffffff;
+  border-color: #0d5c3a;
+}
+
+.rankArrowBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .rankingCard {
+    padding: 1rem;
+  }
+  .rankBadge {
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
+    margin-right: 0.75rem;
+  }
+  .rankingDragHandle {
+    display: none;
+  }
+}
