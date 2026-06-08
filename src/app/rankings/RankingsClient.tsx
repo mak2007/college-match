@@ -85,94 +85,96 @@ export default function RankingsClient({ initialColleges }: RankingsClientProps)
           className={`${styles.tabBtn} ${activeTab === "roi" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("roi")}
         >
-          ROI Ranking <span className={styles.flagshipBadge}>Flagship</span>
+          ROI Rankings <span className={styles.flagshipBadge}>Flagship</span>
         </button>
         <button
           className={`${styles.tabBtn} ${activeTab === "overall" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("overall")}
         >
-          Overall Ranking
+          Overall Rankings
         </button>
         <button
           className={`${styles.tabBtn} ${activeTab === "affordability" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("affordability")}
         >
-          Value / Affordability
+          Affordability Rankings
         </button>
         <button
           className={`${styles.tabBtn} ${activeTab === "curriculum" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("curriculum")}
         >
-          Curriculum Strength
+          Curriculum & Opportunities
         </button>
         <button
           className={`${styles.tabBtn} ${activeTab === "opportunities" ? styles.tabBtnActive : ""}`}
           onClick={() => setActiveTab("opportunities")}
         >
-          Industry Opportunities
+          Placement Rankings
         </button>
       </div>
 
-      {/* Table */}
-      <div className={styles.tableCard}>
-        <table className={styles.rankingsTable}>
-          <thead>
-            <tr>
-              <th className={styles.rankNumber}>Rank</th>
-              <th>College</th>
-              {activeTab === "roi" && <th>Avg Tuition</th>}
-              {activeTab === "roi" && <th>Avg Package</th>}
-              {activeTab === "affordability" && <th>Total Cost (Lakh/yr)</th>}
-              <th>Score / Metric</th>
-              <th className={styles.actionCell}>Analysis</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rankedColleges.map((college, index) => (
-              <tr key={college.id}>
-                <td className={styles.rankNumber}>#{index + 1}</td>
-                <td>
-                  <div className={styles.collegeCell}>
-                    {college.logoUrl ? (
-                      <img src={college.logoUrl} alt={college.name} className={styles.logoImage} />
-                    ) : (
-                      <div className={styles.logoPlaceholder}>{college.name.charAt(0)}</div>
+      {/* Cards Grid */}
+      <div key={activeTab} className={`${styles.cardsGrid} ${styles.fadeContainer}`}>
+        {rankedColleges.map((college, index) => {
+          const rank = index + 1;
+          const isTop3 = rank <= 3;
+
+          let metricLabel = "";
+          let metricValue = "";
+
+          if (activeTab === "roi") {
+            metricLabel = "ROI Ratio / Avg Salary";
+            metricValue = `${college.roiRatio.toFixed(1)}x (₹${(college.salary / 100000).toFixed(1)}L LPA)`;
+          } else if (activeTab === "overall") {
+            metricLabel = "Overall Fit Score";
+            metricValue = `${college.overallScore.toFixed(0)}%`;
+          } else if (activeTab === "affordability") {
+            metricLabel = "Fees (Tuition + Hostel)";
+            metricValue = `₹${(college.totalCost / 100000).toFixed(2)} Lakhs/yr`;
+          } else if (activeTab === "curriculum") {
+            metricLabel = "Curriculum Strength";
+            metricValue = `${college.curriculumScore}/10 Score`;
+          } else if (activeTab === "opportunities") {
+            metricLabel = "Placement Strength";
+            metricValue = `${college.placementScore}/10 Score`;
+          }
+
+          return (
+            <div key={college.id} className={styles.rankingCard}>
+              <div className={styles.cardTop}>
+                {/* Rank Circular Badge */}
+                <div className={`${styles.rankBadge} ${isTop3 ? styles.rankTop : styles.rankNormal}`}>
+                  #{rank}
+                </div>
+
+                <div className={styles.collegeMeta}>
+                  <div className={styles.collegeNameRow}>
+                    <span className={styles.collegeName}>{college.name}</span>
+                    {college.isPartner && (
+                      <span className={styles.partnerBadge}>Partner</span>
                     )}
-                    <div>
-                      <span className={styles.collegeName}>{college.name}</span>
-                      <div className={styles.collegeLocation}>
-                        📍 {college.city}, {college.state} | {college.repBranchCode} Branch
-                      </div>
-                    </div>
                   </div>
-                </td>
-                {activeTab === "roi" && (
-                  <td>₹{(college.tuition / 100000).toFixed(2)} L/yr</td>
-                )}
-                {activeTab === "roi" && (
-                  <td>₹{(college.salary / 100000).toFixed(1)} LPA</td>
-                )}
-                {activeTab === "affordability" && (
-                  <td>₹{(college.totalCost / 100000).toFixed(2)} L</td>
-                )}
-                <td>
-                  <span className={styles.scoreBadge}>
-                    {activeTab === "roi" && `${college.roiRatio.toFixed(1)}x ROI`}
-                    {activeTab === "overall" && `${college.overallScore.toFixed(1)}%`}
-                    {activeTab === "affordability" && `₹${(college.totalCost / 100000).toFixed(2)} L`}
-                    {activeTab === "curriculum" && `${college.curriculumScore}/10 Score`}
-                    {activeTab === "opportunities" && `${college.placementScore}/10 Score`}
-                  </span>
-                </td>
-                <td className={styles.actionCell}>
-                  <Link href={`/predict?college=${college.id}`} className={styles.actionBtn}>
-                    Predict Fit
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  <div className={styles.collegeLocation}>
+                    📍 {college.city}, {college.state} | Representative Branch: <strong>{college.repBranchCode}</strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* Metrics Block */}
+              <div className={styles.metricsBlock}>
+                <span className={styles.metricLabel}>{metricLabel}</span>
+                <span className={styles.metricValue}>{metricValue}</span>
+              </div>
+
+              {/* Card Actions */}
+              <div className={styles.cardActions}>
+                <Link href={`/predict?college=${college.id}`} className={styles.actionBtn}>
+                  Predict Fit →
+                </Link>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

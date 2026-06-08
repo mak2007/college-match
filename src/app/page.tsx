@@ -1,62 +1,11 @@
 import Link from "next/link";
 import styles from "./home.module.css";
-
-// Green Asterisk Icon
-const AsteriskIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    width="22"
-    height="22"
-    stroke="currentColor"
-    strokeWidth="3.5"
-    strokeLinecap="round"
-    fill="none"
-    style={{ color: "#34d399" }}
-    className={styles.logoSvg}
-  >
-    <line x1="12" y1="4" x2="12" y2="20" />
-    <line x1="4" y1="12" x2="20" y2="12" />
-    <line x1="6.34" y1="6.34" x2="17.66" y2="17.66" />
-    <line x1="17.66" y1="6.34" x2="6.34" y2="17.66" />
-  </svg>
-);
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
     <div className={styles.wrapper}>
-      {/* Header / Navbar */}
-      <header className={styles.header}>
-        <div className={styles.headerContainer}>
-          <Link href="/" className={styles.logoLink}>
-            <AsteriskIcon />
-            <span>kollegio</span>
-          </Link>
-          
-          <nav className={styles.nav}>
-            <Link href="/discover" className={styles.navLink}>
-              Discover Colleges
-            </Link>
-            <Link href="/predict" className={styles.navLink}>
-              Predictor
-            </Link>
-            <Link href="/rankings" className={styles.navLink}>
-              Rankings
-            </Link>
-            <Link href="/compare" className={styles.navLink}>
-              Compare
-            </Link>
-          </nav>
-          
-          <div className={styles.headerActions}>
-            <Link href="/admin/login" className={styles.loginLink}>
-              Login
-            </Link>
-            <Link href="/predict" className={styles.signUpBtn}>
-              Get My Matches <span style={{ fontSize: "0.85rem" }}>→</span>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Hero Section */}
       <main style={{ flex: 1 }}>

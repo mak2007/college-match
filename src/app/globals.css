@@ -58,8 +58,8 @@
 html, body {
   width: 100%;
   min-height: 100vh;
-  background-color: var(--background-dark);
-  color: var(--text-primary);
+  background-color: #faf9f5;
+  color: #0c2e1b;
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

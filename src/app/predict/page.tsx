@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "./predict.module.css";
+import Navbar from "@/components/Navbar";
 
 interface MatchResult {
   id: string;
@@ -55,11 +56,58 @@ export default function Predictor() {
   const [budgetLimit, setBudgetLimit] = useState(1600000); // 16 Lakh total budget
   const [isBudgetConstraint, setIsBudgetConstraint] = useState(true);
   const [preferredBranches, setPreferredBranches] = useState<string[]>(["CSE"]);
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
   const [selectedStates, setSelectedStates] = useState<string[]>([]);
   const [minSalaryLpa, setMinSalaryLpa] = useState(6);
 
-  // States available in seed
-  const AVAILABLE_STATES = ["Karnataka", "Tamil Nadu", "Maharashtra", "Punjab", "Rajasthan", "Uttar Pradesh", "Odisha"];
+  // Load from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("cm_predictor_progress");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.step !== undefined) setStep(parsed.step);
+        if (parsed.priorityType !== undefined) setPriorityType(parsed.priorityType);
+        if (parsed.jeePercentile !== undefined) setJeePercentile(parsed.jeePercentile);
+        if (parsed.class12Percentage !== undefined) setClass12Percentage(parsed.class12Percentage);
+        if (parsed.budgetLimit !== undefined) setBudgetLimit(parsed.budgetLimit);
+        if (parsed.isBudgetConstraint !== undefined) setIsBudgetConstraint(parsed.isBudgetConstraint);
+        if (parsed.preferredBranches !== undefined) setPreferredBranches(parsed.preferredBranches);
+        if (parsed.selectedRegions !== undefined) setSelectedRegions(parsed.selectedRegions);
+        if (parsed.minSalaryLpa !== undefined) setMinSalaryLpa(parsed.minSalaryLpa);
+      }
+    } catch (e) {
+      console.error("Error loading progress from localStorage", e);
+    }
+  }, []);
+
+  // Save to localStorage when quiz values change
+  useEffect(() => {
+    if (step < 7) {
+      const progress = {
+        step,
+        priorityType,
+        jeePercentile,
+        class12Percentage,
+        budgetLimit,
+        isBudgetConstraint,
+        preferredBranches,
+        selectedRegions,
+        minSalaryLpa,
+      };
+      localStorage.setItem("cm_predictor_progress", JSON.stringify(progress));
+    }
+  }, [
+    step,
+    priorityType,
+    jeePercentile,
+    class12Percentage,
+    budgetLimit,
+    isBudgetConstraint,
+    preferredBranches,
+    selectedRegions,
+    minSalaryLpa,
+  ]);
 
   const handleNext = () => {
     if (step < 6) {
@@ -75,10 +123,10 @@ export default function Predictor() {
     }
   };
 
-  const handleStateToggle = (stateName: string) => {
-    setSelectedStates(prev =>
-      prev.includes(stateName) ? prev.filter(s => s !== stateName) : [...prev, stateName]
-    );
+  const resetQuiz = () => {
+    localStorage.removeItem("cm_predictor_progress");
+    setStep(1);
+    setResults([]);
   };
 
   const handleBranchToggle = (branch: string) => {
@@ -117,6 +165,24 @@ export default function Predictor() {
         ];
       }
 
+      // Map regions to states
+      const REGION_MAP: Record<string, string[]> = {
+        'South India': ['Karnataka', 'Tamil Nadu'],
+        'North India': ['Punjab', 'Uttar Pradesh', 'Rajasthan'],
+        'West India': ['Maharashtra'],
+        'East India': ['Odisha'],
+      };
+
+      let statesToFilter: string[] = [];
+      if (!selectedRegions.includes("Anywhere in India") && selectedRegions.length > 0) {
+        selectedRegions.forEach(region => {
+          if (REGION_MAP[region]) {
+            statesToFilter.push(...REGION_MAP[region]);
+          }
+        });
+      }
+      setSelectedStates(statesToFilter);
+
       // Call matching API endpoint
       const response = await fetch("/api/match", {
         method: "POST",
@@ -126,8 +192,8 @@ export default function Predictor() {
           class12Percentage,
           budgetLimit,
           isBudgetConstraint,
-          restrictLocation: selectedStates.length > 0,
-          preferredLocations: selectedStates.map(state => ({ state, city: "" })),
+          restrictLocation: statesToFilter.length > 0,
+          preferredLocations: statesToFilter.map(state => ({ state, city: "" })),
           preferredBranches,
           priorities
         })
@@ -136,6 +202,7 @@ export default function Predictor() {
       const data = await response.json();
       if (data.success) {
         setResults(data.matches || []);
+        localStorage.removeItem("cm_predictor_progress"); // Clear on completion
         setStep(7); // Show results view
       } else {
         alert("Engine failed to compute results: " + (data.error || "Unknown error"));
@@ -148,10 +215,128 @@ export default function Predictor() {
     }
   };
 
+  const STEP_LABELS = ["Academics", "Location", "Priority", "Budget", "Branch", "Placements"];
+
+  const renderStepIndicator = () => {
+    return (
+      <div className={styles.stepIndicator}>
+        {STEP_LABELS.map((label, idx) => {
+          const stepNum = idx + 1;
+          const isActive = step === stepNum;
+          const isComplete = step > stepNum;
+
+          return (
+            <div key={label} className={styles.stepSegment}>
+              <div
+                className={`${styles.stepCircle} ${
+                  isActive ? styles.stepCircleActive : ""
+                } ${isComplete ? styles.stepCircleComplete : ""}`}
+              >
+                {isComplete ? "✓" : stepNum}
+              </div>
+              <span className={`${styles.stepLabel} ${isActive ? styles.stepLabelActive : ""}`}>
+                {label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   // Render Quiz Step
   const renderQuizStep = () => {
     switch (step) {
-      case 1:
+      case 1: // Academic Performance (was step 2)
+        return (
+          <div className={styles.questionGroup}>
+            <h2 className={styles.questionTitle}>Your Academic Profile</h2>
+            <p className={styles.questionSubtitle}>Provide scores to calculate your target admissibility cutoff fit</p>
+
+            <div className={styles.sliderContainer}>
+              <div className={styles.sliderLabel}>
+                <span>JEE Percentile</span>
+                <span style={{ color: "var(--brand-green)" }}>{jeePercentile}%</span>
+              </div>
+              <input
+                type="range"
+                min="50"
+                max="100"
+                step="0.5"
+                className={styles.sliderInput}
+                value={jeePercentile}
+                onChange={(e) => setJeePercentile(Number(e.target.value))}
+              />
+            </div>
+
+            <div className={styles.sliderContainer}>
+              <div className={styles.sliderLabel}>
+                <span>Class 12 Board Percentage</span>
+                <span style={{ color: "var(--brand-green)" }}>{class12Percentage}%</span>
+              </div>
+              <input
+                type="range"
+                min="50"
+                max="100"
+                step="1"
+                className={styles.sliderInput}
+                value={class12Percentage}
+                onChange={(e) => setClass12Percentage(Number(e.target.value))}
+              />
+            </div>
+          </div>
+        );
+      case 2: // Location Preference (was step 5)
+        const regions = [
+          { name: "My State Only", desc: "Restrict search to your home state" },
+          { name: "South India", desc: "Karnataka, Tamil Nadu, etc." },
+          { name: "North India", desc: "Punjab, Uttar Pradesh, Rajasthan, etc." },
+          { name: "West India", desc: "Maharashtra, etc." },
+          { name: "East India", desc: "Odisha, etc." },
+          { name: "Anywhere in India", desc: "No location restrictions (Recommended)", prominent: true }
+        ];
+
+        return (
+          <div className={styles.questionGroup}>
+            <h2 className={styles.questionTitle}>Where do you prefer to study?</h2>
+            <p className={styles.questionSubtitle}>Select one or more regional preferences for your college campus</p>
+            <div className={styles.optionsGrid}>
+              {regions.map(r => {
+                const isSelected = selectedRegions.includes(r.name);
+                const isProminent = r.prominent;
+                return (
+                  <div
+                    key={r.name}
+                    className={`${styles.optionCard} ${isSelected ? styles.optionCardActive : ""} ${isProminent ? styles.optionCardProminent : ""}`}
+                    onClick={() => {
+                      if (r.name === "Anywhere in India") {
+                        if (isSelected) {
+                          setSelectedRegions([]);
+                        } else {
+                          setSelectedRegions(["Anywhere in India"]);
+                        }
+                      } else {
+                        setSelectedRegions(prev => {
+                          const filtered = prev.filter(item => item !== "Anywhere in India");
+                          if (filtered.includes(r.name)) {
+                            return filtered.filter(item => item !== r.name);
+                          } else {
+                            return [...filtered, r.name];
+                          }
+                        });
+                      }
+                    }}
+                  >
+                    <input type="checkbox" checked={isSelected} readOnly />
+                    <span className={styles.optionTitle}>{r.name}</span>
+                    <span className={styles.optionDesc}>{r.desc}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      case 3: // Priority Type (was step 1)
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Which describes you best?</h2>
@@ -199,46 +384,7 @@ export default function Predictor() {
             </div>
           </div>
         );
-      case 2:
-        return (
-          <div className={styles.questionGroup}>
-            <h2 className={styles.questionTitle}>Your Academic Profile</h2>
-            <p className={styles.questionSubtitle}>Provide scores to calculate your target admissibility cutoff fit</p>
-
-            <div className={styles.sliderContainer}>
-              <div className={styles.sliderLabel}>
-                <span>JEE Percentile</span>
-                <span style={{ color: "var(--brand-green)" }}>{jeePercentile}%</span>
-              </div>
-              <input
-                type="range"
-                min="50"
-                max="100"
-                step="0.5"
-                className={styles.sliderInput}
-                value={jeePercentile}
-                onChange={(e) => setJeePercentile(Number(e.target.value))}
-              />
-            </div>
-
-            <div className={styles.sliderContainer}>
-              <div className={styles.sliderLabel}>
-                <span>Class 12 Board Percentage</span>
-                <span style={{ color: "var(--brand-green)" }}>{class12Percentage}%</span>
-              </div>
-              <input
-                type="range"
-                min="50"
-                max="100"
-                step="1"
-                className={styles.sliderInput}
-                value={class12Percentage}
-                onChange={(e) => setClass12Percentage(Number(e.target.value))}
-              />
-            </div>
-          </div>
-        );
-      case 3:
+      case 4: // Budget (was step 3)
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Tuition & Hostel Budget</h2>
@@ -270,7 +416,7 @@ export default function Predictor() {
             </label>
           </div>
         );
-      case 4:
+      case 5: // Branch Preference (was step 4)
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Preferred B.Tech Branches</h2>
@@ -296,27 +442,7 @@ export default function Predictor() {
             </div>
           </div>
         );
-      case 5:
-        return (
-          <div className={styles.questionGroup}>
-            <h2 className={styles.questionTitle}>Preferred Locations</h2>
-            <p className={styles.questionSubtitle}>Select the states you are willing to move to (leave blank for no restriction)</p>
-
-            <div className={styles.optionsGrid}>
-              {AVAILABLE_STATES.map(state => (
-                <div
-                  key={state}
-                  className={`${styles.optionCard} ${selectedStates.includes(state) ? styles.optionCardActive : ""}`}
-                  onClick={() => handleStateToggle(state)}
-                >
-                  <input type="checkbox" checked={selectedStates.includes(state)} readOnly />
-                  <span className={styles.optionTitle}>📍 {state}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      case 6:
+      case 6: // Placement Expectations (was step 6)
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Placement Expectations</h2>
@@ -351,7 +477,7 @@ export default function Predictor() {
         <div className={styles.resultsWrapper} style={{ textAlign: "center", padding: "4rem 0" }}>
           <h2>No recommendations matched.</h2>
           <p>Try relaxing your academic percentiles or budget limits.</p>
-          <button className={styles.ctaBtn} style={{ marginTop: "2rem" }} onClick={() => setStep(1)}>
+          <button className={styles.ctaBtn} style={{ marginTop: "2rem" }} onClick={resetQuiz}>
             Restart Predictor
           </button>
         </div>
@@ -366,7 +492,6 @@ export default function Predictor() {
         </div>
 
         {results.map((match) => {
-          // Dynamic calculation of Strengths & Tradeoffs based on DB values
           const strengths = [];
           const tradeoffs = [];
 
@@ -391,7 +516,6 @@ export default function Predictor() {
             tradeoffs.push("Location mismatch: The campus resides outside of your preferred geographic regions.");
           }
 
-          // Fallbacks if empty
           if (strengths.length === 0) strengths.push("Consistent academic standards with high NIRF rankings.");
           if (tradeoffs.length === 0) tradeoffs.push("High student-to-faculty classroom ratio across main branches.");
 
@@ -399,10 +523,10 @@ export default function Predictor() {
             <div key={match.id + "-" + match.branchCode} className={styles.resultCard}>
               <div className={styles.resultCardTop}>
                 <div>
-                  <h3 style={{ fontSize: "1.4rem", fontWeight: "800", color: "var(--brand-green)" }}>
+                  <h3 style={{ fontSize: "1.4rem", fontWeight: "800", color: "#0c2e1b" }}>
                     {match.name}
                   </h3>
-                  <p style={{ color: "var(--light-text-secondary)", fontSize: "0.9rem", marginTop: "0.25rem" }}>
+                  <p style={{ color: "#556052", fontSize: "0.9rem", marginTop: "0.25rem" }}>
                     📍 {match.city}, {match.state} | Branch: <strong>{match.branchCode}</strong>
                   </p>
                 </div>
@@ -456,7 +580,7 @@ export default function Predictor() {
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "2rem", gap: "1rem" }}>
-                <Link href={`/compare?add=${match.id}`} className={styles.ctaBtn} style={{ backgroundColor: "#f1f5f9", color: "var(--light-text)", border: "1px solid var(--light-border)" }}>
+                <Link href={`/compare?add=${match.id}`} className={styles.ctaBtn} style={{ backgroundColor: "#f4f3ed", color: "#0c2e1b", border: "1px solid #e5e3dc" }}>
                   Add to Compare
                 </Link>
                 <a href={match.officialApplyUrl} target="_blank" rel="noreferrer" className={styles.ctaBtn}>
@@ -468,7 +592,7 @@ export default function Predictor() {
         })}
 
         <div style={{ textAlign: "center", marginTop: "3rem" }}>
-          <button className={styles.ctaBtn} onClick={() => setStep(1)}>
+          <button className={styles.ctaBtn} onClick={resetQuiz}>
             Rerun Quiz
           </button>
         </div>
@@ -478,48 +602,7 @@ export default function Predictor() {
 
   return (
     <div className={styles.wrapper}>
-      {/* Navbar Header */}
-      <header className={styles.header}>
-        <div className={styles.headerContainer}>
-          <Link href="/" className={styles.logoLink}>
-            <svg
-              viewBox="0 0 24 24"
-              width="22"
-              height="22"
-              stroke="currentColor"
-              strokeWidth="3.5"
-              strokeLinecap="round"
-              fill="none"
-              style={{ color: "#10b981", marginRight: "0.2rem" }}
-            >
-              <line x1="12" y1="4" x2="12" y2="20" />
-              <line x1="4" y1="12" x2="20" y2="12" />
-              <line x1="6.34" y1="6.34" x2="17.66" y2="17.66" />
-              <line x1="17.66" y1="6.34" x2="6.34" y2="17.66" />
-            </svg>
-            <span>kollegio</span>
-          </Link>
-          <nav className={styles.nav}>
-            <Link href="/discover" className={styles.navLink}>
-              Discover Colleges
-            </Link>
-            <Link href="/predict" className={`${styles.navLink} ${styles.navLinkActive}`}>
-              Predictor
-            </Link>
-            <Link href="/rankings" className={styles.navLink}>
-              Rankings
-            </Link>
-            <Link href="/compare" className={styles.navLink}>
-              Compare
-            </Link>
-          </nav>
-          <div className={styles.headerActions}>
-            <Link href="/predict" className={styles.ctaBtn}>
-              Get My Matches
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main quiz interface or results panel */}
       {step === 7 ? (
@@ -537,24 +620,23 @@ export default function Predictor() {
 
           {/* Right form/question side */}
           <div className={styles.quizSide}>
-            {/* Top progress bar */}
-            <div className={styles.progressContainer}>
-              {step > 1 && (
-                <button className={styles.backBtn} onClick={handleBack}>
-                  ←
-                </button>
-              )}
-              <div className={styles.progressBar}>
-                <div className={styles.progressFill} style={{ width: `${(step / 6) * 100}%` }} />
-              </div>
-            </div>
+            {/* Top progress indicator */}
+            {renderStepIndicator()}
 
             {/* Render form step */}
-            {renderQuizStep()}
+            <div key={step} className={styles.stepTransition}>
+              {renderQuizStep()}
+            </div>
 
             {/* Bottom Actions */}
             <div className={styles.buttonGroup}>
-              <div /> {/* Spacer */}
+              {step > 1 ? (
+                <button className={styles.prevBtn} onClick={handleBack} disabled={loading}>
+                  ← Back
+                </button>
+              ) : (
+                <div />
+              )}
               <button className={styles.nextBtn} onClick={handleNext} disabled={loading}>
                 {loading ? "Calculating..." : step === 6 ? "Generate Results" : "Next →"}
               </button>
@@ -564,10 +646,10 @@ export default function Predictor() {
       )}
 
       {/* Footer */}
-      <footer className={styles.header} style={{ marginTop: "auto", borderTop: "1px solid var(--light-border)", borderBottom: "none", padding: "2rem 0" }}>
+      <footer className={styles.header} style={{ marginTop: "auto", borderTop: "1px solid #e5e3dc", borderBottom: "none", padding: "2rem 0" }}>
         <div className={styles.headerContainer} style={{ height: "auto" }}>
-          <p style={{ color: "var(--light-text-muted)", fontSize: "0.85rem" }}>© 2026 kollegio. All rights reserved.</p>
-          <p style={{ color: "var(--light-text-muted)", fontSize: "0.85rem", fontStyle: "italic" }}>Data-backed college selection engine</p>
+          <p style={{ color: "#8b9588", fontSize: "0.85rem" }}>© 2026 kollegio. All rights reserved.</p>
+          <p style={{ color: "#8b9588", fontSize: "0.85rem", fontStyle: "italic" }}>Data-backed college selection engine</p>
         </div>
       </footer>
     </div>

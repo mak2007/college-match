@@ -1,15 +1,15 @@
 .wrapper {
-  background-color: var(--light-bg);
-  color: var(--light-text);
+  background-color: #faf9f5;
+  color: #0c2e1b;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  font-family: var(--font-family);
+  font-family: 'Outfit', sans-serif;
 }
 
 .header {
-  border-bottom: 1px solid var(--light-border);
-  background-color: var(--light-surface);
+  border-bottom: 1px solid #e5e3dc;
+  background-color: #faf9f5;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -33,7 +33,7 @@
   text-decoration: none;
   font-weight: 800;
   font-size: 1.6rem;
-  color: var(--brand-green);
+  color: #0c2e1b;
   letter-spacing: -0.04em;
 }
 
@@ -44,7 +44,7 @@
 }
 
 .navLink {
-  color: var(--light-text-secondary);
+  color: #556052;
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 600;
@@ -52,7 +52,7 @@
 }
 
 .navLink:hover, .navLinkActive {
-  color: var(--brand-green);
+  color: #0d5c3a;
 }
 
 .navLinkActive {
@@ -66,19 +66,24 @@
 }
 
 .ctaBtn {
-  background-color: var(--brand-green);
-  color: #ffffff;
+  background-color: #0c2e1b;
+  color: #faf9f5;
   border: none;
-  padding: 0.6rem 1.25rem;
+  padding: 0.65rem 1.35rem;
   border-radius: 9999px;
   font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .ctaBtn:hover {
-  background-color: var(--brand-green-hover);
+  background-color: #1b4d32;
+  transform: translateY(-1px);
 }
 
 /* Split Layout for Quiz */
@@ -90,25 +95,25 @@
 }
 
 .illustrationSide {
-  background-color: #e8f4ec; /* Soft light green */
+  background-color: #f4f3ed;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 3rem;
-  border-right: 1px solid var(--light-border);
+  border-right: 1px solid #e5e3dc;
 }
 
 .illusTitle {
   font-size: 1.5rem;
   font-weight: 800;
-  color: var(--brand-green);
+  color: #0c2e1b;
   text-align: center;
   margin-top: 2rem;
 }
 
 .illusDesc {
-  color: var(--light-text-secondary);
+  color: #556052;
   text-align: center;
   font-size: 0.95rem;
   margin-top: 0.5rem;
@@ -116,7 +121,7 @@
 }
 
 .quizSide {
-  background-color: var(--light-surface);
+  background-color: #ffffff;
   padding: 4rem 6rem;
   display: flex;
   flex-direction: column;
@@ -125,62 +130,112 @@
   margin: 0 auto;
 }
 
-.progressContainer {
+/* Step indicator container */
+.stepIndicator {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  justify-content: space-between;
+  margin-bottom: 3.5rem;
+  position: relative;
 }
 
-.backBtn {
-  background: none;
-  border: none;
-  color: var(--light-text-secondary);
-  font-size: 1.25rem;
-  cursor: pointer;
-  padding: 0.5rem;
+.stepIndicator::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  left: 2rem;
+  right: 2rem;
+  height: 2px;
+  background-color: #e5e3dc;
+  z-index: 1;
+}
+
+.stepSegment {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.stepCircle {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #e5e3dc;
+  color: #72816f;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
 }
 
-.backBtn:hover {
-  background-color: #f1f5f9;
+.stepCircleActive {
+  border-color: #0d5c3a;
+  background-color: #0d5c3a;
+  color: #faf9f5;
+  box-shadow: 0 0 0 4px rgba(13, 92, 58, 0.15);
 }
 
-.progressBar {
-  flex: 1;
-  height: 6px;
-  background-color: #e2e8f0;
-  border-radius: 9999px;
-  overflow: hidden;
+.stepCircleComplete {
+  border-color: #0d5c3a;
+  background-color: #0d5c3a;
+  color: #ffffff;
 }
 
-.progressFill {
-  height: 100%;
-  background-color: var(--brand-green);
-  border-radius: 9999px;
-  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.stepLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #72816f;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.stepLabelActive {
+  color: #0c2e1b;
+  font-weight: 700;
+}
+
+.progressContainer {
+  display: none; /* Hidden, using stepIndicator instead */
+}
+
+/* Step transition container */
+.stepTransition {
+  animation: fadeSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Question Styling */
 .questionGroup {
-  animation: fadeIn 0.4s ease forwards;
+  margin-bottom: 2rem;
 }
 
 .questionTitle {
   font-size: 2rem;
   font-weight: 800;
-  color: var(--light-text);
+  color: #0c2e1b;
   margin-bottom: 0.5rem;
   letter-spacing: -0.02em;
 }
 
 .questionSubtitle {
   font-size: 1.05rem;
-  color: var(--light-text-secondary);
+  color: #556052;
   margin-bottom: 2.5rem;
 }
 
@@ -193,7 +248,7 @@
 }
 
 .optionCard {
-  border: 1.5px solid var(--light-border);
+  border: 1.5px solid #e5e3dc;
   border-radius: 12px;
   padding: 1.5rem;
   cursor: pointer;
@@ -202,17 +257,17 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  background-color: var(--light-surface);
+  background-color: #ffffff;
 }
 
 .optionCard:hover {
-  border-color: var(--brand-green);
-  background-color: #fafdfb;
+  border-color: #0d5c3a;
+  background-color: #faf9f5;
 }
 
 .optionCardActive {
-  border-color: var(--brand-green);
-  background-color: var(--brand-green-light);
+  border-color: #0d5c3a;
+  background-color: #f4fcf7;
 }
 
 .optionCard input {
@@ -221,7 +276,18 @@
   right: 1.5rem;
   width: 18px;
   height: 18px;
-  accent-color: var(--brand-green);
+  accent-color: #0d5c3a;
+}
+
+.optionCardProminent {
+  grid-column: span 2;
+  border: 2px solid #0d5c3a;
+  background-color: #f4fcf7;
+  padding: 1.75rem;
+}
+
+.optionCardProminent:hover {
+  background-color: #ebfaf0;
 }
 
 .optionIcon {
@@ -232,12 +298,12 @@
 .optionTitle {
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--light-text);
+  color: #0c2e1b;
 }
 
 .optionDesc {
   font-size: 0.85rem;
-  color: var(--light-text-secondary);
+  color: #72816f;
   line-height: 1.4;
 }
 
@@ -245,17 +311,17 @@
 .inputField {
   width: 100%;
   padding: 1rem 1.25rem;
-  border: 1.5px solid var(--light-border);
+  border: 1.5px solid #e5e3dc;
   border-radius: 10px;
   font-size: 1rem;
-  color: var(--light-text);
+  color: #0c2e1b;
   margin-bottom: 1.5rem;
   outline: none;
-  background-color: var(--light-surface);
+  background-color: #ffffff;
 }
 
 .inputField:focus {
-  border-color: var(--brand-green);
+  border-color: #0d5c3a;
 }
 
 .sliderContainer {
@@ -274,7 +340,25 @@
   width: 100%;
   height: 6px;
   border-radius: 9999px;
-  accent-color: var(--brand-green);
+  accent-color: #0d5c3a;
+  background-color: #e5e3dc;
+  outline: none;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0c2e1b;
+  cursor: pointer;
+}
+
+.checkboxLabel input {
+  width: 18px;
+  height: 18px;
+  accent-color: #0d5c3a;
 }
 
 /* Buttons */
@@ -282,10 +366,11 @@
   display: flex;
   justify-content: space-between;
   margin-top: auto;
+  padding-top: 2rem;
 }
 
 .nextBtn {
-  background-color: var(--brand-green);
+  background-color: #0d5c3a;
   color: #ffffff;
   border: none;
   padding: 1rem 2.5rem;
@@ -293,19 +378,39 @@
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .nextBtn:hover {
-  background-color: var(--brand-green-hover);
+  background-color: #0c2e1b;
 }
 
 .nextBtn:disabled {
   background-color: #cbd5e1;
   cursor: not-allowed;
+}
+
+.prevBtn {
+  background-color: #ffffff;
+  color: #0c2e1b;
+  border: 1px solid #e5e3dc;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.prevBtn:hover {
+  background-color: #f4f3ed;
+  border-color: #c5c3bc;
 }
 
 /* Predictor Results Styling */
@@ -323,23 +428,23 @@
 .resultsHeader h2 {
   font-size: 2.25rem;
   font-weight: 800;
-  color: var(--brand-green);
+  color: #0c2e1b;
   letter-spacing: -0.02em;
 }
 
 .resultsHeader p {
-  color: var(--light-text-secondary);
+  color: #556052;
   font-size: 1.1rem;
   margin-top: 0.5rem;
 }
 
 .resultCard {
-  background-color: var(--light-surface);
-  border: 1px solid var(--light-border);
+  background-color: #ffffff;
+  border: 1px solid #e5e3dc;
   border-radius: 20px;
   padding: 2.5rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 25px rgba(12, 46, 27, 0.02);
 }
 
 .resultCardTop {
@@ -353,14 +458,14 @@
   width: 75px;
   height: 75px;
   border-radius: 50%;
-  background-color: var(--brand-green-light);
-  color: var(--brand-green);
+  background-color: #f4fcf7;
+  color: #0d5c3a;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.4rem;
   font-weight: 800;
-  border: 2px solid var(--brand-green);
+  border: 2px solid #0d5c3a;
 }
 
 .competitivenessBadge {
@@ -372,9 +477,9 @@
   letter-spacing: 0.05em;
 }
 
-.badgeSafe { background-color: #d1fae5; color: #065f46; }
+.badgeSafe { background-color: #dcfce7; color: #166534; }
 .badgeTarget { background-color: #dbeafe; color: #1e40af; }
-.badgeReach { background-color: #fef3c7; color: #92400e; }
+.badgeReach { background-color: #fef9c3; color: #854d0e; }
 .badgeUnlikely { background-color: #fee2e2; color: #991b1b; }
 
 .explainSection {
@@ -384,16 +489,10 @@
 .explainTitle {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--light-text);
+  color: #0c2e1b;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-}
-
-.explainText {
-  color: var(--light-text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.6;
 }
 
 .bulletList {
@@ -406,14 +505,14 @@
   padding-left: 1.5rem;
   margin-bottom: 0.5rem;
   font-size: 0.95rem;
-  color: var(--light-text-secondary);
+  color: #556052;
 }
 
 .bulletList li::before {
   content: "•";
   position: absolute;
   left: 0.25rem;
-  color: var(--brand-green);
+  color: #0d5c3a;
   font-weight: bold;
 }
 
@@ -421,12 +520,12 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
-  border-top: 1px solid var(--light-border);
+  border-top: 1px solid #e5e3dc;
   padding-top: 1.75rem;
 }
 
 .strengthBlock {
-  background-color: #fafdfc;
+  background-color: #f4fcf7;
   border: 1px dashed #a7f3d0;
   border-radius: 12px;
   padding: 1.25rem;
@@ -448,19 +547,8 @@
   gap: 0.4rem;
 }
 
-.blockTitleGreen { color: #065f46; }
+.blockTitleGreen { color: #166534; }
 .blockTitleRed { color: #991b1b; }
-
-.blockText {
-  font-size: 0.85rem;
-  color: var(--light-text-secondary);
-  line-height: 1.5;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 
 @media (max-width: 768px) {
   .quizLayout {
@@ -477,5 +565,11 @@
   }
   .strengthsGrid {
     grid-template-columns: 1fr;
+  }
+  .optionCardProminent {
+    grid-column: span 1;
+  }
+  .stepLabel {
+    display: none;
   }
 }
