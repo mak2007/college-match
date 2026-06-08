@@ -27,7 +27,6 @@ const STUDENT_LINKS = [
   { href: "/discover", icon: "🔍", title: "Discover Colleges", desc: "Search & filter by placements, ROI, fees" },
   { href: "/predict", icon: "🎯", title: "College Predictor", desc: "Get personalized match scores" },
   { href: "/rankings", icon: "📊", title: "College Rankings", desc: "Compare by ROI, placements, curriculum" },
-  { href: "/compare", icon: "⚖️", title: "Compare Colleges", desc: "Side-by-side analysis" },
 ];
 
 export default function Navbar() {
@@ -53,7 +52,7 @@ export default function Navbar() {
     setDropdownOpen(false);
   }, [pathname]);
 
-  const isStudentRoute = ["/discover", "/predict", "/rankings", "/compare"].some((r) =>
+  const isStudentRoute = ["/discover", "/predict", "/rankings"].some((r) =>
     pathname.startsWith(r)
   );
 
