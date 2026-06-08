@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./home.module.css";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 
 export default function Home() {
   return (
@@ -32,8 +33,8 @@ export default function Home() {
             with the perfect private B.Tech institute.
           </p>
           <div className={styles.ctaGroup} style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/match" className="btn btn-primary glow-effect" style={{ fontSize: "1.1rem", padding: "1rem 2rem" }}>
-              ⚡ Live Matcher & Optimizer
+            <Link href="/match" style={{ textDecoration: "none" }}>
+              <LiquidButton size="xl">⚡ Live Matcher & Optimizer</LiquidButton>
             </Link>
             <Link href="/wizard" className="btn btn-secondary" style={{ fontSize: "1.1rem", padding: "1rem 2rem" }}>
               Classic B.Tech Wizard
