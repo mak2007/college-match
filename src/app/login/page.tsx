@@ -28,10 +28,7 @@ export default function StudentLogin() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/dashboard/student";
 
-  const [activeTab, setActiveTab] = useState<"login" | "signup">("signup");
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otpValues, setOtpValues] = useState<string[]>(Array(6).fill(""));
   const [loading, setLoading] = useState(false);
@@ -83,7 +80,7 @@ export default function StudentLogin() {
       const res = await fetch("/api/auth/otp/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code, name, phone }),
+        body: JSON.stringify({ email, code }),
       });
       const data = await res.json();
 
@@ -170,39 +167,10 @@ export default function StudentLogin() {
 
       <div className={styles.container}>
         <div className={styles.card}>
-          <h2 className={styles.title}>
-            {activeTab === "signup" ? "Create your account" : "Welcome back"}
-          </h2>
+          <h2 className={styles.title}>Welcome back</h2>
           <p className={styles.subtitle}>
-            {activeTab === "signup"
-              ? "Sign up to unlock and save your college matches"
-              : "Sign in to access your dashboard and saved results"}
+            Sign in to access your dashboard and saved results
           </p>
-
-          {!otpSent && (
-            <div className={styles.tabs}>
-              <button
-                className={`${styles.tab} ${activeTab === "signup" ? styles.activeTab : ""}`}
-                onClick={() => {
-                  setActiveTab("signup");
-                  setError("");
-                  setSuccess("");
-                }}
-              >
-                Sign Up
-              </button>
-              <button
-                className={`${styles.tab} ${activeTab === "login" ? styles.activeTab : ""}`}
-                onClick={() => {
-                  setActiveTab("login");
-                  setError("");
-                  setSuccess("");
-                }}
-              >
-                Log In
-              </button>
-            </div>
-          )}
 
           {error && <div className={styles.errorAlert}>{error}</div>}
           {success && <div className={styles.successAlert}>{success}</div>}
@@ -234,33 +202,6 @@ export default function StudentLogin() {
               <div className={styles.divider}>or</div>
 
               <form onSubmit={handleSendOtp} className={styles.form}>
-                {activeTab === "signup" && (
-                  <>
-                    <div className={styles.formGroup}>
-                      <label>Full Name</label>
-                      <input
-                        type="text"
-                        placeholder="John Doe"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        disabled={loading}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label>Phone Number</label>
-                      <input
-                        type="tel"
-                        placeholder="9999999999"
-                        required
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        disabled={loading}
-                      />
-                    </div>
-                  </>
-                )}
-
                 <div className={styles.formGroup}>
                   <label>Email Address</label>
                   <input

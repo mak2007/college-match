@@ -601,9 +601,6 @@ export default function Predictor() {
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "2rem", gap: "1rem" }}>
-                <Link href={`/compare?add=${match.id}`} className={styles.ctaBtn} style={{ backgroundColor: "#f4f3ed", color: "#0c2e1b", border: "1px solid #e5e3dc" }}>
-                  Add to Compare
-                </Link>
                 <a href={match.officialApplyUrl} target="_blank" rel="noreferrer" className={styles.ctaBtn}>
                   Apply Online
                 </a>

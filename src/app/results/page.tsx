@@ -21,9 +21,9 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
   if (!studentId) {
     return (
       <div className={styles.errorContainer}>
-        <div className="glass-card text-center" style={{ maxWidth: "500px" }}>
-          <h2>No recommendations found</h2>
-          <p style={{ color: "var(--text-secondary)", margin: "1rem 0" }}>
+        <div style={{ maxWidth: "500px", background: "white", border: "1px solid #e6e4dc", borderRadius: "16px", padding: "2.5rem", textAlign: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}>
+          <h2 style={{ color: "#0c2e1b" }}>No recommendations found</h2>
+          <p style={{ color: "#4a5d4e", margin: "1rem 0" }}>
             It looks like you haven't filled out the preference wizard yet.
           </p>
           <Link href="/wizard" className="btn btn-primary">
@@ -46,9 +46,9 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
   if (!student) {
     return (
       <div className={styles.errorContainer}>
-        <div className="glass-card text-center" style={{ maxWidth: "500px" }}>
-          <h2>Student record not found</h2>
-          <p style={{ color: "var(--text-secondary)", margin: "1rem 0" }}>
+        <div style={{ maxWidth: "500px", background: "white", border: "1px solid #e6e4dc", borderRadius: "16px", padding: "2.5rem", textAlign: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}>
+          <h2 style={{ color: "#0c2e1b" }}>Student record not found</h2>
+          <p style={{ color: "#4a5d4e", margin: "1rem 0" }}>
             The student ID provided is invalid or has been removed.
           </p>
           <Link href="/wizard" className="btn btn-primary">
@@ -98,9 +98,9 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
         </section>
 
         {dbRecommendations.length === 0 ? (
-          <div className="glass-card text-center" style={{ margin: "2rem auto", maxWidth: "600px" }}>
-            <h3>No matches satisfy your strict filters</h3>
-            <p style={{ color: "var(--text-secondary)", margin: "1rem 0" }}>
+          <div style={{ margin: "2rem auto", maxWidth: "600px", background: "white", border: "1px solid #e6e4dc", borderRadius: "16px", padding: "2.5rem", textAlign: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}>
+            <h3 style={{ color: "#0c2e1b" }}>No matches satisfy your strict filters</h3>
+            <p style={{ color: "#4a5d4e", margin: "1rem 0" }}>
               Try loosening your location constraints or increasing your budget limit in the wizard.
             </p>
             <Link href="/wizard" className="btn btn-primary">
@@ -122,8 +122,8 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  background: "linear-gradient(to bottom, rgba(11, 15, 25, 0.4), rgba(11, 15, 25, 0.85))",
-                  backdropFilter: "blur(8px)",
+                  background: "rgba(250, 249, 245, 0.85)",
+                  backdropFilter: "blur(10px)",
                   borderRadius: "16px",
                   padding: "2rem",
                 }}
@@ -133,21 +133,21 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
                   style={{
                     maxWidth: "480px",
                     padding: "3rem 2rem",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
-                    boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
-                    background: "rgba(17, 24, 39, 0.95)",
+                    border: "1px solid var(--light-border)",
+                    boxShadow: "0 20px 50px rgba(12, 46, 27, 0.1)",
+                    background: "var(--light-surface)",
                   }}
                 >
                   <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔒</div>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700, color: "white", marginBottom: "1rem" }}>
+                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700, color: "var(--light-text)", marginBottom: "1rem" }}>
                     Unlock Your College Matches
                   </h2>
-                  <p style={{ color: "#a0aec0", marginBottom: "2rem", fontSize: "0.95rem", lineHeight: "1.6" }}>
+                  <p style={{ color: "var(--light-text-secondary)", marginBottom: "2rem", fontSize: "0.95rem", lineHeight: "1.6" }}>
                     Create a free student account to view matching scores, tuition breakdown, placement statistics, and direct application links for your top colleges.
                   </p>
                   <Link
                     href={`/login?redirect=/results?student_id=${student.id}`}
-                    className="btn btn-primary glow-effect"
+                    className="btn btn-primary"
                     style={{
                       display: "inline-block",
                       padding: "1rem 2rem",
@@ -212,7 +212,7 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
                 const applyRedirectUrl = `/api/leads/apply?student_id=${student.id}&college_id=${college.id}&branch_code=${branch.branchCode}`;
 
                 return (
-                  <div key={rec.id} className={`${styles.collegeCard} glass-card glow-effect`}>
+                  <div key={rec.id} className={styles.collegeCard}>
                     {/* Card Header */}
                     <div className={styles.cardHeader}>
                       <div className={styles.collegeMeta}>

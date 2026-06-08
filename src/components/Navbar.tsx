@@ -115,7 +115,7 @@ export default function Navbar() {
 
           {/* Right: Actions */}
           <div className={styles.rightActions}>
-            <Link href="/admin/login" className={styles.loginLink}>
+            <Link href="/login" className={styles.loginLink}>
               Login
             </Link>
             <Link href="/predict" className={styles.signUpBtn}>
@@ -161,7 +161,7 @@ export default function Navbar() {
             Sign Up →
           </Link>
           <Link
-            href="/admin/login"
+            href="/login"
             className={styles.loginLink}
             style={{ textAlign: "center", padding: "0.75rem" }}
           >

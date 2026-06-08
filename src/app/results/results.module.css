@@ -1,13 +1,15 @@
 .wrapper {
-  background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.05) 0%, rgba(6, 182, 212, 0.03) 50%, rgba(11, 15, 25, 1) 100%), var(--background-dark);
+  background-color: #faf9f5;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  color: #0c2e1b;
+  font-family: var(--font-family);
 }
 
 .header {
-  border-bottom: 1px solid var(--glass-border);
-  background: rgba(11, 15, 25, 0.6);
+  border-bottom: 1px solid #e6e4dc;
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
@@ -18,19 +20,20 @@
   font-size: 1.25rem;
   font-weight: 800;
   text-decoration: none;
-  background: var(--brand-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #0c2e1b;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .studentBadge {
-  background-color: var(--surface-light);
-  border: 1px solid var(--glass-border);
+  background-color: #f0ede4;
+  border: 1px solid #e6e4dc;
   padding: 0.35rem 0.85rem;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 500;
+  color: #4a5d4e;
 }
 
 .resultsHeader {
@@ -44,10 +47,11 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   margin-bottom: 0.5rem;
+  color: #0c2e1b;
 }
 
 .subtitle {
-  color: var(--text-secondary);
+  color: #4a5d4e;
   font-size: 1.05rem;
 }
 
@@ -59,13 +63,19 @@
 }
 
 .collegeCard {
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   padding: 1.75rem !important;
+  background: #ffffff !important;
+  border: 1px solid #e6e4dc !important;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  backdrop-filter: none;
 }
 
 .collegeCard:hover {
   transform: translateY(-2px);
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: #c5d6c9 !important;
+  box-shadow: 0 8px 24px rgba(12, 46, 27, 0.08);
 }
 
 .cardHeader {
@@ -73,7 +83,7 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
-  border-bottom: 1px solid var(--glass-border);
+  border-bottom: 1px solid #e6e4dc;
   padding-bottom: 1.25rem;
 }
 
@@ -87,24 +97,25 @@
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: var(--brand-gradient);
+  background: linear-gradient(135deg, #0c2e1b 0%, #10b981 100%);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.25rem;
   font-weight: 800;
-  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 10px rgba(12, 46, 27, 0.2);
 }
 
 .collegeName {
   font-size: 1.4rem;
   font-weight: 700;
   letter-spacing: -0.01em;
+  color: #0c2e1b;
 }
 
 .collegeLocation {
-  color: var(--text-secondary);
+  color: #4a5d4e;
   font-size: 0.9rem;
   margin-top: 0.15rem;
 }
@@ -115,7 +126,7 @@
 
 .scoreLabel {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: #8c9e90;
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -124,7 +135,7 @@
 .scoreVal {
   font-size: 1.75rem;
   font-weight: 800;
-  color: var(--secondary-color);
+  color: #10b981;
   line-height: 1;
   margin-top: 0.25rem;
 }
@@ -137,9 +148,9 @@
 }
 
 .branchBadge {
-  background-color: rgba(6, 182, 212, 0.1);
-  color: #22d3ee;
-  border: 1px solid rgba(6, 182, 212, 0.2);
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.2);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -150,21 +161,21 @@
 .branchTitle {
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #0c2e1b;
 }
 
 .cardGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background-color: rgba(11, 15, 25, 0.4);
-  border: 1px solid var(--glass-border);
+  background-color: #f7f5ef;
+  border: 1px solid #e6e4dc;
   border-radius: 8px;
   margin-bottom: 1.25rem;
 }
 
 .gridSection {
   padding: 1.25rem;
-  border-right: 1px solid var(--glass-border);
+  border-right: 1px solid #e6e4dc;
 }
 
 .gridSection:last-child {
@@ -174,7 +185,7 @@
 .sectionTitle {
   font-size: 0.8rem;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: #8c9e90;
   letter-spacing: 0.05em;
   margin-bottom: 0.75rem;
   font-weight: 600;
@@ -188,7 +199,11 @@
 }
 
 .statRow span {
-  color: var(--text-secondary);
+  color: #4a5d4e;
+}
+
+.statRow strong {
+  color: #0c2e1b;
 }
 
 .totalRow {
@@ -196,17 +211,17 @@
   justify-content: space-between;
   font-size: 0.95rem;
   margin-top: 0.75rem;
-  border-top: 1px dashed var(--glass-border);
+  border-top: 1px dashed #e6e4dc;
   padding-top: 0.5rem;
 }
 
 .totalRow span {
-  color: var(--text-primary);
+  color: #0c2e1b;
   font-weight: 500;
 }
 
 .totalRow strong {
-  color: var(--primary-color);
+  color: #10b981;
   font-size: 1.05rem;
 }
 
@@ -223,32 +238,32 @@
 }
 
 .badgeSafe {
-  background-color: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .badgeTarget {
-  background-color: rgba(99, 102, 241, 0.15);
-  color: #a5b4fc;
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  background-color: rgba(30, 64, 175, 0.08);
+  color: #1e40af;
+  border: 1px solid rgba(30, 64, 175, 0.15);
 }
 
 .badgeReach {
-  background-color: rgba(245, 158, 11, 0.15);
-  color: #fcd34d;
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #b45309;
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .badgeUnlikely {
-  background-color: rgba(239, 104, 104, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 104, 104, 0.25);
+  background-color: rgba(239, 68, 68, 0.08);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.15);
 }
 
 .cutoffSubtext {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: #8c9e90;
   line-height: 1.4;
 }
 
@@ -257,7 +272,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
-  border-top: 1px solid var(--glass-border);
+  border-top: 1px solid #e6e4dc;
   padding-top: 1.25rem;
   flex-wrap: wrap;
 }
@@ -271,7 +286,7 @@
 
 .reasonItem {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: #4a5d4e;
   font-weight: 500;
 }
 
@@ -284,8 +299,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--background-dark);
+  background-color: #faf9f5;
   padding: 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 900px) {
@@ -294,7 +325,7 @@
   }
   .gridSection {
     border-right: none;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid #e6e4dc;
   }
   .gridSection:last-child {
     border-bottom: none;
