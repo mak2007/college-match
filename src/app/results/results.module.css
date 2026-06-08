@@ -1,0 +1,313 @@
+.wrapper {
+  background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.05) 0%, rgba(6, 182, 212, 0.03) 50%, rgba(11, 15, 25, 1) 100%), var(--background-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(11, 15, 25, 0.6);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-decoration: none;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.studentBadge {
+  background-color: var(--surface-light);
+  border: 1px solid var(--glass-border);
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.resultsHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+}
+
+.resultsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.collegeCard {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  padding: 1.75rem !important;
+}
+
+.collegeCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 1.25rem;
+}
+
+.collegeMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rankBadge {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--brand-gradient);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+}
+
+.collegeName {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.collegeLocation {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-top: 0.15rem;
+}
+
+.scoreWrapper {
+  text-align: right;
+}
+
+.scoreLabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.scoreVal {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--secondary-color);
+  line-height: 1;
+  margin-top: 0.25rem;
+}
+
+.branchBox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+}
+
+.branchBadge {
+  background-color: rgba(6, 182, 212, 0.1);
+  color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.branchTitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: rgba(11, 15, 25, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.gridSection {
+  padding: 1.25rem;
+  border-right: 1px solid var(--glass-border);
+}
+
+.gridSection:last-child {
+  border-right: none;
+}
+
+.sectionTitle {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.statRow span {
+  color: var(--text-secondary);
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  margin-top: 0.75rem;
+  border-top: 1px dashed var(--glass-border);
+  padding-top: 0.5rem;
+}
+
+.totalRow span {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.totalRow strong {
+  color: var(--primary-color);
+  font-size: 1.05rem;
+}
+
+.likelihoodWrapper {
+  margin: 0.5rem 0;
+}
+
+.likelihoodBadge {
+  display: inline-flex;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badgeSafe {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.badgeTarget {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+.badgeReach {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.badgeUnlikely {
+  background-color: rgba(239, 104, 104, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 104, 104, 0.25);
+}
+
+.cutoffSubtext {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.reasonsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.reasonItem {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.actionBtn {
+  text-align: right;
+}
+
+.errorContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background-dark);
+  padding: 1rem;
+}
+
+@media (max-width: 900px) {
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+  .gridSection {
+    border-right: none;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .gridSection:last-child {
+    border-bottom: none;
+  }
+  .cardFooter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+  .actionBtn {
+    text-align: left;
+  }
+  .actionBtn a {
+    width: 100%;
+  }
+}

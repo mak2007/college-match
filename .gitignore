@@ -1,0 +1,77 @@
+# ============================================================
+# CollegeMatch .gitignore — Security-Hardened
+# ============================================================
+
+# ── Dependencies ──
+node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ── Next.js Build Output ──
+/.next/
+/out/
+/build/
+/.vercel/
+
+# ── Environment & Secrets (CRITICAL — never commit these) ──
+.env
+.env.*
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+!.env.example
+
+# ── Prisma Generated ──
+/src/generated/prisma
+
+# ── Testing ──
+/coverage/
+
+# ── OS & IDE Files ──
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.code-workspace
+
+# ── Certificates & Keys ──
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# ── Debug Logs ──
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── TypeScript Cache ──
+*.tsbuildinfo
+next-env.d.ts
+
+# ── Miscellaneous ──
+*.log
+.cache/
+
+# ── Local Database Files ──
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# ── Scratch / Utility Scripts ──
+/scratch/
