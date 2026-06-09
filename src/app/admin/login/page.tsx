@@ -23,28 +23,20 @@ function AdminLoginContent() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-        credentials: "include",
-      });
+      // Use auth context login to set user state globally
+      await login(email, password);
 
+      // Determine target URL
+      const res = await fetch("/api/auth/me", { credentials: "include" });
       const data = await res.json();
+      const role = data?.user?.role;
+      const targetUrl = redirectUrl || (role === "SUPERADMIN" ? "/admin/super" : role === "COLLEGE_ADMIN" ? "/admin/college" : null);
 
-      if (!res.ok) {
-        throw new Error(data.error || "Login failed");
+      if (!targetUrl) {
+        throw new Error("Unauthorized role");
       }
 
-      // Update auth context
-      if (data.role) {
-        // Store role in context via login
-      }
-
-      const targetUrl = redirectUrl || (data.role === "SUPERADMIN" ? "/admin/super" : "/admin/college");
       setLastVisitedPath(targetUrl);
-
-      // Store in sessionStorage for refresh preservation
       if (typeof window !== "undefined") {
         sessionStorage.setItem("cm_last_path", targetUrl);
       }

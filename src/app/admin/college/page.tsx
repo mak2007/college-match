@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import Link from "next/link";
 import { verifyToken } from "@/lib/auth";
 import LeadsTable from "./LeadsTable";
+import LogoutButton from "@/components/LogoutButton";
 import styles from "./college.module.css";
 
 export default async function CollegeAdminDashboard() {
@@ -40,9 +41,9 @@ export default async function CollegeAdminDashboard() {
           <p style={{ color: "var(--text-secondary)", margin: "1rem 0" }}>
             The college profile associated with this account could not be found.
           </p>
-          <Link href="/api/auth/logout" className="btn btn-primary">
+          <LogoutButton className="btn btn-primary">
             Logout
-          </Link>
+          </LogoutButton>
         </div>
       </div>
     );
@@ -66,9 +67,9 @@ export default async function CollegeAdminDashboard() {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <span className={styles.collegeNameHeader}>🏫 {college.name}</span>
-            <Link href="/api/auth/logout" className={styles.logoutBtn}>
+            <LogoutButton className={styles.logoutBtn}>
               Logout
-            </Link>
+            </LogoutButton>
           </div>
         </div>
       </header>

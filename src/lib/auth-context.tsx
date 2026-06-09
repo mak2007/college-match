@@ -92,7 +92,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!res.ok) {
         throw new Error(data.error || "Login failed");
       }
-      setUser(data);
+      // Immediately fetch user from /api/auth/me for correct shape
+      const meRes = await fetch("/api/auth/me", { credentials: "include" });
+      const meData = await meRes.json();
+      setUser(meData.user);
     } catch (err: any) {
       setError(err.message);
       throw err;
