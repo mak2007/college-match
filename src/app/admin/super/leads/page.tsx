@@ -146,7 +146,7 @@ export default function SuperadminLeadsPage() {
             <button
               key={st.value}
               className={`${styles.pipelineCard} ${statusFilter === st.value ? styles.pipelineCardActive : ""}`}
-              style={{ borderColor: statusFilter === st.value ? st.color : "rgba(255,255,255,0.06)" }}
+              style={{ borderColor: statusFilter === st.value ? st.color : "var(--light-border)" }}
               onClick={() => setStatusFilter(statusFilter === st.value ? "ALL" : st.value)}
             >
               <div className={styles.pipelineIcon}>{st.icon}</div>

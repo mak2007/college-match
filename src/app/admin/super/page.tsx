@@ -1,22 +1,11 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import Link from "next/link";
-import { verifyToken } from "@/lib/auth";
 import styles from "./super.module.css";
 
 export default async function SuperadminDashboard() {
-  // 1. Verify Authentication
-  const cookieStore = await cookies();
-  const token = cookieStore.get("cm_auth_token")?.value;
+  // Auth is verified by the parent layout.tsx — no need to re-check here.
 
-  const decoded = token ? await verifyToken(token) : null;
-
-  if (!decoded || decoded.role !== "SUPERADMIN") {
-    redirect("/admin/login");
-  }
-
-  // 2. Fetch Aggregated Statistics
+  // 1. Fetch Aggregated Statistics
   const totalLeads = await prisma.lead.count();
   const partnerCollegesCount = await prisma.college.count({ where: { isPartner: true } });
   

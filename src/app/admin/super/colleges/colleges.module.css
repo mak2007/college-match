@@ -1,13 +1,13 @@
 .wrapper {
-  background-color: var(--background-dark);
+  background-color: var(--light-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 .header {
-  border-bottom: 1px solid var(--glass-border);
-  background: rgba(17, 24, 39, 0.6);
+  border-bottom: 1px solid var(--light-border);
+  background: var(--light-surface);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
@@ -35,36 +35,36 @@
 }
 
 .navLink {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
-  background-color: var(--surface-light);
-  border: 1px solid var(--glass-border);
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
   transition: all 0.2s ease;
 }
 
 .navLink:hover {
-  color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--light-text);
+  background-color: var(--light-bg);
 }
 
 .logoutBtn {
-  color: var(--accent-color);
+  color: var(--color-danger);
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 600;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
-  background-color: rgba(244, 63, 94, 0.08);
-  border: 1px solid rgba(244, 63, 94, 0.2);
+  background-color: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   transition: all 0.2s ease;
 }
 
 .logoutBtn:hover {
-  background-color: var(--accent-color);
+  background-color: var(--color-danger);
   color: white;
 }
 
@@ -73,10 +73,11 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   margin-bottom: 0.25rem;
+  color: var(--light-text);
 }
 
 .subtitle {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   font-size: 1rem;
 }
 
@@ -85,8 +86,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--background-dark);
-  color: var(--text-secondary);
+  background-color: var(--light-bg);
+  color: var(--light-text-secondary);
   font-size: 1.1rem;
 }
 
@@ -103,6 +104,7 @@
   border-left: 3px solid var(--primary-color);
   padding-left: 0.75rem;
   margin-bottom: 1.5rem;
+  color: var(--light-text);
 }
 
 .collegesList {
@@ -115,21 +117,22 @@
 }
 
 .collegeItem {
-  background-color: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--glass-border);
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
   border-radius: 8px;
   padding: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  color: var(--light-text);
 }
 
 .collegeItem:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-color: var(--text-muted);
+  background-color: var(--brand-blue-light);
+  border-color: var(--secondary-color);
 }
 
 .collegeItemActive {
-  background-color: rgba(99, 102, 241, 0.08);
+  background-color: rgba(15, 45, 82, 0.08);
   border-color: var(--primary-color);
 }
 
@@ -138,9 +141,9 @@
   font-weight: 700;
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
-  background-color: rgba(6, 182, 212, 0.1);
-  color: #22d3ee;
-  border: 1px solid rgba(6, 182, 212, 0.2);
+  background-color: rgba(15, 45, 82, 0.1);
+  color: var(--primary-color);
+  border: 1px solid rgba(15, 45, 82, 0.2);
 }
 
 .attributesRow {
@@ -148,22 +151,22 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   font-size: 0.8rem;
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
 }
 
 .customAttrTag {
-  background-color: var(--surface-light);
-  border: 1px solid var(--glass-border);
+  background-color: var(--light-bg);
+  border: 1px solid var(--light-border);
   padding: 0.1rem 0.4rem;
   border-radius: 4px;
   font-size: 0.75rem;
-  color: #a5b4fc;
+  color: var(--primary-color);
 }
 
 .subCardTitle {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--light-text);
   margin-bottom: 0.75rem;
 }
 
@@ -174,9 +177,9 @@
 }
 
 .successAlert {
-  background-color: rgba(16, 185, 129, 0.1);
+  background-color: rgba(196, 164, 132, 0.1);
   border: 1px solid var(--color-success);
-  color: #a7f3d0;
+  color: var(--secondary-hover);
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
@@ -187,7 +190,7 @@
 .errorAlert {
   background-color: rgba(239, 68, 68, 0.1);
   border: 1px solid var(--color-danger);
-  color: #fca5a5;
+  color: var(--color-danger);
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;

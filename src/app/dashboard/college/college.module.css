@@ -1,14 +1,14 @@
 .wrapper {
   min-height: 100vh;
-  background: radial-gradient(120% 120% at 50% 10%, #090d16 40%, #17102e 100%);
-  color: #f8fafc;
-  font-family: 'Outfit', sans-serif;
+  background: var(--light-bg);
+  color: var(--light-text);
+  font-family: var(--font-outfit), sans-serif;
 }
 
 .header {
-  background: rgba(9, 13, 22, 0.75);
+  background: var(--light-surface);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--light-border);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -17,27 +17,25 @@
 .logo {
   font-size: 1.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-color);
   text-decoration: none;
   letter-spacing: -0.025em;
 }
 
 .collegeTag {
-  background: rgba(168, 85, 247, 0.15);
-  color: #d8b4fe;
+  background: rgba(15, 45, 82, 0.08);
+  color: var(--primary-color);
   font-size: 0.725rem;
   font-weight: 700;
   padding: 0.15rem 0.5rem;
   border-radius: 6px;
-  border: 1px solid rgba(168, 85, 247, 0.25);
+  border: 1px solid rgba(15, 45, 82, 0.15);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .collegeNameHeader {
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   font-size: 0.9rem;
   font-weight: 600;
   max-width: 250px;
@@ -47,9 +45,9 @@
 }
 
 .exitBtn {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  color: #dc2626;
   padding: 0.4rem 0.8rem;
   border-radius: 8px;
   font-size: 0.825rem;
@@ -59,8 +57,8 @@
 }
 
 .exitBtn:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.25);
 }
 
 .nav {
@@ -69,7 +67,7 @@
 }
 
 .navLink {
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   text-decoration: none;
   font-size: 0.925rem;
   font-weight: 500;
@@ -77,7 +75,7 @@
 }
 
 .navLink:hover {
-  color: #f8fafc;
+  color: var(--primary-color);
 }
 
 /* --- Gate Page --- */
@@ -95,10 +93,9 @@
   padding: 3rem 2.5rem;
   text-align: center;
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  box-shadow: 0 25px 50px -12px rgba(15, 45, 82, 0.06);
   animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -113,13 +110,11 @@
   font-weight: 800;
   letter-spacing: -0.025em;
   margin-bottom: 0.75rem;
-  background: linear-gradient(to right, #f8fafc, #cbd5e1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-color);
 }
 
 .gateSubtitle {
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   font-size: 0.975rem;
   line-height: 1.6;
   margin-bottom: 2rem;
@@ -135,24 +130,25 @@
   width: 100%;
   padding: 0.9rem 1.2rem;
   border-radius: 12px;
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f8fafc;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
   font-size: 1rem;
   outline: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-family: inherit;
 }
 
 .gateSelect:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(15, 45, 82, 0.1);
 }
 
 .errorAlert {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
   padding: 0.8rem;
   border-radius: 10px;
   margin-bottom: 1.5rem;
@@ -165,8 +161,8 @@
   align-items: center;
   gap: 2rem;
   padding: 2.5rem;
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.12) 0%, rgba(99, 102, 241, 0.04) 100%);
-  border: 1px solid rgba(168, 85, 247, 0.2);
+  background: linear-gradient(135deg, rgba(15, 45, 82, 0.04) 0%, rgba(196, 164, 132, 0.06) 100%);
+  border: 1px solid var(--light-border);
   border-radius: 24px;
   margin-bottom: 2rem;
 }
@@ -175,14 +171,14 @@
   width: 68px;
   height: 68px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.75rem;
   font-weight: 800;
   color: #fff;
-  box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
+  box-shadow: 0 10px 20px rgba(15, 45, 82, 0.15);
 }
 
 .welcomeTitle {
@@ -190,10 +186,11 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   margin-bottom: 0.25rem;
+  color: var(--primary-color);
 }
 
 .welcomeSub {
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   font-size: 0.95rem;
 }
 
@@ -214,13 +211,15 @@
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--light-border);
+  background: var(--light-surface);
   transition: transform 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(15, 45, 82, 0.04);
 }
 
 .kpiCard:hover {
   transform: translateY(-2px);
+  border-color: var(--secondary-color);
 }
 
 .kpiIcon {
@@ -232,30 +231,28 @@
   font-size: 2.25rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  background: linear-gradient(to right, #ffffff, #e2e8f0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-color);
   line-height: 1;
   margin-bottom: 0.5rem;
 }
 
 .kpiLabel {
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   font-weight: 500;
   margin-bottom: 0.25rem;
 }
 
 .kpiSub {
   font-size: 0.775rem;
-  color: #64748b;
+  color: var(--light-text-muted);
 }
 
 /* --- Tab Selection Navigation --- */
 .tabBar {
   display: flex;
   gap: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--light-border);
   margin-bottom: 2rem;
   padding-bottom: 0.5rem;
   overflow-x: auto;
@@ -264,7 +261,7 @@
 .tabBtn {
   background: none;
   border: none;
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   padding: 0.75rem 1.25rem;
   font-size: 0.95rem;
   font-weight: 600;
@@ -272,17 +269,18 @@
   border-radius: 8px;
   transition: all 0.2s ease;
   white-space: nowrap;
+  font-family: inherit;
 }
 
 .tabBtn:hover {
-  color: #f8fafc;
-  background: rgba(255, 255, 255, 0.04);
+  color: var(--primary-color);
+  background: rgba(15, 45, 82, 0.04);
 }
 
 .tabBtnActive {
-  color: #a855f7;
-  background: rgba(168, 85, 247, 0.1);
-  box-shadow: inset 0 -2px 0 #a855f7;
+  color: var(--primary-color);
+  background: rgba(15, 45, 82, 0.06);
+  box-shadow: inset 0 -2px 0 var(--primary-color);
 }
 
 .tabContent {
@@ -301,33 +299,36 @@
   flex: 1;
   padding: 0.8rem 1.2rem;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f8fafc;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
   font-size: 0.925rem;
   outline: none;
   transition: all 0.2s ease;
+  font-family: inherit;
 }
 
 .searchInput:focus {
-  border-color: #a855f7;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(15, 45, 82, 0.08);
 }
 
 .filterSelect {
   padding: 0.8rem 1.2rem;
   border-radius: 10px;
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f8fafc;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
   font-size: 0.925rem;
   outline: none;
   cursor: pointer;
+  font-family: inherit;
 }
 
 .statusToast {
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  color: #34d399;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
   padding: 0.5rem 1rem;
   border-radius: 8px;
   font-size: 0.85rem;
@@ -345,18 +346,19 @@
 .leadCard {
   padding: 1.5rem;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--light-border);
+  background: var(--light-surface);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition: all 0.25s ease;
+  box-shadow: 0 2px 4px rgba(15, 45, 82, 0.03);
 }
 
 .leadCard:hover {
   transform: translateY(-2px);
-  border-color: rgba(168, 85, 247, 0.3);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  border-color: var(--secondary-color);
+  box-shadow: 0 10px 30px rgba(15, 45, 82, 0.06);
 }
 
 .leadHeader {
@@ -370,7 +372,7 @@
   font-size: 1.2rem;
   font-weight: 700;
   margin: 0 0 0.4rem 0;
-  color: #fff;
+  color: var(--primary-color);
 }
 
 .statusBadge {
@@ -387,22 +389,22 @@
 .referredDateLabel {
   display: block;
   font-size: 0.7rem;
-  color: #64748b;
+  color: var(--light-text-muted);
   text-transform: uppercase;
 }
 
 .referredDate {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #e2e8f0;
+  color: var(--light-text);
 }
 
 .leadInfoSection {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: rgba(15, 45, 82, 0.02);
+  border: 1px solid var(--light-border);
   padding: 0.75rem;
   border-radius: 12px;
   margin-bottom: 1.25rem;
@@ -415,30 +417,31 @@
 .leadDetailCol span {
   display: block;
   font-size: 0.7rem;
-  color: #64748b;
+  color: var(--light-text-muted);
   margin-bottom: 0.25rem;
 }
 
 .leadDetailCol strong {
   font-size: 0.9rem;
-  color: #e2e8f0;
+  color: var(--light-text);
 }
 
 .leadBranchPill {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(15, 45, 82, 0.06);
   padding: 0.1rem 0.4rem;
   border-radius: 4px;
   font-size: 0.8rem !important;
+  color: var(--primary-color) !important;
 }
 
 .leadContactBlock {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
   margin-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--light-border);
   padding-bottom: 0.75rem;
 }
 
@@ -450,7 +453,7 @@
 
 .tokenContainer {
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--light-text-muted);
 }
 
 .tokenContainer span {
@@ -458,22 +461,23 @@
 }
 
 .tokenContainer code {
-  color: #cbd5e1;
+  color: var(--light-text-secondary);
 }
 
 .statusChangeSelect {
   padding: 0.45rem 0.75rem;
   border-radius: 8px;
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f8fafc;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
   font-size: 0.8rem;
   outline: none;
   cursor: pointer;
+  font-family: inherit;
 }
 
 .statusChangeSelect:focus {
-  border-color: #a855f7;
+  border-color: var(--primary-color);
 }
 
 /* --- Branch Configurations Tab --- */
@@ -486,23 +490,24 @@
 .branchCard {
   padding: 1.75rem;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--light-border);
+  background: var(--light-surface);
+  box-shadow: 0 2px 4px rgba(15, 45, 82, 0.03);
 }
 
 .branchHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--light-border);
   padding-bottom: 1rem;
   margin-bottom: 1.5rem;
 }
 
 .branchCodeBig {
-  background: rgba(168, 85, 247, 0.1);
-  border: 1px solid rgba(168, 85, 247, 0.2);
-  color: #d8b4fe;
+  background: rgba(15, 45, 82, 0.06);
+  border: 1px solid rgba(15, 45, 82, 0.12);
+  color: var(--primary-color);
   font-size: 0.8rem;
   font-weight: 700;
   padding: 0.25rem 0.6rem;
@@ -516,6 +521,7 @@
   font-size: 1.25rem;
   font-weight: 800;
   margin: 0;
+  color: var(--light-text);
 }
 
 .branchStrengthWrap {
@@ -525,13 +531,13 @@
 .branchStrengthWrap span {
   display: block;
   font-size: 0.725rem;
-  color: #64748b;
+  color: var(--light-text-muted);
   text-transform: uppercase;
 }
 
 .branchStrengthWrap strong {
   font-size: 1.35rem;
-  color: #a855f7;
+  color: var(--primary-color);
 }
 
 .branchInfoGrid {
@@ -541,8 +547,8 @@
 }
 
 .branchInfoCard {
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: rgba(15, 45, 82, 0.02);
+  border: 1px solid var(--light-border);
   padding: 1rem;
   border-radius: 12px;
   text-align: center;
@@ -551,13 +557,13 @@
 .branchInfoCard span {
   display: block;
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--light-text-muted);
   margin-bottom: 0.4rem;
 }
 
 .branchInfoCard strong {
   font-size: 0.95rem;
-  color: #e2e8f0;
+  color: var(--light-text);
 }
 
 /* --- College Profile Tab --- */
@@ -570,15 +576,17 @@
 .profileInfoCard {
   padding: 2rem;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--light-border);
+  background: var(--light-surface);
+  box-shadow: 0 2px 4px rgba(15, 45, 82, 0.03);
 }
 
 .profileInfoCard h3 {
   font-size: 1.15rem;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--light-border);
   padding-bottom: 0.75rem;
+  color: var(--primary-color);
 }
 
 .ratingsList {
@@ -590,7 +598,7 @@
 .ratingRow span {
   display: block;
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   margin-bottom: 0.4rem;
 }
 
@@ -603,14 +611,14 @@
 .ratingBar {
   flex: 1;
   height: 8px;
-  background: #6366f1;
+  background: var(--primary-color);
   border-radius: 4px;
 }
 
 .ratingBarContainer span {
   font-size: 0.9rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--light-text);
   margin: 0;
 }
 
@@ -628,15 +636,15 @@
 }
 
 .configRow span {
-  color: #94a3b8;
+  color: var(--light-text-secondary);
 }
 
 .configRow strong {
-  color: #e2e8f0;
+  color: var(--light-text);
 }
 
 .profileLink {
-  color: #a855f7;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 600;
   max-width: 200px;
@@ -647,6 +655,7 @@
 
 .profileLink:hover {
   text-decoration: underline;
+  color: var(--secondary-color);
 }
 
 .attributesGrid {
@@ -656,8 +665,8 @@
 }
 
 .attributeItem {
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(15, 45, 82, 0.02);
+  border: 1px solid var(--light-border);
   padding: 0.75rem;
   border-radius: 10px;
   text-align: center;
@@ -666,13 +675,13 @@
 .attributeItem span {
   display: block;
   font-size: 0.725rem;
-  color: #64748b;
+  color: var(--light-text-muted);
   margin-bottom: 0.25rem;
 }
 
 .attributeItem strong {
   font-size: 1rem;
-  color: #d8b4fe;
+  color: var(--primary-color);
 }
 
 @keyframes fadeIn {

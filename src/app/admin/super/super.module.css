@@ -1,13 +1,14 @@
 .wrapper {
-  background-color: var(--background-dark);
+  background-color: var(--light-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  color: var(--light-text);
 }
 
 .header {
-  border-bottom: 1px solid var(--glass-border);
-  background: rgba(17, 24, 39, 0.6);
+  border-bottom: 1px solid var(--light-border);
+  background: var(--light-surface);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
@@ -17,15 +18,12 @@
 .logo {
   font-size: 1.25rem;
   font-weight: 800;
-  background: var(--brand-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--primary-color);
 }
 
 .adminTag {
   font-size: 0.75rem;
-  background-color: var(--accent-color);
+  background-color: var(--secondary-color);
   color: white;
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
@@ -36,41 +34,41 @@
 
 .adminEmail {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   font-weight: 500;
 }
 
 .navLink {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
-  background-color: var(--surface-light);
-  border: 1px solid var(--glass-border);
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
   transition: all 0.2s ease;
 }
 
 .navLink:hover {
-  color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--primary-color);
+  background-color: var(--brand-blue-light);
 }
 
 .logoutBtn {
-  color: var(--accent-color);
+  color: var(--secondary-color);
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 600;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
-  background-color: rgba(244, 63, 94, 0.08);
-  border: 1px solid rgba(244, 63, 94, 0.2);
+  background-color: rgba(196, 164, 132, 0.08);
+  border: 1px solid rgba(196, 164, 132, 0.2);
   transition: all 0.2s ease;
 }
 
 .logoutBtn:hover {
-  background-color: var(--accent-color);
+  background-color: var(--secondary-color);
   color: white;
 }
 
@@ -84,7 +82,7 @@
 .statLabel {
   font-size: 0.8rem;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--light-text-secondary);
   letter-spacing: 0.05em;
   font-weight: 600;
   margin-bottom: 0.5rem;
@@ -93,6 +91,7 @@
 .statVal {
   font-size: 2rem;
   font-weight: 800;
+  color: var(--light-text);
 }
 
 .contentGrid {
@@ -108,6 +107,7 @@
   letter-spacing: -0.01em;
   border-left: 3px solid var(--primary-color);
   padding-left: 0.75rem;
+  color: var(--primary-color);
 }
 
 .tableWrapper {
@@ -123,8 +123,8 @@
 
 .table th {
   padding: 1rem;
-  border-bottom: 1px solid var(--glass-border);
-  color: var(--text-secondary);
+  border-bottom: 1px solid var(--light-border);
+  color: var(--primary-color);
   font-weight: 600;
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -133,7 +133,8 @@
 
 .table td {
   padding: 1.25rem 1rem;
-  border-bottom: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--light-border);
+  color: var(--light-text);
 }
 
 .table tr:last-child td {
@@ -147,8 +148,8 @@
 }
 
 .leadItem {
-  background-color: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--glass-border);
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
   border-radius: 8px;
   padding: 1rem;
 }
@@ -162,25 +163,25 @@
 
 .badgeReferred {
   background-color: rgba(156, 163, 175, 0.1);
-  color: #9ca3af;
+  color: #4b5563;
   border: 1px solid rgba(156, 163, 175, 0.2);
 }
 
 .badgeApplied {
   background-color: rgba(59, 130, 246, 0.1);
-  color: #60a5fa;
+  color: #2563eb;
   border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 .badgeEnrolled {
   background-color: rgba(16, 185, 129, 0.1);
-  color: #34d399;
+  color: #059669;
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .badgeRejected {
   background-color: rgba(239, 68, 68, 0.1);
-  color: #fca5a5;
+  color: #dc2626;
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 

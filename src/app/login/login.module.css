@@ -60,33 +60,6 @@
   margin-bottom: 2rem;
 }
 
-.tabs {
-  display: flex;
-  background: #f4eee2;
-  padding: 4px;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-}
-
-.tab {
-  flex: 1;
-  background: none;
-  border: none;
-  padding: 0.75rem;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #555;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.activeTab {
-  background: white;
-  color: #0F2D52;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
 .errorAlert {
   background-color: #fef2f2;
   border: 1px solid #fca5a5;
@@ -133,6 +106,7 @@
   background: #fafaf8;
   outline: none;
   transition: border-color 0.2s ease;
+  font-family: inherit;
 }
 
 .formGroup input:focus {
@@ -155,11 +129,16 @@
   color: #1A1A1A;
   cursor: pointer;
   transition: background 0.2s ease;
-  margin-bottom: 1.5rem;
+  font-family: inherit;
 }
 
 .googleBtn:hover {
   background: #f4eee2;
+}
+
+.googleBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .divider {
@@ -186,29 +165,6 @@
   margin-left: 0.75rem;
 }
 
-.otpInputs {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.otpInput {
-  width: 50px;
-  height: 55px;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  background: #fafaf8;
-  outline: none;
-}
-
-.otpInput:focus {
-  border-color: #0F2D52;
-  background: white;
-}
-
 .submitBtn {
   width: 100%;
   padding: 0.85rem;
@@ -220,7 +176,8 @@
   font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  font-family: inherit;
 }
 
 .submitBtn:hover {
@@ -230,18 +187,6 @@
 .submitBtn:disabled {
   background: #c3d0df;
   cursor: not-allowed;
-}
-
-.backBtn {
-  background: none;
-  border: none;
-  color: #0F2D52;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  text-decoration: underline;
-  margin-top: 1rem;
-  align-self: center;
 }
 
 .modeToggle {
@@ -266,4 +211,15 @@
 .modeToggle a:hover {
   color: #C4A484;
   text-decoration: underline;
+}
+
+@media (max-width: 500px) {
+  .card {
+    padding: 1.75rem;
+    border-radius: 12px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
 }

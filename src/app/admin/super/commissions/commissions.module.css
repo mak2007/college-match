@@ -1,6 +1,7 @@
 .pageWrapper {
   padding: 2rem;
   animation: fadeIn 0.4s ease;
+  color: var(--light-text);
 }
 
 .pageHeader {
@@ -11,14 +12,12 @@
   font-size: 1.85rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  background: linear-gradient(to right, #f8fafc, #cbd5e1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-color);
   margin: 0 0 0.35rem;
 }
 
 .pageSubtitle {
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   font-size: 0.925rem;
   margin: 0;
 }
@@ -34,9 +33,10 @@
 .kpiCard {
   padding: 1.5rem;
   border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--light-border);
+  background: var(--light-surface);
   transition: transform 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .kpiCard:hover {
@@ -45,7 +45,7 @@
 
 .kpiRevenue { border-left: 3px solid #10b981; }
 .kpiPending { border-left: 3px solid #f59e0b; }
-.kpiTotal { border-left: 3px solid #818cf8; }
+.kpiTotal { border-left: 3px solid #0F2D52; }
 .kpiCancelled { border-left: 3px solid #ef4444; }
 
 .kpiIconWrap {
@@ -57,23 +57,21 @@
   font-size: 1.85rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  background: linear-gradient(to right, #ffffff, #e2e8f0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--light-text);
   line-height: 1;
   margin-bottom: 0.4rem;
 }
 
 .kpiLabel {
   font-size: 0.825rem;
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   font-weight: 500;
   margin-bottom: 0.15rem;
 }
 
 .kpiSub {
   font-size: 0.725rem;
-  color: #64748b;
+  color: var(--light-text-muted);
 }
 
 /* Insights Row */
@@ -87,21 +85,22 @@
 .insightCard {
   padding: 1.5rem;
   border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--light-border);
+  background: var(--light-surface);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .insightTitle {
   font-size: 1rem;
   font-weight: 700;
-  color: #e2e8f0;
+  color: var(--primary-color);
   margin: 0 0 1.25rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--light-border);
 }
 
 .insightEmpty {
-  color: #64748b;
+  color: var(--light-text-secondary);
   font-size: 0.875rem;
   text-align: center;
   padding: 2rem 0;
@@ -119,7 +118,7 @@
   align-items: center;
   gap: 0.85rem;
   padding: 0.6rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--light-border);
 }
 
 .rankItem:last-child {
@@ -129,7 +128,7 @@
 .rankNum {
   font-weight: 800;
   font-size: 0.825rem;
-  color: #818cf8;
+  color: var(--primary-color);
   min-width: 28px;
 }
 
@@ -141,7 +140,7 @@
 .rankName {
   font-weight: 600;
   font-size: 0.875rem;
-  color: #f8fafc;
+  color: var(--light-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -149,7 +148,7 @@
 
 .rankMeta {
   font-size: 0.725rem;
-  color: #64748b;
+  color: var(--light-text-secondary);
 }
 
 .rankAmount {
@@ -169,7 +168,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--light-border);
 }
 
 .recentItem:last-child {
@@ -179,12 +178,12 @@
 .recentStudent {
   font-weight: 600;
   font-size: 0.85rem;
-  color: #f8fafc;
+  color: var(--light-text);
 }
 
 .recentCollege {
   font-size: 0.725rem;
-  color: #94a3b8;
+  color: var(--light-text-secondary);
 }
 
 .recentRight {
@@ -195,7 +194,7 @@
   display: block;
   font-weight: 700;
   font-size: 0.875rem;
-  color: #e2e8f0;
+  color: var(--light-text);
 }
 
 .recentStatus {
@@ -216,7 +215,7 @@
 .sectionTitle {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #e2e8f0;
+  color: var(--primary-color);
   margin: 0;
 }
 
@@ -229,9 +228,9 @@
 .statusTab {
   padding: 0.45rem 0.85rem;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: #94a3b8;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text-secondary);
   font-size: 0.775rem;
   font-family: inherit;
   cursor: pointer;
@@ -239,14 +238,14 @@
 }
 
 .statusTab:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #f8fafc;
+  background: var(--brand-blue-light);
+  color: var(--primary-color);
 }
 
 .statusTabActive {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.3);
-  color: #818cf8;
+  background: var(--primary-color);
+  border-color: var(--primary-hover);
+  color: #ffffff;
 }
 
 /* Table */
@@ -262,7 +261,7 @@
   padding: 0.75rem 1.25rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--primary-color);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -273,14 +272,14 @@
   align-items: center;
   padding: 1rem 1.25rem;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
   transition: all 0.2s ease;
 }
 
 .tableRow:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: var(--brand-blue-light);
+  border-color: var(--primary-color);
 }
 
 .cellInfo {
@@ -290,13 +289,13 @@
 .cellStudent {
   font-weight: 700;
   font-size: 0.875rem;
-  color: #ffffff;
+  color: var(--light-text);
   margin-bottom: 0.1rem;
 }
 
 .cellCollege {
   font-size: 0.775rem;
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -308,13 +307,14 @@
 }
 
 .branchPill {
-  background: rgba(255, 255, 255, 0.08);
-  color: #e2e8f0;
+  background: var(--brand-blue-light);
+  color: var(--primary-color);
   font-size: 0.725rem;
   font-weight: 700;
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
   letter-spacing: 0.03em;
+  border: 1px solid var(--light-border);
 }
 
 .cellAmount {
@@ -336,21 +336,21 @@
 
 .cellDate {
   font-size: 0.8rem;
-  color: #cbd5e1;
+  color: var(--light-text);
 }
 
 .subDate {
   font-size: 0.675rem;
-  color: #64748b;
+  color: var(--light-text-secondary);
   margin-top: 0.15rem;
 }
 
 .statusSelect {
   padding: 0.45rem 0.7rem;
   border-radius: 8px;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f8fafc;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
   font-size: 0.75rem;
   font-family: inherit;
   cursor: pointer;
@@ -371,12 +371,12 @@
   align-items: center;
   margin-top: 1.5rem;
   padding: 1rem 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--light-border);
 }
 
 .pageInfo {
   font-size: 0.825rem;
-  color: #94a3b8;
+  color: var(--light-text-secondary);
 }
 
 .pageButtons {
@@ -387,9 +387,9 @@
 .pageBtn {
   padding: 0.5rem 0.85rem;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: #94a3b8;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text-secondary);
   font-size: 0.8rem;
   font-family: inherit;
   cursor: pointer;
@@ -397,8 +397,8 @@
 }
 
 .pageBtn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.06);
-  color: #f8fafc;
+  background: var(--brand-blue-light);
+  color: var(--primary-color);
 }
 
 .pageBtn:disabled {
@@ -413,14 +413,14 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  color: #94a3b8;
+  color: var(--light-text-secondary);
 }
 
 .spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid rgba(255, 255, 255, 0.08);
-  border-top-color: #818cf8;
+  border: 3px solid var(--light-border);
+  border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 1rem;
@@ -433,8 +433,8 @@
 .emptyState {
   text-align: center;
   padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
   border-radius: 20px;
 }
 
@@ -446,12 +446,12 @@
 .emptyState h3 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #e2e8f0;
+  color: var(--primary-color);
   margin: 0 0 0.5rem;
 }
 
 .emptyState p {
-  color: #94a3b8;
+  color: var(--light-text-secondary);
   font-size: 0.925rem;
   margin: 0;
 }
@@ -470,7 +470,7 @@
   backdrop-filter: blur(12px);
   border: 1px solid;
   max-width: 360px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .toastSuccess {
