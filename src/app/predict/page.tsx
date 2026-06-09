@@ -58,6 +58,7 @@ export default function Predictor() {
   const [isBudgetConstraint, setIsBudgetConstraint] = useState(true);
   const [preferredBranches, setPreferredBranches] = useState<string[]>(["CSE"]);
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const [locationMode, setLocationMode] = useState<"all" | "states">("all");
   const [selectedStates, setSelectedStates] = useState<string[]>([]);
   const [ranking, setRanking] = useState<string[]>([
     "placements",
@@ -80,6 +81,8 @@ export default function Predictor() {
         if (parsed.isBudgetConstraint !== undefined) setIsBudgetConstraint(parsed.isBudgetConstraint);
         if (parsed.preferredBranches !== undefined) setPreferredBranches(parsed.preferredBranches);
         if (parsed.selectedRegions !== undefined) setSelectedRegions(parsed.selectedRegions);
+        if (parsed.locationMode !== undefined) setLocationMode(parsed.locationMode);
+        if (parsed.selectedStates !== undefined) setSelectedStates(parsed.selectedStates);
         if (parsed.ranking !== undefined) setRanking(parsed.ranking);
       }
     } catch (e) {
@@ -98,6 +101,8 @@ export default function Predictor() {
         isBudgetConstraint,
         preferredBranches,
         selectedRegions,
+        locationMode,
+        selectedStates,
         ranking,
       };
       localStorage.setItem("cm_predictor_progress", JSON.stringify(progress));
@@ -110,6 +115,8 @@ export default function Predictor() {
     isBudgetConstraint,
     preferredBranches,
     selectedRegions,
+    locationMode,
+    selectedStates,
     ranking,
   ]);
 
@@ -201,15 +208,7 @@ export default function Predictor() {
         'East India': ['Odisha'],
       };
 
-      let statesToFilter: string[] = [];
-      if (!selectedRegions.includes("Anywhere in India") && selectedRegions.length > 0) {
-        selectedRegions.forEach(region => {
-          if (REGION_MAP[region]) {
-            statesToFilter.push(...REGION_MAP[region]);
-          }
-        });
-      }
-      setSelectedStates(statesToFilter);
+      const statesToFilter = locationMode === "states" ? selectedStates : [];
 
       // Call matching API endpoint
       const response = await fetch("/api/match", {
@@ -330,52 +329,100 @@ export default function Predictor() {
           </div>
         );
       case 2: // Location Preference
-        const regions = [
-          { name: "My State Only", desc: "Restrict search to your home state" },
-          { name: "South India", desc: "Karnataka, Tamil Nadu, etc." },
-          { name: "North India", desc: "Punjab, Uttar Pradesh, Rajasthan, etc." },
-          { name: "West India", desc: "Maharashtra, etc." },
-          { name: "East India", desc: "Odisha, etc." },
-          { name: "Anywhere in India", desc: "No location restrictions (Recommended)", prominent: true }
+        const INDIAN_STATES = [
+          "Andhra Pradesh", "Assam", "Bihar", "Chhattisgarh", "Delhi", "Gujarat",
+          "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka",
+          "Kerala", "Madhya Pradesh", "Maharashtra", "Odisha", "Punjab", "Rajasthan",
+          "Tamil Nadu", "Telangana", "Uttarakhand", "Uttar Pradesh", "West Bengal"
         ];
 
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Where do you prefer to study?</h2>
-            <p className={styles.questionSubtitle}>Select one or more regional preferences for your college campus</p>
-            <div className={styles.optionsGrid}>
-              {regions.map(r => {
-                const isSelected = selectedRegions.includes(r.name);
-                const isProminent = r.prominent;
-                return (
-                  <div
-                    key={r.name}
-                    className={`${styles.optionCard} ${isSelected ? styles.optionCardActive : ""} ${isProminent ? styles.optionCardProminent : ""}`}
-                    onClick={() => {
-                      if (r.name === "Anywhere in India") {
-                        if (isSelected) {
-                          setSelectedRegions([]);
-                        } else {
-                          setSelectedRegions(["Anywhere in India"]);
+            <p className={styles.questionSubtitle}>Select specific states or choose All India</p>
+            
+            <div className={styles.locationSelectionContainer}>
+              {/* Option 1: Select Specific States */}
+              <div 
+                className={`${styles.locationOptionCard} ${locationMode === "states" ? styles.locationOptionCardActive : ""}`}
+                onClick={() => setLocationMode("states")}
+              >
+                <div className={styles.locationOptionHeader}>
+                  <input 
+                    type="radio" 
+                    name="locationMode" 
+                    checked={locationMode === "states"} 
+                    onChange={() => setLocationMode("states")} 
+                  />
+                  <span className={styles.locationOptionTitle}>Select Specific States</span>
+                </div>
+                
+                {locationMode === "states" && (
+                  <div className={styles.dropdownSection} onClick={(e) => e.stopPropagation()}>
+                    <select
+                      className={styles.stateSelect}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val && !selectedStates.includes(val)) {
+                          setSelectedStates(prev => [...prev, val]);
                         }
-                      } else {
-                        setSelectedRegions(prev => {
-                          const filtered = prev.filter(item => item !== "Anywhere in India");
-                          if (filtered.includes(r.name)) {
-                            return filtered.filter(item => item !== r.name);
-                          } else {
-                            return [...filtered, r.name];
-                          }
-                        });
-                      }
-                    }}
-                  >
-                    <input type="checkbox" checked={isSelected} readOnly />
-                    <span className={styles.optionTitle}>{r.name}</span>
-                    <span className={styles.optionDesc}>{r.desc}</span>
+                        e.target.value = ""; // Reset select dropdown
+                      }}
+                    >
+                      <option value="">-- Choose a State --</option>
+                      {INDIAN_STATES.map(st => (
+                        <option key={st} value={st} disabled={selectedStates.includes(st)}>
+                          {st}
+                        </option>
+                      ))}
+                    </select>
+                    
+                    {selectedStates.length > 0 ? (
+                      <div className={styles.stateTagsContainer}>
+                        {selectedStates.map(st => (
+                          <span key={st} className={styles.stateTag}>
+                            {st}
+                            <button 
+                              type="button" 
+                              className={styles.removeTagBtn}
+                              onClick={() => setSelectedStates(prev => prev.filter(s => s !== st))}
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className={styles.dropdownHint}>Select one or more states from the dropdown menu.</p>
+                    )}
                   </div>
-                );
-              })}
+                )}
+              </div>
+
+              {/* Option 2: All India */}
+              <div 
+                className={`${styles.locationOptionCard} ${locationMode === "all" ? styles.locationOptionCardActive : ""}`}
+                onClick={() => {
+                  setLocationMode("all");
+                  setSelectedStates([]); // Clear selected states
+                }}
+              >
+                <div className={styles.locationOptionHeader}>
+                  <input 
+                    type="radio" 
+                    name="locationMode" 
+                    checked={locationMode === "all"} 
+                    onChange={() => {
+                      setLocationMode("all");
+                      setSelectedStates([]);
+                    }} 
+                  />
+                  <span className={styles.locationOptionTitle}>All India</span>
+                </div>
+                <p className={styles.locationOptionDesc}>
+                  No location restrictions. Recommend colleges from all regions across India.
+                </p>
+              </div>
             </div>
           </div>
         );
@@ -674,49 +721,34 @@ export default function Predictor() {
 
   const renderLockedResults = () => {
     return (
-      <div className={styles.resultsWrapper}>
-        <div className={styles.lockedOverlay}>
-          <div className={styles.lockedCard}>
-            <div className={styles.lockedIcon}>🔒</div>
-            <h2 className={styles.lockedTitle}>Your Results Are Ready!</h2>
-            <p className={styles.lockedSubtitle}>
-              We've analyzed {results.length} college{results.length !== 1 ? 's' : ''} based on your preferences.
-              Sign up or log in to unlock your personalized recommendations.
-            </p>
+      <div className={styles.modalBackdrop}>
+        <div className={styles.lockedCard}>
+          <div className={styles.lockedIcon}>🔒</div>
+          <h2 className={styles.lockedTitle}>Your Results Are Ready!</h2>
+          <p className={styles.lockedSubtitle}>
+            We've analyzed your academic profile and preferences to find your best college matches.
+            Sign up or log in to unlock your personalized recommendations.
+          </p>
 
-            {/* Blurred preview cards */}
-            <div className={styles.blurredPreview}>
-              {results.slice(0, 3).map((match, idx) => (
-                <div key={idx} className={styles.blurredCard}>
-                  <div className={styles.blurredCardInner}>
-                    <span className={styles.blurredRank}>#{idx + 1}</span>
-                    <span className={styles.blurredName}>████████ ██████</span>
-                    <span className={styles.blurredScore}>{match.matchScore.toFixed(0)}%</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Auth Actions */}
-            <div className={styles.lockedActions}>
-              <Link
-                href={`/login?mode=signup&redirect=/predict`}
-                className={styles.lockedSignupBtn}
-              >
-                Sign Up to Unlock Results →
-              </Link>
-              <Link
-                href={`/login?redirect=/predict`}
-                className={styles.lockedLoginBtn}
-              >
-                Already have an account? Log in
-              </Link>
-            </div>
-
-            <p className={styles.lockedFootnote}>
-              Your quiz progress is saved. Results will appear instantly after authentication.
-            </p>
+          {/* Auth Actions */}
+          <div className={styles.lockedActions}>
+            <Link
+              href={`/login?mode=signup&redirect=/predict`}
+              className={styles.lockedSignupBtn}
+            >
+              Sign Up to Unlock Results →
+            </Link>
+            <Link
+              href={`/login?redirect=/predict`}
+              className={styles.lockedLoginBtn}
+            >
+              Already have an account? Log in
+            </Link>
           </div>
+
+          <p className={styles.lockedFootnote}>
+            Your quiz progress is saved. Results will appear instantly after authentication.
+          </p>
         </div>
       </div>
     );
@@ -728,7 +760,12 @@ export default function Predictor() {
 
       {/* Main quiz interface or results panel */}
       {step === 6 ? (
-        isAuthenticated ? renderResults() : renderLockedResults()
+        <>
+          <div className={!isAuthenticated ? styles.blurredResultsContainer : ""}>
+            {renderResults()}
+          </div>
+          {!isAuthenticated && renderLockedResults()}
+        </>
       ) : (
         <div className={styles.quizLayout}>
           {/* Left illustration side */}
