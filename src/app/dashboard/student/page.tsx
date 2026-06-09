@@ -99,14 +99,39 @@ export default function StudentDashboard() {
   const [actionLoading, setActionLoading] = useState<Record<string, boolean>>({});
   const [toastMessage, setToastMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-  // Check URL params on mount for ?student_id=
+  // Check URL params or auth session on mount
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const sid = params.get("student_id");
-    if (sid) {
-      setStudentId(sid);
-      loadDashboard(sid);
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      const sid = params.get("student_id");
+      if (sid) {
+        setStudentId(sid);
+        loadDashboard(sid);
+        return;
+      }
+
+      // If no student_id query param, check if user is logged in
+      try {
+        const authRes = await fetch("/api/auth/me");
+        if (authRes.ok) {
+          const authData = await authRes.json();
+          if (authData.user && authData.user.email) {
+            setLoading(true);
+            const lookupRes = await fetch(`/api/student/lookup?email=${encodeURIComponent(authData.user.email)}`);
+            if (lookupRes.ok) {
+              const studentJson = await lookupRes.json();
+              setStudentId(studentJson.id);
+              await loadDashboard(studentJson.id);
+            } else {
+              setLoading(false);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Auto session lookup failed:", err);
+      }
     }
+    init();
   }, []);
 
   async function loadDashboard(id: string) {
