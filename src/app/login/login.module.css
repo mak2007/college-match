@@ -2,8 +2,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #faf9f5;
-  color: #111;
+  background-color: #FFFAF0;
+  color: #1A1A1A;
   font-family: var(--font-outfit), sans-serif;
 }
 
@@ -20,7 +20,7 @@
 .logo {
   font-weight: 700;
   font-size: 1.25rem;
-  color: #0c2e1b;
+  color: #0F2D52;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -42,13 +42,13 @@
   padding: 2.5rem;
   width: 100%;
   max-width: 440px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 30px rgba(15, 45, 82, 0.02);
 }
 
 .title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #0c2e1b;
+  color: #0F2D52;
   margin-bottom: 0.5rem;
   text-align: center;
 }
@@ -62,7 +62,7 @@
 
 .tabs {
   display: flex;
-  background: #f0ede4;
+  background: #f4eee2;
   padding: 4px;
   border-radius: 8px;
   margin-bottom: 1.5rem;
@@ -83,7 +83,7 @@
 
 .activeTab {
   background: white;
-  color: #0c2e1b;
+  color: #0F2D52;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -136,7 +136,7 @@
 }
 
 .formGroup input:focus {
-  border-color: #34d399;
+  border-color: #0F2D52;
   background: white;
 }
 
@@ -152,21 +152,21 @@
   background: white;
   font-weight: 600;
   font-size: 0.95rem;
-  color: #333;
+  color: #1A1A1A;
   cursor: pointer;
   transition: background 0.2s ease;
   margin-bottom: 1.5rem;
 }
 
 .googleBtn:hover {
-  background: #f7f6f2;
+  background: #f4eee2;
 }
 
 .divider {
   display: flex;
   align-items: center;
   text-align: center;
-  color: #888;
+  color: #8c8c8c;
   font-size: 0.8rem;
   margin: 1.5rem 0;
 }
@@ -205,7 +205,7 @@
 }
 
 .otpInput:focus {
-  border-color: #34d399;
+  border-color: #0F2D52;
   background: white;
 }
 
@@ -214,7 +214,7 @@
   padding: 0.85rem;
   border: none;
   border-radius: 8px;
-  background: #0c2e1b;
+  background: #0F2D52;
   color: white;
   font-weight: 600;
   font-size: 0.95rem;
@@ -224,22 +224,46 @@
 }
 
 .submitBtn:hover {
-  background: #14492b;
+  background: #0A203A;
 }
 
 .submitBtn:disabled {
-  background: #a3b899;
+  background: #c3d0df;
   cursor: not-allowed;
 }
 
 .backBtn {
   background: none;
   border: none;
-  color: #0c2e1b;
+  color: #0F2D52;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
   text-decoration: underline;
   margin-top: 1rem;
   align-self: center;
+}
+
+.modeToggle {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.modeToggle p {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.modeToggle a {
+  color: #0F2D52;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.modeToggle a:hover {
+  color: #C4A484;
+  text-decoration: underline;
 }

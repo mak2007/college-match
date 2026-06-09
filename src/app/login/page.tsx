@@ -14,7 +14,7 @@ const AsteriskIcon = () => (
     strokeWidth="3.5"
     strokeLinecap="round"
     fill="none"
-    style={{ color: "#34d399" }}
+    style={{ color: "#C4A484" }}
   >
     <line x1="12" y1="4" x2="12" y2="20" />
     <line x1="4" y1="12" x2="20" y2="12" />
@@ -27,6 +27,7 @@ function StudentLoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/dashboard/student";
+  const isSignupMode = searchParams.get("mode") === "signup";
 
   const [email, setEmail] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -167,9 +168,11 @@ function StudentLoginContent() {
 
       <div className={styles.container}>
         <div className={styles.card}>
-          <h2 className={styles.title}>Welcome back</h2>
+          <h2 className={styles.title}>{isSignupMode ? "Create your account" : "Welcome back"}</h2>
           <p className={styles.subtitle}>
-            Sign in to access your dashboard and saved results
+            {isSignupMode
+              ? "Sign up to unlock personalized college recommendations and save your results"
+              : "Sign in to access your dashboard and saved results"}
           </p>
 
           {error && <div className={styles.errorAlert}>{error}</div>}
@@ -215,7 +218,7 @@ function StudentLoginContent() {
                 </div>
 
                 <button type="submit" className={styles.submitBtn} disabled={loading}>
-                  {loading ? "Sending code..." : "Send Verification Code"}
+                  {loading ? "Sending code..." : isSignupMode ? "Sign Up with Email" : "Send Verification Code"}
                 </button>
               </form>
             </>
@@ -263,6 +266,13 @@ function StudentLoginContent() {
               </button>
             </form>
           )}
+          <div className={styles.modeToggle}>
+            {isSignupMode ? (
+              <p>Already have an account? <Link href={`/login${redirectUrl !== '/dashboard/student' ? `?redirect=${redirectUrl}` : ''}`}>Log in</Link></p>
+            ) : (
+              <p>Don't have an account? <Link href={`/login?mode=signup${redirectUrl !== '/dashboard/student' ? `&redirect=${redirectUrl}` : ''}`}>Sign up</Link></p>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -275,7 +285,7 @@ export default function StudentLogin() {
       <div className={styles.wrapper}>
         <div className={styles.container}>
           <div className={styles.card} style={{ textAlign: "center" }}>
-            <h2 style={{ color: "#0c2e1b", marginBottom: "0.5rem" }}>Loading...</h2>
+            <h2 style={{ color: "#0F2D52", marginBottom: "0.5rem" }}>Loading...</h2>
           </div>
         </div>
       </div>

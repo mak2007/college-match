@@ -22,8 +22,8 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
     return (
       <div className={styles.errorContainer}>
         <div style={{ maxWidth: "500px", background: "white", border: "1px solid #e6e4dc", borderRadius: "16px", padding: "2.5rem", textAlign: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}>
-          <h2 style={{ color: "#0c2e1b" }}>No recommendations found</h2>
-          <p style={{ color: "#4a5d4e", margin: "1rem 0" }}>
+          <h2 style={{ color: "#0F2D52" }}>No recommendations found</h2>
+          <p style={{ color: "#4a4a4a", margin: "1rem 0" }}>
             It looks like you haven't filled out the preference wizard yet.
           </p>
           <Link href="/wizard" className="btn btn-primary">
@@ -47,8 +47,8 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
     return (
       <div className={styles.errorContainer}>
         <div style={{ maxWidth: "500px", background: "white", border: "1px solid #e6e4dc", borderRadius: "16px", padding: "2.5rem", textAlign: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}>
-          <h2 style={{ color: "#0c2e1b" }}>Student record not found</h2>
-          <p style={{ color: "#4a5d4e", margin: "1rem 0" }}>
+          <h2 style={{ color: "#0F2D52" }}>Student record not found</h2>
+          <p style={{ color: "#4a4a4a", margin: "1rem 0" }}>
             The student ID provided is invalid or has been removed.
           </p>
           <Link href="/wizard" className="btn btn-primary">
@@ -99,8 +99,8 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
 
         {dbRecommendations.length === 0 ? (
           <div style={{ margin: "2rem auto", maxWidth: "600px", background: "white", border: "1px solid #e6e4dc", borderRadius: "16px", padding: "2.5rem", textAlign: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}>
-            <h3 style={{ color: "#0c2e1b" }}>No matches satisfy your strict filters</h3>
-            <p style={{ color: "#4a5d4e", margin: "1rem 0" }}>
+            <h3 style={{ color: "#0F2D52" }}>No matches satisfy your strict filters</h3>
+            <p style={{ color: "#4a4a4a", margin: "1rem 0" }}>
               Try loosening your location constraints or increasing your budget limit in the wizard.
             </p>
             <Link href="/wizard" className="btn btn-primary">
@@ -134,7 +134,7 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
                     maxWidth: "480px",
                     padding: "3rem 2rem",
                     border: "1px solid var(--light-border)",
-                    boxShadow: "0 20px 50px rgba(12, 46, 27, 0.1)",
+                    boxShadow: "0 20px 50px rgba(15, 45, 82, 0.1)",
                     background: "var(--light-surface)",
                   }}
                 >

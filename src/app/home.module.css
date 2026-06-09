@@ -1,6 +1,6 @@
 .wrapper {
-  background-color: #faf9f5; /* Light cream/ivory background */
-  color: #0c2e1b; /* Dark forest green text */
+  background-color: #FFFAF0; /* Floral White */
+  color: #1A1A1A; /* Dark Text */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,7 +11,7 @@
 /* Header */
 .header {
   border-bottom: 1px solid #e5e3dc;
-  background-color: #faf9f5;
+  background-color: #FFFAF0;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -25,7 +25,7 @@
   text-decoration: none;
   font-weight: 800;
   font-size: 1.6rem;
-  color: #0c2e1b;
+  color: #0F2D52;
   letter-spacing: -0.04em;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .navLink {
-  color: #556052;
+  color: #4a4a4a;
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 600;
@@ -61,7 +61,7 @@
 }
 
 .navLink:hover {
-  color: #0c2e1b;
+  color: #0F2D52;
 }
 
 /* Dropdown Menu */
@@ -73,7 +73,7 @@
   transform: translateX(-50%);
   background-color: #ffffff;
   border: 1px solid #e5e3dc;
-  box-shadow: 0 10px 30px rgba(12, 46, 27, 0.08);
+  box-shadow: 0 10px 30px rgba(15, 45, 82, 0.08);
   border-radius: 12px;
   padding: 0.75rem;
   min-width: 220px;
@@ -90,7 +90,7 @@
   display: flex;
   flex-direction: column;
   padding: 0.75rem 1rem;
-  color: #0c2e1b;
+  color: #1A1A1A;
   text-decoration: none;
   border-radius: 8px;
   transition: all 0.2s ease;
@@ -102,7 +102,7 @@
 }
 
 .dropdownLink:hover {
-  background-color: #f4f3ed;
+  background-color: #f4eee2;
 }
 
 .dropdownTitle {
@@ -114,7 +114,7 @@
 }
 
 .dropdownDesc {
-  color: #72816f;
+  color: #8c8c8c;
   font-size: 0.75rem;
   margin-top: 0.15rem;
   font-weight: 400;
@@ -127,7 +127,7 @@
 }
 
 .loginLink {
-  color: #556052;
+  color: #4a4a4a;
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 600;
@@ -135,12 +135,12 @@
 }
 
 .loginLink:hover {
-  color: #0c2e1b;
+  color: #0F2D52;
 }
 
 .signUpBtn {
-  background-color: #0c2e1b;
-  color: #faf9f5;
+  background-color: #0F2D52;
+  color: #FFFAF0;
   border: none;
   padding: 0.65rem 1.35rem;
   border-radius: 9999px;
@@ -154,12 +154,12 @@
 }
 
 .signUpBtn:hover {
-  background-color: #1b4d32;
+  background-color: #0A203A;
 }
 
 /* Hero Section */
 .hero {
-  background-color: #0c2e1b; /* Deep forest green */
+  background-color: #0F2D52; /* Deep Blue */
   color: #ffffff;
   padding: 6.5rem 1.5rem 0 1.5rem;
   text-align: center;
@@ -184,7 +184,7 @@
 
 .circle {
   position: absolute;
-  background-color: rgba(74, 222, 128, 0.04);
+  background-color: rgba(196, 164, 132, 0.06);
   border-radius: 50%;
   filter: blur(40px);
 }
@@ -221,7 +221,7 @@
 }
 
 .badge {
-  color: #fcd34d; /* Yellow/Gold text */
+  color: #C4A484; /* Pale Brown accent */
   font-size: 0.85rem;
   font-weight: 800;
   letter-spacing: 0.15em;
@@ -240,7 +240,7 @@
 
 .subtitle {
   font-size: 1.3rem;
-  color: #a7f3d0; /* Bright light green text */
+  color: #C4A484; /* Pale Brown text for high contrast on Deep Blue */
   font-weight: 600;
   margin-bottom: 3.5rem;
   max-width: 720px;
@@ -248,8 +248,8 @@
 }
 
 .ctaBtn {
-  background-color: #faf9f5; /* Light cream/ivory */
-  color: #0c2e1b;
+  background-color: #FFFAF0; /* Floral White */
+  color: #0F2D52;
   border: none;
   padding: 1.1rem 2.25rem;
   border-radius: 9999px;
@@ -284,7 +284,7 @@
 }
 
 .peekingCard {
-  background-color: #163e27; /* Medium forest green card background */
+  background-color: #0A203A; /* Secondary Deep Blue card background */
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px 16px 0 0;
   height: 160px;
@@ -301,7 +301,7 @@
 
 .peekingCard:hover {
   transform: translateY(5px);
-  background-color: #1a4d31;
+  background-color: #0F2D52;
   border-color: rgba(255, 255, 255, 0.15);
   box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
 }
@@ -329,15 +329,15 @@
 }
 
 .cardText {
-  color: #a7f3d0;
+  color: #C4A484; /* Pale Brown text */
   font-size: 0.85rem;
   margin-top: 0.25rem;
   font-weight: 500;
 }
 
-/* Features Grid (Why fit matters) styled with Forest theme */
+/* Features Grid (Why fit matters) styled with theme */
 .featuresSection {
-  background-color: #faf9f5;
+  background-color: #FFFAF0;
   padding: 8rem 1.5rem;
   width: 100%;
   max-width: 1200px;
@@ -349,7 +349,7 @@
   font-weight: 800;
   text-align: center;
   margin-bottom: 4rem;
-  color: #0c2e1b;
+  color: #0F2D52;
   letter-spacing: -0.03em;
 }
 
@@ -364,14 +364,14 @@
   border: 1px solid #e5e3dc;
   border-radius: 20px;
   padding: 3rem 2.5rem;
-  box-shadow: 0 4px 20px rgba(12, 46, 27, 0.015);
+  box-shadow: 0 4px 20px rgba(15, 45, 82, 0.015);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .featureCard:hover {
   transform: translateY(-6px);
-  box-shadow: 0 15px 35px rgba(12, 46, 27, 0.05);
-  border-color: #c5c3bc;
+  box-shadow: 0 15px 35px rgba(15, 45, 82, 0.05);
+  border-color: #C4A484;
 }
 
 .featureIcon {
@@ -379,7 +379,7 @@
   margin-bottom: 1.75rem;
   width: 54px;
   height: 54px;
-  background-color: #f4f3ed;
+  background-color: #f4eee2;
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -389,13 +389,13 @@
 .featureTitle {
   font-size: 1.3rem;
   font-weight: 800;
-  color: #0c2e1b;
+  color: #0F2D52;
   margin-bottom: 0.85rem;
   letter-spacing: -0.01em;
 }
 
 .featureText {
-  color: #556052;
+  color: #4a4a4a;
   font-size: 0.95rem;
   line-height: 1.65;
 }
@@ -403,7 +403,7 @@
 /* Footer styling */
 .footer {
   border-top: 1px solid #e5e3dc;
-  background-color: #faf9f5;
+  background-color: #FFFAF0;
   padding: 3rem 1.5rem;
   width: 100%;
   margin-top: auto;
@@ -420,12 +420,12 @@
 }
 
 .copyText {
-  color: #8b9588;
+  color: #8c8c8c;
   font-size: 0.9rem;
 }
 
 .footerNote {
-  color: #8b9588;
+  color: #8c8c8c;
   font-size: 0.9rem;
   font-style: italic;
 }

@@ -14,7 +14,7 @@ const AsteriskIcon = () => (
     strokeWidth="3.5"
     strokeLinecap="round"
     fill="none"
-    style={{ color: "#34d399" }}
+    style={{ color: "#C4A484" }}
   >
     <line x1="12" y1="4" x2="12" y2="20" />
     <line x1="4" y1="12" x2="20" y2="12" />
@@ -73,7 +73,7 @@ export default function Navbar() {
               <button
                 className={styles.dropdownTrigger}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                style={isStudentRoute ? { color: "#0c2e1b" } : undefined}
+                style={isStudentRoute ? { color: "#0F2D52" } : undefined}
               >
                 For Students
                 <span className={`${styles.chevron} ${dropdownOpen ? styles.chevronOpen : ""}`}>
@@ -118,7 +118,7 @@ export default function Navbar() {
             <Link href="/login" className={styles.loginLink}>
               Login
             </Link>
-            <Link href="/predict" className={styles.signUpBtn}>
+            <Link href="/login?mode=signup" className={styles.signUpBtn}>
               Sign Up <span style={{ fontSize: "0.85rem" }}>→</span>
             </Link>
           </div>
@@ -157,7 +157,7 @@ export default function Navbar() {
         </div>
 
         <div className={styles.mobileCta}>
-          <Link href="/predict" className={styles.signUpBtn} style={{ justifyContent: "center" }}>
+          <Link href="/login?mode=signup" className={styles.signUpBtn} style={{ justifyContent: "center" }}>
             Sign Up →
           </Link>
           <Link

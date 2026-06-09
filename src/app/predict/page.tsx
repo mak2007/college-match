@@ -48,6 +48,8 @@ export default function Predictor() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<MatchResult[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showLockedModal, setShowLockedModal] = useState(false);
 
   // Quiz Form states
   const [jeePercentile, setJeePercentile] = useState(90);
@@ -111,6 +113,42 @@ export default function Predictor() {
     ranking,
   ]);
 
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          setIsAuthenticated(!!data.user);
+        }
+      } catch {
+        setIsAuthenticated(false);
+      }
+    };
+    checkAuth();
+  }, []);
+
+  // Restore pending results after authentication
+  useEffect(() => {
+    if (isAuthenticated) {
+      try {
+        const pending = localStorage.getItem('cm_pending_results');
+        if (pending) {
+          const parsed = JSON.parse(pending);
+          if (parsed.matches && parsed.matches.length > 0) {
+            setResults(parsed.matches);
+            setStep(6);
+            localStorage.removeItem('cm_pending_results');
+            localStorage.removeItem('cm_predictor_progress');
+          }
+        }
+      } catch (e) {
+        console.error('Error restoring pending results', e);
+      }
+    }
+  }, [isAuthenticated]);
+
   const handleNext = () => {
     if (step < 5) {
       setStep(prev => prev + 1);
@@ -127,6 +165,7 @@ export default function Predictor() {
 
   const resetQuiz = () => {
     localStorage.removeItem("cm_predictor_progress");
+    localStorage.removeItem("cm_pending_results");
     setStep(1);
     setResults([]);
   };
@@ -191,6 +230,21 @@ export default function Predictor() {
       const data = await response.json();
       if (data.success) {
         setResults(data.matches || []);
+        // Save results to localStorage for recovery after auth
+        if (!isAuthenticated) {
+          localStorage.setItem('cm_pending_results', JSON.stringify({
+            matches: data.matches || [],
+            quizInputs: {
+              jeePercentile,
+              class12Percentage,
+              budgetLimit,
+              isBudgetConstraint,
+              preferredBranches,
+              selectedRegions,
+              ranking
+            }
+          }));
+        }
         localStorage.removeItem("cm_predictor_progress"); // Clear on completion
         setStep(6); // Show results view
       } else {
@@ -245,7 +299,7 @@ export default function Predictor() {
             <div className={styles.sliderContainer}>
               <div className={styles.sliderLabel}>
                 <span>JEE Percentile</span>
-                <span style={{ color: "var(--brand-green)" }}>{jeePercentile}%</span>
+                <span style={{ color: "var(--brand-blue)" }}>{jeePercentile}%</span>
               </div>
               <input
                 type="range"
@@ -261,7 +315,7 @@ export default function Predictor() {
             <div className={styles.sliderContainer}>
               <div className={styles.sliderLabel}>
                 <span>Class 12 Board Percentage</span>
-                <span style={{ color: "var(--brand-green)" }}>{class12Percentage}%</span>
+                <span style={{ color: "var(--brand-blue)" }}>{class12Percentage}%</span>
               </div>
               <input
                 type="range"
@@ -437,7 +491,7 @@ export default function Predictor() {
             <div className={styles.sliderContainer}>
               <div className={styles.sliderLabel}>
                 <span>Max 4-Year Budget Limit</span>
-                <span style={{ color: "var(--brand-green)" }}>₹{(budgetLimit / 100000).toFixed(1)} Lakhs</span>
+                <span style={{ color: "var(--brand-blue)" }}>₹{(budgetLimit / 100000).toFixed(1)} Lakhs</span>
               </div>
               <input
                 type="range"
@@ -544,10 +598,10 @@ export default function Predictor() {
             <div key={match.id + "-" + match.branchCode} className={styles.resultCard}>
               <div className={styles.resultCardTop}>
                 <div>
-                  <h3 style={{ fontSize: "1.4rem", fontWeight: "800", color: "#0c2e1b" }}>
+                  <h3 style={{ fontSize: "1.4rem", fontWeight: "800", color: "#0F2D52" }}>
                     {match.name}
                   </h3>
-                  <p style={{ color: "#556052", fontSize: "0.9rem", marginTop: "0.25rem" }}>
+                  <p style={{ color: "#4a4a4a", fontSize: "0.9rem", marginTop: "0.25rem" }}>
                     📍 {match.city}, {match.state} | Branch: <strong>{match.branchCode}</strong>
                   </p>
                 </div>
@@ -618,13 +672,63 @@ export default function Predictor() {
     );
   };
 
+  const renderLockedResults = () => {
+    return (
+      <div className={styles.resultsWrapper}>
+        <div className={styles.lockedOverlay}>
+          <div className={styles.lockedCard}>
+            <div className={styles.lockedIcon}>🔒</div>
+            <h2 className={styles.lockedTitle}>Your Results Are Ready!</h2>
+            <p className={styles.lockedSubtitle}>
+              We've analyzed {results.length} college{results.length !== 1 ? 's' : ''} based on your preferences.
+              Sign up or log in to unlock your personalized recommendations.
+            </p>
+
+            {/* Blurred preview cards */}
+            <div className={styles.blurredPreview}>
+              {results.slice(0, 3).map((match, idx) => (
+                <div key={idx} className={styles.blurredCard}>
+                  <div className={styles.blurredCardInner}>
+                    <span className={styles.blurredRank}>#{idx + 1}</span>
+                    <span className={styles.blurredName}>████████ ██████</span>
+                    <span className={styles.blurredScore}>{match.matchScore.toFixed(0)}%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Auth Actions */}
+            <div className={styles.lockedActions}>
+              <Link
+                href={`/login?mode=signup&redirect=/predict`}
+                className={styles.lockedSignupBtn}
+              >
+                Sign Up to Unlock Results →
+              </Link>
+              <Link
+                href={`/login?redirect=/predict`}
+                className={styles.lockedLoginBtn}
+              >
+                Already have an account? Log in
+              </Link>
+            </div>
+
+            <p className={styles.lockedFootnote}>
+              Your quiz progress is saved. Results will appear instantly after authentication.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.wrapper}>
       <Navbar />
 
       {/* Main quiz interface or results panel */}
       {step === 6 ? (
-        renderResults()
+        isAuthenticated ? renderResults() : renderLockedResults()
       ) : (
         <div className={styles.quizLayout}>
           {/* Left illustration side */}

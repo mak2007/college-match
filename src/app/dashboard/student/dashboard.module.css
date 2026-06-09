@@ -1,14 +1,14 @@
 .wrapper {
   min-height: 100vh;
-  background-color: #faf9f5;
-  color: #0c2e1b;
+  background-color: #FFFAF0;
+  color: #1A1A1A;
   font-family: var(--font-family);
 }
 
 .header {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 250, 240, 0.85);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid #e6e4dc;
+  border-bottom: 1px solid #e5e3dc;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -17,7 +17,7 @@
 .logo {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #0c2e1b;
+  color: #0F2D52;
   text-decoration: none;
   letter-spacing: -0.025em;
 }
@@ -28,7 +28,7 @@
 }
 
 .navLink {
-  color: #4a5d4e;
+  color: #4a4a4a;
   text-decoration: none;
   font-size: 0.925rem;
   font-weight: 500;
@@ -36,7 +36,7 @@
 }
 
 .navLink:hover {
-  color: #0c2e1b;
+  color: #0F2D52;
 }
 
 /* --- Lookup Gate Style --- */
@@ -55,8 +55,8 @@
   text-align: center;
   border-radius: 24px;
   background: #ffffff;
-  border: 1px solid #e6e4dc;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e3dc;
+  box-shadow: 0 4px 20px rgba(15, 45, 82, 0.04);
   animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -71,11 +71,11 @@
   font-weight: 800;
   letter-spacing: -0.025em;
   margin-bottom: 0.75rem;
-  color: #0c2e1b;
+  color: #0F2D52;
 }
 
 .gateSubtitle {
-  color: #4a5d4e;
+  color: #4a4a4a;
   font-size: 0.975rem;
   line-height: 1.6;
   margin-bottom: 2rem;
@@ -92,16 +92,16 @@
   padding: 0.9rem 1.2rem;
   border-radius: 12px;
   background: #ffffff;
-  border: 1px solid #e6e4dc;
-  color: #0c2e1b;
+  border: 1px solid #e5e3dc;
+  color: #1A1A1A;
   font-size: 1rem;
   outline: none;
   transition: all 0.2s ease;
 }
 
 .gateForm input:focus {
-  border-color: #34d399;
-  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2);
+  border-color: #0F2D52;
+  box-shadow: 0 0 0 3px rgba(15, 45, 82, 0.15);
 }
 
 .errorAlert {
@@ -117,11 +117,11 @@
 .gateHint {
   margin-top: 1.75rem;
   font-size: 0.875rem;
-  color: #8c9e90;
+  color: #8c8c8c;
 }
 
 .gateLink {
-  color: #059669;
+  color: #0F2D52;
   text-decoration: none;
   font-weight: 500;
 }
@@ -136,8 +136,8 @@
   align-items: center;
   gap: 2rem;
   padding: 2.5rem;
-  background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(12, 46, 27, 0.02) 100%);
-  border: 1px solid rgba(52, 211, 153, 0.25);
+  background: linear-gradient(135deg, rgba(15, 45, 82, 0.08) 0%, rgba(196, 164, 132, 0.06) 100%);
+  border: 1px solid rgba(15, 45, 82, 0.12);
   border-radius: 24px;
   margin-bottom: 2rem;
 }
@@ -146,14 +146,14 @@
   width: 68px;
   height: 68px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #0c2e1b 0%, #10b981 100%);
+  background: linear-gradient(135deg, #0F2D52 0%, #1e40af 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.75rem;
   font-weight: 800;
   color: #fff;
-  box-shadow: 0 10px 20px rgba(12, 46, 27, 0.15);
+  box-shadow: 0 10px 20px rgba(15, 45, 82, 0.2);
 }
 
 .welcomeTitle {
@@ -161,11 +161,11 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   margin-bottom: 0.25rem;
-  color: #0c2e1b;
+  color: #0F2D52;
 }
 
 .welcomeSub {
-  color: #4a5d4e;
+  color: #4a4a4a;
   font-size: 0.95rem;
 }
 
@@ -186,15 +186,15 @@
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e5e3dc;
   background: #ffffff;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 10px rgba(15, 45, 82, 0.02);
 }
 
 .kpiCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 15px rgba(15, 45, 82, 0.06);
 }
 
 .kpiIcon {
@@ -206,28 +206,28 @@
   font-size: 2.25rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #0c2e1b;
+  color: #0F2D52;
   line-height: 1;
   margin-bottom: 0.5rem;
 }
 
 .kpiLabel {
   font-size: 0.875rem;
-  color: #4a5d4e;
+  color: #4a4a4a;
   font-weight: 500;
   margin-bottom: 0.25rem;
 }
 
 .kpiSub {
   font-size: 0.775rem;
-  color: #8c9e90;
+  color: #8c8c8c;
 }
 
 /* --- Tabs Bar --- */
 .tabBar {
   display: flex;
   gap: 0.75rem;
-  border-bottom: 1px solid #e6e4dc;
+  border-bottom: 1px solid #e5e3dc;
   margin-bottom: 2rem;
   padding-bottom: 0.5rem;
 }
@@ -235,7 +235,7 @@
 .tabBtn {
   background: none;
   border: none;
-  color: #4a5d4e;
+  color: #4a4a4a;
   padding: 0.75rem 1.25rem;
   font-size: 0.95rem;
   font-weight: 600;
@@ -245,14 +245,14 @@
 }
 
 .tabBtn:hover {
-  color: #0c2e1b;
-  background: rgba(12, 46, 27, 0.03);
+  color: #0F2D52;
+  background: rgba(15, 45, 82, 0.04);
 }
 
 .tabBtnActive {
-  color: #0c2e1b;
-  background: rgba(52, 211, 153, 0.1);
-  box-shadow: inset 0 -2px 0 #10b981;
+  color: #0F2D52;
+  background: rgba(15, 45, 82, 0.08);
+  box-shadow: inset 0 -2px 0 #0F2D52;
 }
 
 /* --- Tab Content --- */
@@ -276,7 +276,7 @@
 .infoCard {
   padding: 2rem;
   border-radius: 20px;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e5e3dc;
   background: #ffffff;
 }
 
@@ -284,9 +284,9 @@
   font-size: 1.15rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid #e6e4dc;
+  border-bottom: 1px solid #e5e3dc;
   padding-bottom: 0.75rem;
-  color: #0c2e1b;
+  color: #0F2D52;
 }
 
 .infoRows {
@@ -303,15 +303,15 @@
 }
 
 .infoRow span {
-  color: #4a5d4e;
+  color: #4a4a4a;
 }
 
 .infoRow strong {
-  color: #0c2e1b;
+  color: #1A1A1A;
 }
 
 .highlight {
-  color: #059669 !important;
+  color: #0F2D52 !important;
   font-size: 1.05rem;
 }
 
@@ -325,21 +325,21 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: #faf9f5;
-  border: 1px solid #e6e4dc;
+  background: #f4eee2;
+  border: 1px solid #e5e3dc;
   padding: 0.75rem 1rem;
   border-radius: 12px;
 }
 
 .priorityNum {
   font-weight: 700;
-  color: #059669;
+  color: #0F2D52;
   font-size: 0.875rem;
 }
 
 .priorityCriteria {
   font-size: 0.9rem;
-  color: #0c2e1b;
+  color: #1A1A1A;
 }
 
 .locationTags {
@@ -350,9 +350,9 @@
 }
 
 .locationTag {
-  background: rgba(52, 211, 153, 0.1);
-  border: 1px solid rgba(52, 211, 153, 0.25);
-  color: #059669;
+  background: rgba(15, 45, 82, 0.08);
+  border: 1px solid rgba(15, 45, 82, 0.15);
+  color: #0F2D52;
   padding: 0.4rem 0.8rem;
   border-radius: 8px;
   font-size: 0.825rem;
@@ -361,7 +361,7 @@
 
 .locationNote {
   font-size: 0.8rem;
-  color: #8c9e90;
+  color: #8c8c8c;
   margin: 0;
   line-height: 1.4;
 }
@@ -376,15 +376,15 @@
 .matchCard {
   padding: 2rem;
   border-radius: 20px;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e5e3dc;
   background: #ffffff;
   transition: all 0.25s ease;
 }
 
 .matchCard:hover {
   transform: translateY(-2px);
-  border-color: #c5d6c9;
-  box-shadow: 0 8px 24px rgba(12, 46, 27, 0.08);
+  border-color: #C4A484;
+  box-shadow: 0 8px 24px rgba(15, 45, 82, 0.08);
 }
 
 .matchHeader {
@@ -400,7 +400,7 @@
 }
 
 .matchRank {
-  background: linear-gradient(135deg, #0c2e1b 0%, #10b981 100%);
+  background: linear-gradient(135deg, #0F2D52 0%, #1e40af 100%);
   color: white;
   font-weight: 800;
   font-size: 1rem;
@@ -410,20 +410,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(12, 46, 27, 0.2);
+  box-shadow: 0 4px 12px rgba(15, 45, 82, 0.2);
 }
 
 .matchName {
   font-size: 1.35rem;
   font-weight: 800;
   letter-spacing: -0.01em;
-  color: #0c2e1b;
+  color: #0F2D52;
   margin: 0 0 0.25rem;
 }
 
 .matchLoc {
   font-size: 0.85rem;
-  color: #4a5d4e;
+  color: #4a4a4a;
   margin: 0;
 }
 
@@ -434,7 +434,7 @@
 .matchScoreLabel {
   display: block;
   font-size: 0.75rem;
-  color: #8c9e90;
+  color: #8c8c8c;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.15rem;
@@ -443,7 +443,7 @@
 .matchScore {
   font-size: 1.75rem;
   font-weight: 800;
-  color: #10b981;
+  color: #0F2D52;
 }
 
 .matchBranchRow {
@@ -451,15 +451,15 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
-  background: #f7f5ef;
+  background: #f4eee2;
   padding: 0.6rem 1rem;
   border-radius: 12px;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e5e3dc;
 }
 
 .branchPill {
-  background: rgba(52, 211, 153, 0.15);
-  color: #059669;
+  background: rgba(15, 45, 82, 0.1);
+  color: #0F2D52;
   font-size: 0.75rem;
   font-weight: 700;
   padding: 0.25rem 0.6rem;
@@ -470,16 +470,16 @@
 .branchTitle {
   font-weight: 600;
   font-size: 0.95rem;
-  color: #0c2e1b;
+  color: #1A1A1A;
 }
 
 .partnerBadge {
   margin-left: auto;
   font-size: 0.775rem;
   font-weight: 600;
-  color: #10b981;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #0F2D52;
+  background: rgba(15, 45, 82, 0.08);
+  border: 1px solid rgba(15, 45, 82, 0.15);
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
 }
@@ -492,23 +492,23 @@
 }
 
 .matchStat {
-  background: #faf9f5;
+  background: #f4eee2;
   padding: 0.75rem;
   border-radius: 10px;
   text-align: center;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e5e3dc;
 }
 
 .matchStat span {
   display: block;
   font-size: 0.75rem;
-  color: #8c9e90;
+  color: #8c8c8c;
   margin-bottom: 0.25rem;
 }
 
 .matchStat strong {
   font-size: 0.95rem;
-  color: #0c2e1b;
+  color: #1A1A1A;
 }
 
 .matchReasons {
@@ -516,15 +516,15 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
-  border-top: 1px solid #e6e4dc;
+  border-top: 1px solid #e5e3dc;
   padding-top: 1rem;
 }
 
 .reasonChip {
   font-size: 0.8rem;
-  color: #4a5d4e;
-  background: #f5f3ec;
-  border: 1px solid #e6e4dc;
+  color: #4a4a4a;
+  background: #f4eee2;
+  border: 1px solid #e5e3dc;
   padding: 0.35rem 0.75rem;
   border-radius: 99px;
 }
@@ -533,13 +533,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #e6e4dc;
+  border-top: 1px solid #e5e3dc;
   padding-top: 1rem;
 }
 
 .matchDate {
   font-size: 0.775rem;
-  color: #8c9e90;
+  color: #8c8c8c;
 }
 
 /* --- Leads Tab --- */
@@ -555,15 +555,15 @@
   min-width: 140px;
   background: #ffffff;
   border-left: 3px solid;
-  border-top: 1px solid #e6e4dc;
-  border-right: 1px solid #e6e4dc;
-  border-bottom: 1px solid #e6e4dc;
+  border-top: 1px solid #e5e3dc;
+  border-right: 1px solid #e5e3dc;
+  border-bottom: 1px solid #e5e3dc;
   padding: 0.85rem 1.25rem;
   border-radius: 10px;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
+  box-shadow: 0 2px 8px rgba(15, 45, 82, 0.02);
 }
 
 .pipelineIcon {
@@ -578,7 +578,7 @@
 
 .pipelineLabel {
   font-size: 0.8rem;
-  color: #4a5d4e;
+  color: #4a4a4a;
   font-weight: 500;
 }
 
@@ -594,7 +594,7 @@
   padding: 0.75rem 1.5rem;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #8c9e90;
+  color: #8c8c8c;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -606,25 +606,25 @@
   padding: 1.25rem 1.5rem;
   border-radius: 14px;
   background: #ffffff;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e5e3dc;
   transition: all 0.2s ease;
 }
 
 .tableRow:hover {
-  background: #faf8f2;
-  border-color: #c5d6c9;
+  background: #f4eee2;
+  border-color: #C4A484;
 }
 
 .leadCollege {
   font-weight: 700;
   font-size: 0.95rem;
-  color: #0c2e1b;
+  color: #0F2D52;
   margin-bottom: 0.25rem;
 }
 
 .leadBranch {
   font-size: 0.8rem;
-  color: #4a5d4e;
+  color: #4a4a4a;
 }
 
 .statusBadge {
@@ -640,17 +640,17 @@
 
 .tableDate {
   font-size: 0.85rem;
-  color: #4a5d4e;
+  color: #4a4a4a;
 }
 
 .tokenCode {
   font-family: monospace;
   font-size: 0.775rem;
-  background: #f5f3ec;
-  color: #0c2e1b;
+  background: #f4eee2;
+  color: #0F2D52;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e5e3dc;
 }
 
 @keyframes fadeIn {
@@ -700,7 +700,7 @@
   .tableRow > div::before {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #8c9e90;
+    color: #8c8c8c;
     text-transform: uppercase;
   }
   .tableRow > div:nth-child(2)::before { content: "Status: "; }
@@ -713,6 +713,9 @@
   }
   .matchScoreWrap {
     text-align: left;
+  }
+  .matchStats {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -730,13 +733,13 @@
   backdrop-filter: blur(12px);
   border: 1px solid;
   max-width: 400px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px rgba(15, 45, 82, 0.08);
 }
 
 .toastSuccess {
-  background: rgba(16, 185, 129, 0.1);
-  color: #059669;
-  border-color: rgba(16, 185, 129, 0.2);
+  background: rgba(15, 45, 82, 0.08);
+  color: #0F2D52;
+  border-color: rgba(15, 45, 82, 0.15);
 }
 
 .toastError {
@@ -761,9 +764,9 @@
   padding: 0.6rem 1.25rem;
   font-size: 0.875rem;
   border-radius: 8px;
-  border: 1px solid rgba(245, 158, 11, 0.5);
-  background: rgba(245, 158, 11, 0.08);
-  color: #b45309;
+  border: 1px solid rgba(196, 164, 132, 0.5);
+  background: rgba(196, 164, 132, 0.08);
+  color: #C4A484;
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 500;
@@ -771,9 +774,9 @@
 }
 
 .shortlistBtn:hover:not(:disabled) {
-  background: rgba(245, 158, 11, 0.15);
+  background: rgba(196, 164, 132, 0.15);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+  box-shadow: 0 4px 12px rgba(196, 164, 132, 0.15);
 }
 
 .shortlistBtn:disabled {
@@ -785,8 +788,8 @@
   padding: 0.6rem 1.25rem;
   font-size: 0.875rem;
   border-radius: 8px;
-  border: 1px solid rgba(12, 46, 27, 0.2);
-  background: linear-gradient(135deg, #0c2e1b 0%, #10b981 100%);
+  border: 1px solid rgba(15, 45, 82, 0.2);
+  background: linear-gradient(135deg, #0F2D52 0%, #1e40af 100%);
   color: #fff;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -796,7 +799,7 @@
 
 .applyBtn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(12, 46, 27, 0.2);
+  box-shadow: 0 4px 15px rgba(15, 45, 82, 0.2);
 }
 
 .applyBtn:disabled {
@@ -821,7 +824,7 @@
   border-radius: 6px;
   border: 1px solid rgba(107, 114, 128, 0.3);
   background: rgba(107, 114, 128, 0.05);
-  color: #4a5d4e;
+  color: #4a4a4a;
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 500;
