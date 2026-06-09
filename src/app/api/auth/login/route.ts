@@ -16,11 +16,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // 1. Find User by email
+    // Find user and verify password in minimal queries
     const user = await prisma.user.findUnique({
       where: { email },
-      include: {
-        collegeAdminProfile: true,
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        passwordHash: true,
+        collegeAdminProfile: {
+          select: { collegeId: true },
+          take: 1,
+        },
       },
     });
 
@@ -28,43 +35,38 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // 2. Verify password hash
     const isPasswordMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordMatch) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // 3. For College Admins, get the associated college ID
-    let collegeId: string | null = null;
-    if (user.role === "COLLEGE_ADMIN" && user.collegeAdminProfile.length > 0) {
-      collegeId = user.collegeAdminProfile[0].collegeId;
-    }
+    const collegeId =
+      user.role === "COLLEGE_ADMIN" && user.collegeAdminProfile.length > 0
+        ? user.collegeAdminProfile[0].collegeId
+        : null;
 
-    // 4. Sign JWT Token
-    const tokenPayload = {
+    const token = await signToken({
       userId: user.id,
       email: user.email,
       role: user.role,
-      collegeId: collegeId,
-    };
+      collegeId,
+    });
 
-    const token = await signToken(tokenPayload);
-
-    // 5. Set HttpOnly Cookie
     const cookieStore = await cookies();
     cookieStore.set("cm_auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24, // 24 hours
+      maxAge: 60 * 60 * 24,
       sameSite: "lax",
       path: "/",
     });
 
     return NextResponse.json({
       success: true,
+      userId: user.id,
       role: user.role,
       email: user.email,
-      college_id: collegeId,
+      collegeId,
     });
   } catch (error: any) {
     console.error("Login API Route Error:", error);

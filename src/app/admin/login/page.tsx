@@ -3,13 +3,15 @@
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
 import styles from "./login.module.css";
 
 function AdminLoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect");
-  
+  const { login, setLastVisitedPath } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,7 @@ function AdminLoginContent() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -33,15 +36,20 @@ function AdminLoginContent() {
         throw new Error(data.error || "Login failed");
       }
 
-      // Route based on user role or redirect query parameter
-      if (data.role === "SUPERADMIN") {
-        router.push(redirectUrl || "/admin/super");
-      } else if (data.role === "COLLEGE_ADMIN") {
-        router.push(redirectUrl || "/admin/college");
-      } else {
-        throw new Error("Unauthorized role");
+      // Update auth context
+      if (data.role) {
+        // Store role in context via login
       }
-      router.refresh();
+
+      const targetUrl = redirectUrl || (data.role === "SUPERADMIN" ? "/admin/super" : "/admin/college");
+      setLastVisitedPath(targetUrl);
+
+      // Store in sessionStorage for refresh preservation
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("cm_last_path", targetUrl);
+      }
+
+      router.push(targetUrl);
     } catch (err: any) {
       console.error("Login client error:", err);
       setError(err.message || "Invalid email or password");
@@ -95,7 +103,7 @@ function AdminLoginContent() {
           </form>
 
           <div className={styles.helpText}>
-            💡 <strong>Demo Credentials:</strong> <br />
+            <strong>Demo Credentials:</strong> <br />
             - Superadmin: <code>admin@collegematch.in</code> / <code>AdminPass123!</code> <br />
             - College Admin: <code>admissions@vit.edu</code> / <code>CollegePass123!</code>
           </div>

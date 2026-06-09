@@ -231,6 +231,10 @@ input::placeholder {
     transform: scale(1);
   }
 }
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 
 .animate-fade {
   animation: fadeIn 0.4s ease forwards;
@@ -240,6 +244,21 @@ input::placeholder {
 }
 .animate-scale {
   animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--light-bg) 25%, var(--light-border) 50%, var(--light-bg) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* Dark theme skeleton */
+@media (prefers-color-scheme: dark) {
+  .skeleton {
+    background: linear-gradient(90deg, var(--surface-dark) 25%, var(--surface-light) 50%, var(--surface-dark) 75%);
+    background-size: 200% 100%;
+  }
 }
 
 /* Grid & Layout Helpers */
