@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import styles from "./login.module.css";
 
-export default function AdminLogin() {
+function AdminLoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect");
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,14 +33,15 @@ export default function AdminLogin() {
         throw new Error(data.error || "Login failed");
       }
 
-      // Route based on user role
+      // Route based on user role or redirect query parameter
       if (data.role === "SUPERADMIN") {
-        router.push("/admin/super");
+        router.push(redirectUrl || "/admin/super");
       } else if (data.role === "COLLEGE_ADMIN") {
-        router.push("/admin/college");
+        router.push(redirectUrl || "/admin/college");
       } else {
         throw new Error("Unauthorized role");
       }
+      router.refresh();
     } catch (err: any) {
       console.error("Login client error:", err);
       setError(err.message || "Invalid email or password");
@@ -98,5 +102,21 @@ export default function AdminLogin() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminLogin() {
+  return (
+    <Suspense fallback={
+      <div className={styles.wrapper}>
+        <div className={styles.container}>
+          <div className="glass-card text-center" style={{ width: "100%", maxWidth: "420px" }}>
+            <h2 className={styles.title}>Loading...</h2>
+          </div>
+        </div>
+      </div>
+    }>
+      <AdminLoginContent />
+    </Suspense>
   );
 }

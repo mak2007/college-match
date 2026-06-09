@@ -7,29 +7,18 @@ import LeadsTable from "./LeadsTable";
 import styles from "./college.module.css";
 
 export default async function CollegeAdminDashboard() {
-  // 1. Verify Authentication & Role
+  // 1. Retrieve user details (middleware already guarantees authentication)
   const cookieStore = await cookies();
   const token = cookieStore.get("cm_auth_token")?.value;
 
   const decoded = token ? await verifyToken(token) : null;
+  const collegeId = decoded?.collegeId;
 
-  if (!decoded || decoded.role !== "COLLEGE_ADMIN") {
-    redirect("/admin/login");
-  }
-
-  const collegeId = decoded.collegeId;
-
-  if (!collegeId) {
+  if (!decoded || !collegeId) {
     return (
-      <div className={styles.errorWrapper}>
-        <div className="glass-card text-center" style={{ maxWidth: "500px" }}>
-          <h2>No Associated College Profile</h2>
-          <p style={{ color: "var(--text-secondary)", margin: "1rem 0" }}>
-            This account is not associated with any college profile. Please contact the administrator.
-          </p>
-          <Link href="/api/auth/logout" className="btn btn-primary">
-            Logout
-          </Link>
+      <div className={styles.wrapper}>
+        <div className="container" style={{ padding: "3rem 1.5rem" }}>
+          <h2>Loading Partner Portal...</h2>
         </div>
       </div>
     );
@@ -44,7 +33,19 @@ export default async function CollegeAdminDashboard() {
   });
 
   if (!college) {
-    redirect("/admin/login");
+    return (
+      <div className={styles.errorWrapper}>
+        <div className="glass-card text-center" style={{ maxWidth: "500px" }}>
+          <h2>College Profile Not Found</h2>
+          <p style={{ color: "var(--text-secondary)", margin: "1rem 0" }}>
+            The college profile associated with this account could not be found.
+          </p>
+          <Link href="/api/auth/logout" className="btn btn-primary">
+            Logout
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   const leads = await prisma.lead.findMany({

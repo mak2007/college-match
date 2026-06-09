@@ -69,8 +69,10 @@ export async function middleware(request: NextRequest) {
   // 2. Extract JWT token from cookie
   const token = request.cookies.get("cm_auth_token")?.value;
 
+  console.log(`[Middleware] Path: ${pathname}, Token present: ${!!token}`);
+
   if (!token) {
-    // No token → redirect to login
+    console.log(`[Middleware] Redirecting to login: No token for ${pathname}`);
     const loginUrl = new URL("/admin/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
@@ -79,7 +81,7 @@ export async function middleware(request: NextRequest) {
   // 3. Verify JWT signature and expiration
   const payload = await verifyToken(token);
   if (!payload) {
-    // Invalid or expired token → clear cookie and redirect to login
+    console.log(`[Middleware] Redirecting to login: Token verification failed for ${pathname}`);
     const loginUrl = new URL("/admin/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     loginUrl.searchParams.set("reason", "session_expired");
@@ -90,8 +92,10 @@ export async function middleware(request: NextRequest) {
 
   // 4. Check role-based access
   const requiredRoles = getRequiredRoles(pathname);
+  console.log(`[Middleware] Payload Role: ${payload.role}, Required Roles for ${pathname}: ${JSON.stringify(requiredRoles)}`);
+
   if (requiredRoles && !requiredRoles.includes(payload.role)) {
-    // Authenticated but wrong role → redirect to appropriate dashboard
+    console.log(`[Middleware] Role mismatch. Redirecting payload.role: ${payload.role}`);
     let redirectTarget = "/";
     switch (payload.role) {
       case "SUPERADMIN":
