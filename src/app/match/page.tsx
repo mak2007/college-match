@@ -70,6 +70,7 @@ export default function LiveMatcher() {
   const [matches, setMatches] = useState<MatchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [careerGoal, setCareerGoal] = useState<string>("NOT_SURE");
 
   const AVAILABLE_LOCATIONS = [
     { state: "Karnataka", city: "Bengaluru" },
@@ -152,6 +153,7 @@ export default function LiveMatcher() {
           criteria: p.id,
           rankOrder: idx + 1,
         })),
+        careerGoal,
       };
 
       const res = await fetch("/api/match", {
@@ -179,7 +181,8 @@ export default function LiveMatcher() {
     restrictLocation,
     selectedLocations,
     preferredBranches,
-    priorities
+    priorities,
+    careerGoal,
   ]);
 
   // Fetch matches initially and trigger live reload when dependencies update
@@ -258,6 +261,31 @@ export default function LiveMatcher() {
                   onChange={(e) => setClass12Percentage(parseFloat(e.target.value))}
                   className={styles.rangeSlider}
                 />
+              </div>
+            </div>
+
+            {/* Career Goal Section */}
+            <div className={styles.filterSection}>
+              <h4 className={styles.sectionLabel}>Career Goal</h4>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                {[
+                  { id: "PLACEMENT", label: "💼 Get Placed" },
+                  { id: "STARTUP", label: "🚀 Start a Startup" },
+                  { id: "HIGHER_STUDIES_INDIA", label: "🎓 Higher Studies (India)" },
+                  { id: "HIGHER_STUDIES_ABROAD", label: "🌍 Study Abroad" },
+                  { id: "GOVERNMENT_EXAMS", label: "📝 Government Exams" },
+                  { id: "NOT_SURE", label: "🤔 Not Sure Yet" },
+                ].map((goal) => (
+                  <button
+                    key={goal.id}
+                    type="button"
+                    className={`${styles.branchBtn} ${careerGoal === goal.id ? styles.branchBtnActive : ""}`}
+                    onClick={() => setCareerGoal(goal.id)}
+                    style={{ textAlign: "left", justifyContent: "flex-start" }}
+                  >
+                    {goal.label}
+                  </button>
+                ))}
               </div>
             </div>
 

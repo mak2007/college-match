@@ -108,6 +108,20 @@ export default function SuperadminColleges() {
     setError("");
   };
 
+  const handleDeleteCollege = async (collegeId: string, collegeName: string) => {
+    if (!confirm(`Are you sure you want to delete "${collegeName}"? This action cannot be undone.`)) return;
+    try {
+      const res = await fetch(`/api/admin/colleges?collegeId=${collegeId}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete college");
+      setColleges(colleges.filter(c => c.id !== collegeId));
+      if (selectedCollege?.id === collegeId) setSelectedCollege(null);
+      setMessage(`"${collegeName}" deleted successfully.`);
+      setTimeout(() => setMessage(""), 3000);
+    } catch (err: any) {
+      setError(err.message || "Failed to delete college");
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedCollege) return;
@@ -177,9 +191,14 @@ export default function SuperadminColleges() {
   return (
     <div className={styles.wrapper}>
       <main className="container" style={{ padding: "3rem 1.5rem" }}>
-        <div style={{ marginBottom: "2rem" }}>
-          <h1 className={styles.title}>Colleges Registry & Ratings</h1>
-          <p className={styles.subtitle}>Manage standard scores, commission rates, and custom attributes.</p>
+        <div style={{ marginBottom: "2rem", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div>
+            <h1 className={styles.title}>Colleges Registry & Ratings</h1>
+            <p className={styles.subtitle}>Manage standard scores, commission rates, and custom attributes.</p>
+          </div>
+          <Link href="/admin/super/colleges/form" className="btn btn-primary glow-effect" style={{ whiteSpace: "nowrap" }}>
+            + Add New College
+          </Link>
         </div>
 
         {message && <div className={styles.successAlert}>✓ {message}</div>}
@@ -204,9 +223,25 @@ export default function SuperadminColleges() {
                   >
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                       <strong>{col.name}</strong>
-                      <span className={styles.partnerBadge}>
-                        {col.isPartner ? "Partner" : "Standard"}
-                      </span>
+                      <div style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
+                        <span className={styles.partnerBadge}>
+                          {col.isPartner ? "Partner" : "Standard"}
+                        </span>
+                        <Link
+                          href={`/admin/super/colleges/form?id=${col.id}`}
+                          style={{ fontSize: "0.75rem", padding: "0.2rem 0.5rem", background: "#e0efe9", borderRadius: "4px", color: "#065f46", textDecoration: "none" }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Edit
+                        </Link>
+                        <button
+                          type="button"
+                          style={{ fontSize: "0.75rem", padding: "0.2rem 0.5rem", background: "#fee2e2", borderRadius: "4px", color: "#991b1b", border: "none", cursor: "pointer" }}
+                          onClick={(e) => { e.stopPropagation(); handleDeleteCollege(col.id, col.name); }}
+                        >
+                          Del
+                        </button>
+                      </div>
                     </div>
                     <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "0.25rem" }}>
                       📍 {col.city}, {col.state} | Rate: ₹{col.commissionRate.toLocaleString("en-IN")}

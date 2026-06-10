@@ -67,6 +67,7 @@ export default function Predictor() {
     "research",
     "extracurriculars"
   ]);
+  const [careerGoal, setCareerGoal] = useState<string>("NOT_SURE");
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -84,6 +85,7 @@ export default function Predictor() {
         if (parsed.locationMode !== undefined) setLocationMode(parsed.locationMode);
         if (parsed.selectedStates !== undefined) setSelectedStates(parsed.selectedStates);
         if (parsed.ranking !== undefined) setRanking(parsed.ranking);
+        if (parsed.careerGoal !== undefined) setCareerGoal(parsed.careerGoal);
       }
     } catch (e) {
       console.error("Error loading progress from localStorage", e);
@@ -92,7 +94,7 @@ export default function Predictor() {
 
   // Save to localStorage when quiz values change
   useEffect(() => {
-    if (step < 6) {
+    if (step < 7) {
       const progress = {
         step,
         jeePercentile,
@@ -104,6 +106,7 @@ export default function Predictor() {
         locationMode,
         selectedStates,
         ranking,
+        careerGoal,
       };
       localStorage.setItem("cm_predictor_progress", JSON.stringify(progress));
     }
@@ -118,6 +121,7 @@ export default function Predictor() {
     locationMode,
     selectedStates,
     ranking,
+    careerGoal,
   ]);
 
   // Check authentication status
@@ -157,7 +161,7 @@ export default function Predictor() {
   }, [isAuthenticated]);
 
   const handleNext = () => {
-    if (step < 5) {
+    if (step < 6) {
       setStep(prev => prev + 1);
     } else {
       handleSubmit();
@@ -222,7 +226,8 @@ export default function Predictor() {
           restrictLocation: statesToFilter.length > 0,
           preferredLocations: statesToFilter.map(state => ({ state, city: "" })),
           preferredBranches,
-          priorities
+          priorities,
+          careerGoal,
         })
       });
 
@@ -240,7 +245,8 @@ export default function Predictor() {
               isBudgetConstraint,
               preferredBranches,
               selectedRegions,
-              ranking
+              ranking,
+              careerGoal,
             }
           }));
         }
@@ -257,7 +263,7 @@ export default function Predictor() {
     }
   };
 
-  const STEP_LABELS = ["Academics", "Location", "Priorities", "Budget", "Branches"];
+  const STEP_LABELS = ["Academics", "Career Goal", "Location", "Priorities", "Budget", "Branches"];
 
   const renderStepIndicator = () => {
     return (
@@ -328,7 +334,37 @@ export default function Predictor() {
             </div>
           </div>
         );
-      case 2: // Location Preference
+      case 2: // Career Goal
+        const CAREER_GOALS = [
+          { id: "PLACEMENT", icon: "💼", title: "Get Placed", desc: "Secure a high-paying job right after graduation" },
+          { id: "STARTUP", icon: "🚀", title: "Start a Startup", desc: "Build entrepreneurial skills and access incubation" },
+          { id: "HIGHER_STUDIES_INDIA", icon: "🎓", title: "Higher Studies (India)", desc: "Prepare for M.Tech/MS at top Indian institutions" },
+          { id: "HIGHER_STUDIES_ABROAD", icon: "🌍", title: "Study Abroad", desc: "Target MS/PhD at international universities" },
+          { id: "GOVERNMENT_EXAMS", icon: "📝", title: "Government Exams", desc: "Prepare for GATE/PSU/UPSC and public sector" },
+          { id: "NOT_SURE", icon: "🤔", title: "Not Sure Yet", desc: "Keep all options open with balanced recommendations" },
+        ];
+
+        return (
+          <div className={styles.questionGroup}>
+            <h2 className={styles.questionTitle}>What is your career goal after B.Tech?</h2>
+            <p className={styles.questionSubtitle}>This is the primary factor driving your college recommendations</p>
+
+            <div className={styles.optionsGrid}>
+              {CAREER_GOALS.map((goal) => (
+                <div
+                  key={goal.id}
+                  className={`${styles.optionCard} ${careerGoal === goal.id ? styles.optionCardActive : ""}`}
+                  onClick={() => setCareerGoal(goal.id)}
+                >
+                  <span style={{ fontSize: "2rem" }}>{goal.icon}</span>
+                  <span className={styles.optionTitle}>{goal.title}</span>
+                  <span className={styles.optionDesc}>{goal.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case 3: // Location Preference
         const INDIAN_STATES = [
           "Andhra Pradesh", "Assam", "Bihar", "Chhattisgarh", "Delhi", "Gujarat",
           "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka",
@@ -426,7 +462,7 @@ export default function Predictor() {
             </div>
           </div>
         );
-      case 3: // Priorities Ranking
+      case 4: // Priorities Ranking
         const itemsMap = {
           placements: { label: "Placements & Salaries", icon: "💼", desc: "Top recruiters, package statistics, and career growth" },
           extracurriculars: { label: "Extracurricular activities and sports", icon: "⚽", desc: "Clubs, student chapters, athletic events, and active groups" },
@@ -529,7 +565,7 @@ export default function Predictor() {
             </div>
           </div>
         );
-      case 4: // Budget
+      case 5: // Budget
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Tuition & Hostel Budget</h2>
@@ -561,7 +597,7 @@ export default function Predictor() {
             </label>
           </div>
         );
-      case 5: // Branch Preference
+      case 6: // Branch Preference
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Preferred B.Tech Branches</h2>
@@ -797,7 +833,7 @@ export default function Predictor() {
                 <div />
               )}
               <button className={styles.nextBtn} onClick={handleNext} disabled={loading}>
-                {loading ? "Calculating..." : step === 5 ? "Generate Results" : "Next →"}
+                {loading ? "Calculating..." : step === 6 ? "Generate Results" : "Next →"}
               </button>
             </div>
           </div>

@@ -1,0 +1,2 @@
+-- Baseline: existing schema already applied manually
+-- No-op migration to establish migration history

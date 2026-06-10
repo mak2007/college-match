@@ -119,6 +119,12 @@ export default function SuperadminLayout({
           >
             <span className={styles.navIcon}>💰</span> Commission Billing
           </Link>
+          <Link
+            href="/admin/super/scholarships"
+            className={`${styles.navLink} ${pathname === "/admin/super/scholarships" ? styles.navLinkActive : ""}`}
+          >
+            <span className={styles.navIcon}>🎓</span> Scholarships
+          </Link>
         </nav>
 
         <div className={styles.sidebarFooter}>

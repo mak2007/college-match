@@ -46,6 +46,9 @@ export default function Wizard() {
     { id: "curriculum", label: "Modern Curriculum & Faculty" },
   ]);
 
+  // Step 4: Career Goal state
+  const [careerGoal, setCareerGoal] = useState<string>("NOT_SURE");
+
   // Student details state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -172,6 +175,7 @@ export default function Wizard() {
           is_budget_constraint: isBudgetConstraint,
           restrict_location: restrictLocation,
           locations: selectedLocations,
+          career_goal: careerGoal,
         },
         priorities: priorities.map((p, index) => ({
           criteria: p.id,
@@ -205,13 +209,13 @@ export default function Wizard() {
     <div className={styles.container}>
       <header className={styles.wizardHeader}>
         <div className={styles.logo}>CollegeMatch</div>
-        <div className={styles.stepIndicator}>Step {step} of 6</div>
+        <div className={styles.stepIndicator}>Step {step} of 7</div>
       </header>
 
       <div className={styles.progressTrack}>
         <div 
           className={styles.progressBar} 
-          style={{ width: `${(step / 6) * 100}%` }}
+          style={{ width: `${(step / 7) * 100}%` }}
         />
       </div>
 
@@ -408,7 +412,52 @@ export default function Wizard() {
             </div>
           )}
 
-          {/* STEP 4: BRANCH PREFERENCES */}
+          {/* STEP 4: CAREER GOAL */}
+          {step === 4 && (
+            <div>
+              <h2 className={styles.stepTitle}>What is your career goal after B.Tech?</h2>
+              <p className={styles.stepDesc}>
+                This is the primary factor driving your college recommendations.
+              </p>
+
+              <div className={styles.formGroup} style={{ display: "flex", flexDirection: "column", gap: "1rem", margin: "1.5rem 0" }}>
+                {[
+                  { id: "PLACEMENT", icon: "💼", title: "Get Placed", desc: "Secure a high-paying job right after graduation" },
+                  { id: "STARTUP", icon: "🚀", title: "Start a Startup", desc: "Build entrepreneurial skills and access incubation" },
+                  { id: "HIGHER_STUDIES_INDIA", icon: "🎓", title: "Higher Studies (India)", desc: "Prepare for M.Tech/MS at top Indian institutions" },
+                  { id: "HIGHER_STUDIES_ABROAD", icon: "🌍", title: "Study Abroad", desc: "Target MS/PhD at international universities" },
+                  { id: "GOVERNMENT_EXAMS", icon: "📝", title: "Government Exams", desc: "Prepare for GATE/PSU/UPSC and public sector" },
+                  { id: "NOT_SURE", icon: "🤔", title: "Not Sure Yet", desc: "Keep all options open with balanced recommendations" },
+                ].map((goal) => (
+                  <div
+                    key={goal.id}
+                    className={`${styles.selectionRow} ${careerGoal === goal.id ? styles.selectionRowActive : ""}`}
+                    onClick={() => setCareerGoal(goal.id)}
+                    style={{ cursor: "pointer", padding: "1rem", borderRadius: "8px", border: careerGoal === goal.id ? "2px solid var(--primary-color)" : "1px solid #e0ddd5" }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                      <span style={{ fontSize: "1.5rem" }}>{goal.icon}</span>
+                      <div>
+                        <strong>{goal.title}</strong>
+                        <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--text-secondary)" }}>{goal.desc}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className={styles.actions}>
+                <button type="button" className="btn btn-secondary" onClick={handleBack}>
+                  Back
+                </button>
+                <button type="button" className="btn btn-primary" onClick={handleNext}>
+                  Continue
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 5: BRANCH PREFERENCES */}
           {step === 4 && (
             <div>
               <h2 className={styles.stepTitle}>Select your preferred B.Tech branch</h2>
@@ -452,7 +501,7 @@ export default function Wizard() {
             </div>
           )}
 
-          {/* STEP 5: PRIORITY RANKING */}
+          {/* STEP 6: PRIORITY RANKING */}
           {step === 5 && (
             <div>
               <h2 className={styles.stepTitle}>Rank your preferences</h2>
@@ -499,7 +548,7 @@ export default function Wizard() {
             </div>
           )}
 
-          {/* STEP 6: CONTACT INFORMATION & SUBMIT */}
+          {/* STEP 7: CONTACT INFORMATION & SUBMIT */}
           {step === 6 && (
             <form onSubmit={handleSubmit}>
               <h2 className={styles.stepTitle}>Where should we send your results?</h2>
