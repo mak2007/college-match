@@ -139,13 +139,13 @@
   overflow-y: auto;
 }
 
-.wrapper table {
+.dataTable {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
 }
 
-.wrapper th {
+.dataHeader {
   background: var(--light-surface);
   padding: 0.75rem 1rem;
   text-align: left;
@@ -157,13 +157,13 @@
   z-index: 1;
 }
 
-.wrapper td {
+.dataCell {
   padding: 0.6rem 1rem;
   border-bottom: 1px solid var(--light-border);
   color: var(--light-text-secondary);
 }
 
-.wrapper tr:hover td {
+.dataRow:hover .dataCell {
   background: rgba(15, 45, 82, 0.02);
 }
 

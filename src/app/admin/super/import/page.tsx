@@ -397,27 +397,27 @@ export default function ImportPage() {
               <span className={styles.previewBadge}>{parsedRows.length} rows parsed</span>
             </div>
             <div className={styles.tableWrapper}>
-              <table>
+              <table className={styles.dataTable}>
                 <thead>
-                  <tr>
-                    <th>#</th>
+                  <tr className={styles.dataRow}>
+                    <th className={styles.dataHeader}>#</th>
                     {previewHeaders.map((h) => (
-                      <th key={h}>{h}</th>
+                      <th key={h} className={styles.dataHeader}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {parsedRows.slice(0, 20).map((row, i) => (
-                    <tr key={i}>
-                      <td>{i + 2}</td>
+                    <tr key={i} className={styles.dataRow}>
+                      <td className={styles.dataCell}>{i + 2}</td>
                       {previewHeaders.map((h) => (
-                        <td key={h}>{String(row[h] ?? "")}</td>
+                        <td key={h} className={styles.dataCell}>{String(row[h] ?? "")}</td>
                       ))}
                     </tr>
                   ))}
                   {parsedRows.length > 20 && (
-                    <tr>
-                      <td colSpan={previewHeaders.length + 1} style={{ textAlign: "center", fontStyle: "italic" }}>
+                    <tr className={styles.dataRow}>
+                      <td className={styles.dataCell} colSpan={previewHeaders.length + 1} style={{ textAlign: "center", fontStyle: "italic" }}>
                         ...{parsedRows.length - 20} more rows
                       </td>
                     </tr>
