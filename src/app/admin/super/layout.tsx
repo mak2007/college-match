@@ -102,6 +102,12 @@ export default function SuperadminLayout({
             <span className={styles.navIcon}>🏫</span> Colleges Registry
           </Link>
           <Link
+            href="/admin/super/import"
+            className={`${styles.navLink} ${pathname === "/admin/super/import" ? styles.navLinkActive : ""}`}
+          >
+            <span className={styles.navIcon}>📥</span> Bulk Import
+          </Link>
+          <Link
             href="/admin/super/config"
             className={`${styles.navLink} ${pathname === "/admin/super/config" ? styles.navLinkActive : ""}`}
           >
