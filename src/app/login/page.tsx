@@ -36,6 +36,30 @@ function StudentLoginContent() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // After auth, check for pending quiz data and complete the flow
+  const handlePostAuth = async (): Promise<string> => {
+    try {
+      const pendingQuiz = localStorage.getItem("cm_pending_quiz");
+      if (pendingQuiz) {
+        const quizData = JSON.parse(pendingQuiz);
+        const res = await fetch("/api/recommendations/from-quiz", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ quizData }),
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (res.ok && data.student_id) {
+          localStorage.removeItem("cm_pending_quiz");
+          return `/results?student_id=${data.student_id}`;
+        }
+      }
+    } catch (e) {
+      console.error("Error processing pending quiz:", e);
+    }
+    return redirectUrl;
+  };
+
   const handleEmailPasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -43,6 +67,8 @@ function StudentLoginContent() {
     setLoading(true);
 
     try {
+      let finalRedirect = redirectUrl;
+
       if (isSignupMode) {
         // Signup: create user via register endpoint
         const res = await fetch("/api/auth/register", {
@@ -56,9 +82,8 @@ function StudentLoginContent() {
           throw new Error(data.error || "Signup failed");
         }
 
-        // Auto-login after signup
-        router.push(redirectUrl);
-        router.refresh();
+        // Check for pending quiz data after signup
+        finalRedirect = await handlePostAuth();
       } else {
         // Login
         const res = await fetch("/api/auth/login", {
@@ -72,9 +97,12 @@ function StudentLoginContent() {
           throw new Error(data.error || "Login failed");
         }
 
-        router.push(redirectUrl);
-        router.refresh();
+        // Check for pending quiz data after login
+        finalRedirect = await handlePostAuth();
       }
+
+      router.push(finalRedirect);
+      router.refresh();
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again.");
       setLoading(false);
@@ -99,7 +127,8 @@ function StudentLoginContent() {
         });
 
         if (res.ok) {
-          router.push(redirectUrl);
+          const finalRedirect = await handlePostAuth();
+          router.push(finalRedirect);
           router.refresh();
         } else {
           // User might already exist, try login
@@ -109,7 +138,8 @@ function StudentLoginContent() {
             body: JSON.stringify({ email: dummyEmail, password: "GoogleAuth_" + Date.now() }),
           });
           if (loginRes.ok) {
-            router.push(redirectUrl);
+            const finalRedirect = await handlePostAuth();
+            router.push(finalRedirect);
             router.refresh();
           } else {
             setError("Google authentication failed. Please try email login.");

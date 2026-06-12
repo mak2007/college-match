@@ -756,15 +756,31 @@ export default function Predictor() {
   };
 
   const renderLockedResults = () => {
+    const previewResults = results.slice(0, 3);
     return (
       <div className={styles.modalBackdrop}>
         <div className={styles.lockedCard}>
           <div className={styles.lockedIcon}>🔒</div>
           <h2 className={styles.lockedTitle}>Your Results Are Ready!</h2>
           <p className={styles.lockedSubtitle}>
-            We've analyzed your academic profile and preferences to find your best college matches.
-            Sign up or log in to unlock your personalized recommendations.
+            We found <strong>{results.length} colleges</strong> that match your profile.
+            Sign up to unlock your personalized recommendations.
           </p>
+
+          {/* Blurred preview of top results */}
+          {previewResults.length > 0 && (
+            <div className={styles.blurredPreview}>
+              {previewResults.map((match, idx) => (
+                <div key={match.id + match.branchCode} className={styles.blurredCard}>
+                  <div className={styles.blurredCardInner}>
+                    <span className={styles.blurredRank}>#{idx + 1}</span>
+                    <span className={styles.blurredName}>{match.name}</span>
+                    <span className={styles.blurredScore}>{match.matchScore.toFixed(0)}%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Auth Actions */}
           <div className={styles.lockedActions}>
@@ -772,7 +788,7 @@ export default function Predictor() {
               href={`/login?mode=signup&redirect=/predict`}
               className={styles.lockedSignupBtn}
             >
-              Sign Up to Unlock Results →
+              Sign Up to Unlock All {results.length} Results →
             </Link>
             <Link
               href={`/login?redirect=/predict`}
