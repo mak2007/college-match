@@ -286,6 +286,47 @@ export default function ImportPage() {
           Existing records are upserted by matching key fields.
         </p>
 
+        {/* Export Actions */}
+        <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginBottom: "1.5rem", padding: "1rem 1.25rem", background: "rgba(15,45,82,0.03)", borderRadius: "12px", border: "1px dashed var(--border-color)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginRight: "auto" }}>
+            <span style={{ fontSize: "1.1rem" }}>📤</span>
+            <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--light-text-primary)" }}>Export to XLSX:</span>
+          </div>
+          {(["colleges", "branches", "scholarships", "admission_pathways"] as ImportType[]).map((t) => (
+            <button
+              key={t}
+              onClick={() => window.open(`/api/admin/export?type=${t}`, "_blank")}
+              style={{
+                padding: "0.45rem 0.9rem",
+                background: "white",
+                color: "var(--light-text-primary)",
+                border: "1px solid var(--border-color)",
+                borderRadius: "8px",
+                fontSize: "0.78rem",
+                fontWeight: 500,
+                cursor: "pointer",
+              }}
+            >
+              {SCHEMAS[t].label}
+            </button>
+          ))}
+          <button
+            onClick={() => window.open("/api/admin/export?type=all", "_blank")}
+            style={{
+              padding: "0.45rem 0.9rem",
+              background: "#0F2D52",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              fontSize: "0.78rem",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            All (Multi-Sheet)
+          </button>
+        </div>
+
         {/* Tabs */}
         <div className={styles.tabs}>
           {TAB_META.map(({ key, icon, label }) => (
