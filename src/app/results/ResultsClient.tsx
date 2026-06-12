@@ -65,12 +65,10 @@ interface ResultsClientProps {
 type SortMode = "best_fit" | "admission_chance";
 
 const CAREER_GOALS = [
-  { value: "PLACEMENT", label: "Placements" },
-  { value: "STARTUP", label: "Startup" },
-  { value: "HIGHER_STUDIES_INDIA", label: "Higher Studies (India)" },
-  { value: "HIGHER_STUDIES_ABROAD", label: "Higher Studies (Abroad)" },
-  { value: "GOVERNMENT_EXAMS", label: "Government Exams" },
-  { value: "NOT_SURE", label: "Not Sure" },
+  { value: "PLACEMENT", label: "Get Placed" },
+  { value: "STARTUP", label: "Start a Startup" },
+  { value: "HIGHER_STUDIES", label: "Higher Studies" },
+  { value: "NOT_SURE", label: "Not Sure Yet" },
 ];
 
 const PRIORITY_CRITERIA = [

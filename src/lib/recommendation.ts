@@ -3,9 +3,7 @@
 export type CareerGoalType =
   | "PLACEMENT"
   | "STARTUP"
-  | "HIGHER_STUDIES_INDIA"
-  | "HIGHER_STUDIES_ABROAD"
-  | "GOVERNMENT_EXAMS"
+  | "HIGHER_STUDIES"
   | "NOT_SURE";
 
 export type RecommendationMode = "best_fit" | "admission_chance";
@@ -203,26 +201,12 @@ const DEFAULT_CAREER_GOAL_WEIGHTS: Record<CareerGoalType, CareerGoalWeights> = {
     COLLEGE_LIFE: 0.15,
     CURRICULUM: 0.45,
   },
-  HIGHER_STUDIES_INDIA: {
+  HIGHER_STUDIES: {
     PLACEMENTS: 0.05,
-    ROI: 0.15,
+    ROI: 0.12,
     BRANCH_STRENGTH: 0.15,
-    COLLEGE_LIFE: 0.10,
+    COLLEGE_LIFE: 0.13,
     CURRICULUM: 0.55,
-  },
-  HIGHER_STUDIES_ABROAD: {
-    PLACEMENTS: 0.05,
-    ROI: 0.10,
-    BRANCH_STRENGTH: 0.15,
-    COLLEGE_LIFE: 0.15,
-    CURRICULUM: 0.55,
-  },
-  GOVERNMENT_EXAMS: {
-    PLACEMENTS: 0.10,
-    ROI: 0.40,
-    BRANCH_STRENGTH: 0.10,
-    COLLEGE_LIFE: 0.10,
-    CURRICULUM: 0.30,
   },
   NOT_SURE: {
     PLACEMENTS: 0.20,
@@ -252,32 +236,22 @@ const DEFAULT_EXTRA_DIMENSIONS: Record<CareerGoalType, CareerGoalExtraDimension[
       metadataKey: "startup_ecosystem",
     },
   ],
-  HIGHER_STUDIES_INDIA: [
+  HIGHER_STUDIES: [
     {
       key: "RESEARCH_OUTPUT",
       label: "Research output & publications",
-      weight: 0.15,
+      weight: 0.10,
       source: "college_metadata",
       metadataKey: "research_output",
     },
-  ],
-  HIGHER_STUDIES_ABROAD: [
     {
       key: "INTERNATIONAL_EXPOSURE",
       label: "International exposure & exchange programs",
-      weight: 0.10,
+      weight: 0.05,
       source: "college_metadata",
       metadataKey: "international_exposure",
     },
-    {
-      key: "RESEARCH_OUTPUT",
-      label: "Research output & publications",
-      weight: 0.10,
-      source: "college_metadata",
-      metadataKey: "research_output",
-    },
   ],
-  GOVERNMENT_EXAMS: [],
   NOT_SURE: [],
 };
 
@@ -719,22 +693,15 @@ export function generateRecommendations(
       const goalLabels: Record<string, string> = {
         PLACEMENT: "placement-focused",
         STARTUP: "startup/entrepreneurship",
-        HIGHER_STUDIES_INDIA: "higher studies in India",
-        HIGHER_STUDIES_ABROAD: "studying abroad",
-        GOVERNMENT_EXAMS: "government exam preparation",
+        HIGHER_STUDIES: "higher studies & research",
       };
       const goalLabel = goalLabels[careerGoal] || careerGoal.toLowerCase();
       if (careerGoal === "PLACEMENT" && c.placementScore >= 8.5) {
         keyReasons.push(`Excellent fit for your ${goalLabel} goal — outstanding placements`);
       } else if (careerGoal === "STARTUP" && Number(collegeMeta.startup_ecosystem) >= 7) {
         keyReasons.push(`Strong ${goalLabel} ecosystem at this college`);
-      } else if (
-        (careerGoal === "HIGHER_STUDIES_INDIA" || careerGoal === "HIGHER_STUDIES_ABROAD") &&
-        Number(collegeMeta.research_output) >= 7
-      ) {
+      } else if (careerGoal === "HIGHER_STUDIES" && Number(collegeMeta.research_output) >= 7) {
         keyReasons.push(`Strong research environment for ${goalLabel}`);
-      } else if (careerGoal === "GOVERNMENT_EXAMS" && sRoi >= 80) {
-        keyReasons.push(`High ROI — cost-effective for ${goalLabel} preparation`);
       }
     }
 

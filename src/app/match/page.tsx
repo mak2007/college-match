@@ -264,9 +264,7 @@ export default function LiveMatcher() {
                 {[
                   { id: "PLACEMENT", label: "💼 Get Placed" },
                   { id: "STARTUP", label: "🚀 Start a Startup" },
-                  { id: "HIGHER_STUDIES_INDIA", label: "🎓 Higher Studies (India)" },
-                  { id: "HIGHER_STUDIES_ABROAD", label: "🌍 Study Abroad" },
-                  { id: "GOVERNMENT_EXAMS", label: "📝 Government Exams" },
+                  { id: "HIGHER_STUDIES", label: "🎓 Higher Studies" },
                   { id: "NOT_SURE", label: "🤔 Not Sure Yet" },
                 ].map((goal) => (
                   <button

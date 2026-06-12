@@ -40,9 +40,7 @@ async function main() {
     careerGoalWeights: {
       PLACEMENT: { PLACEMENTS: 0.40, ROI: 0.20, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.10, CURRICULUM: 0.15 },
       STARTUP: { PLACEMENTS: 0.10, ROI: 0.10, BRANCH_STRENGTH: 0.20, COLLEGE_LIFE: 0.15, CURRICULUM: 0.45 },
-      HIGHER_STUDIES_INDIA: { PLACEMENTS: 0.05, ROI: 0.15, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.10, CURRICULUM: 0.55 },
-      HIGHER_STUDIES_ABROAD: { PLACEMENTS: 0.05, ROI: 0.10, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.15, CURRICULUM: 0.55 },
-      GOVERNMENT_EXAMS: { PLACEMENTS: 0.10, ROI: 0.40, BRANCH_STRENGTH: 0.10, COLLEGE_LIFE: 0.10, CURRICULUM: 0.30 },
+      HIGHER_STUDIES: { PLACEMENTS: 0.05, ROI: 0.12, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.13, CURRICULUM: 0.55 },
       NOT_SURE: { PLACEMENTS: 0.20, ROI: 0.20, BRANCH_STRENGTH: 0.20, COLLEGE_LIFE: 0.20, CURRICULUM: 0.20 },
     },
     priorityAdjustment: {
@@ -57,14 +55,10 @@ async function main() {
       STARTUP: [
         { key: "STARTUP_ECOSYSTEM", label: "Startup ecosystem & incubation", weight: 0.15, source: "college_metadata", metadataKey: "startup_ecosystem" },
       ],
-      HIGHER_STUDIES_INDIA: [
-        { key: "RESEARCH_OUTPUT", label: "Research output & publications", weight: 0.15, source: "college_metadata", metadataKey: "research_output" },
-      ],
-      HIGHER_STUDIES_ABROAD: [
-        { key: "INTERNATIONAL_EXPOSURE", label: "International exposure & exchange programs", weight: 0.10, source: "college_metadata", metadataKey: "international_exposure" },
+      HIGHER_STUDIES: [
         { key: "RESEARCH_OUTPUT", label: "Research output & publications", weight: 0.10, source: "college_metadata", metadataKey: "research_output" },
+        { key: "INTERNATIONAL_EXPOSURE", label: "International exposure & exchange programs", weight: 0.05, source: "college_metadata", metadataKey: "international_exposure" },
       ],
-      GOVERNMENT_EXAMS: [],
       NOT_SURE: [],
     },
     budgetPenalty: {

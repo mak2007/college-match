@@ -22,21 +22,17 @@ function getDefaultConfig(): ScoringConfig {
     careerGoalWeights: {
       PLACEMENT: { PLACEMENTS: 0.35, ROI: 0.25, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.10, CURRICULUM: 0.15 },
       STARTUP: { PLACEMENTS: 0.15, ROI: 0.15, BRANCH_STRENGTH: 0.20, COLLEGE_LIFE: 0.15, CURRICULUM: 0.35 },
-      HIGHER_STUDIES_INDIA: { PLACEMENTS: 0.10, ROI: 0.20, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.10, CURRICULUM: 0.45 },
-      HIGHER_STUDIES_ABROAD: { PLACEMENTS: 0.05, ROI: 0.15, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.15, CURRICULUM: 0.50 },
-      GOVERNMENT_EXAMS: { PLACEMENTS: 0.15, ROI: 0.35, BRANCH_STRENGTH: 0.10, COLLEGE_LIFE: 0.10, CURRICULUM: 0.30 },
+      HIGHER_STUDIES: { PLACEMENTS: 0.05, ROI: 0.12, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.13, CURRICULUM: 0.55 },
       NOT_SURE: { PLACEMENTS: 0.20, ROI: 0.20, BRANCH_STRENGTH: 0.20, COLLEGE_LIFE: 0.20, CURRICULUM: 0.20 },
     },
     priorityAdjustment: { active: true, boostPerRank: 0.10, maxAdjustment: 0.30 },
     careerGoalExtraDimensions: {
       PLACEMENT: [{ key: "PLACEMENT_PERCENTAGE", label: "Branch placement rate", weight: 0.10, source: "branch_metadata", computation: "placement_percentage" }],
       STARTUP: [{ key: "STARTUP_ECOSYSTEM", label: "Startup ecosystem & incubation", weight: 0.10, source: "college_metadata", metadataKey: "startup_ecosystem" }],
-      HIGHER_STUDIES_INDIA: [{ key: "RESEARCH_OUTPUT", label: "Research output & publications", weight: 0.10, source: "college_metadata", metadataKey: "research_output" }],
-      HIGHER_STUDIES_ABROAD: [
-        { key: "INTERNATIONAL_EXPOSURE", label: "International exposure & exchange programs", weight: 0.10, source: "college_metadata", metadataKey: "international_exposure" },
-        { key: "RESEARCH_OUTPUT", label: "Research output & publications", weight: 0.05, source: "college_metadata", metadataKey: "research_output" },
+      HIGHER_STUDIES: [
+        { key: "RESEARCH_OUTPUT", label: "Research output & publications", weight: 0.10, source: "college_metadata", metadataKey: "research_output" },
+        { key: "INTERNATIONAL_EXPOSURE", label: "International exposure & exchange programs", weight: 0.05, source: "college_metadata", metadataKey: "international_exposure" },
       ],
-      GOVERNMENT_EXAMS: [],
       NOT_SURE: [],
     },
     budgetPenalty: { active: true, thresholdMultiplier: 1.3, basePenaltyWeight: 40.0, exponent: 2.0 },

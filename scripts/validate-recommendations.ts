@@ -156,15 +156,15 @@ function getTestProfiles(): (StudentProfile & { name: string })[] {
 
     // ── Branch variants ──
     { name: "92 ECE Placement", jeePercentile: 92, class12Percentage: 88, budgetLimit: 1600000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["ECE"], careerGoal: "PLACEMENT", priorities: defaultPriorities },
-    { name: "85 Mechanical Placement", jeePercentile: 85, class12Percentage: 80, budgetLimit: 1200000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["ME"], careerGoal: "PLACEMENT", priorities: defaultPriorities },
+
     { name: "75 Civil Budget", jeePercentile: 75, class12Percentage: 70, budgetLimit: 800000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["CE"], careerGoal: "PLACEMENT", priorities: roiPriorities },
     { name: "88 IT Placement", jeePercentile: 88, class12Percentage: 84, budgetLimit: 1400000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["IT"], careerGoal: "PLACEMENT", priorities: defaultPriorities },
 
     // ── Career goal variants ──
     { name: "90 CSE Startup", jeePercentile: 90, class12Percentage: 85, budgetLimit: 2000000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["CSE"], careerGoal: "STARTUP", priorities: startupPriorities },
-    { name: "94 ECE Higher Studies India", jeePercentile: 94, class12Percentage: 90, budgetLimit: 1600000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["ECE"], careerGoal: "HIGHER_STUDIES_INDIA", priorities: studiesPriorities },
-    { name: "96 CSE Higher Studies Abroad", jeePercentile: 96, class12Percentage: 92, budgetLimit: 2500000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["CSE"], careerGoal: "HIGHER_STUDIES_ABROAD", priorities: studiesPriorities },
-    { name: "80 ME Govt Exams", jeePercentile: 80, class12Percentage: 78, budgetLimit: 1000000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["ME"], careerGoal: "GOVERNMENT_EXAMS", priorities: roiPriorities },
+    { name: "94 ECE Higher Studies India", jeePercentile: 94, class12Percentage: 90, budgetLimit: 1600000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["ECE"], careerGoal: "HIGHER_STUDIES", priorities: studiesPriorities },
+    { name: "96 CSE Higher Studies Abroad", jeePercentile: 96, class12Percentage: 92, budgetLimit: 2500000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["CSE"], careerGoal: "HIGHER_STUDIES", priorities: studiesPriorities },
+
     { name: "86 CSE Not Sure", jeePercentile: 86, class12Percentage: 83, budgetLimit: 1400000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["CSE", "ECE", "IT"], careerGoal: "NOT_SURE", priorities: defaultPriorities },
 
     // ── Budget variants ──
@@ -180,8 +180,8 @@ function getTestProfiles(): (StudentProfile & { name: string })[] {
     { name: "99 CSE Extreme Reach", jeePercentile: 99, class12Percentage: 97, budgetLimit: 3000000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["CSE"], careerGoal: "PLACEMENT", priorities: defaultPriorities },
     { name: "65 CSE Very Low Percentile", jeePercentile: 65, class12Percentage: 68, budgetLimit: 600000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["CSE"], careerGoal: "PLACEMENT", priorities: roiPriorities },
     { name: "85 CSE Startup No Budget", jeePercentile: 85, class12Percentage: 82, budgetLimit: null, isBudgetConstraint: false, restrictLocation: false, preferredLocations: [], preferredBranches: ["CSE"], careerGoal: "STARTUP", priorities: startupPriorities },
-    { name: "93 ECE Higher Studies Abroad", jeePercentile: 93, class12Percentage: 89, budgetLimit: 2000000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["ECE"], careerGoal: "HIGHER_STUDIES_ABROAD", priorities: studiesPriorities },
-    { name: "78 ME Budget Govt Exams", jeePercentile: 78, class12Percentage: 74, budgetLimit: 800000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["ME"], careerGoal: "GOVERNMENT_EXAMS", priorities: roiPriorities },
+    { name: "93 ECE Higher Studies Abroad", jeePercentile: 93, class12Percentage: 89, budgetLimit: 2000000, isBudgetConstraint: true, restrictLocation: false, preferredLocations: [], preferredBranches: ["ECE"], careerGoal: "HIGHER_STUDIES", priorities: studiesPriorities },
+
   ];
 }
 

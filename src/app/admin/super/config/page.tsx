@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "./config.module.css";
 
-type CareerGoalType = "PLACEMENT" | "STARTUP" | "HIGHER_STUDIES_INDIA" | "HIGHER_STUDIES_ABROAD" | "GOVERNMENT_EXAMS" | "NOT_SURE";
+type CareerGoalType = "PLACEMENT" | "STARTUP" | "HIGHER_STUDIES" | "NOT_SURE";
 
 interface CareerGoalWeights {
   PLACEMENTS: number;
@@ -71,9 +71,7 @@ interface GlobalMetrics {
 const CAREER_GOAL_LABELS: Record<CareerGoalType, string> = {
   PLACEMENT: "💼 Get Placed",
   STARTUP: "🚀 Start a Startup",
-  HIGHER_STUDIES_INDIA: "🎓 Higher Studies (India)",
-  HIGHER_STUDIES_ABROAD: "🌍 Study Abroad",
-  GOVERNMENT_EXAMS: "📝 Government Exams",
+  HIGHER_STUDIES: "🎓 Higher Studies",
   NOT_SURE: "🤔 Not Sure Yet",
 };
 

@@ -429,9 +429,7 @@ export default function Wizard() {
                 {[
                   { id: "PLACEMENT", icon: "💼", title: "Get Placed", desc: "Secure a high-paying job right after graduation" },
                   { id: "STARTUP", icon: "🚀", title: "Start a Startup", desc: "Build entrepreneurial skills and access incubation" },
-                  { id: "HIGHER_STUDIES_INDIA", icon: "🎓", title: "Higher Studies (India)", desc: "Prepare for M.Tech/MS at top Indian institutions" },
-                  { id: "HIGHER_STUDIES_ABROAD", icon: "🌍", title: "Study Abroad", desc: "Target MS/PhD at international universities" },
-                  { id: "GOVERNMENT_EXAMS", icon: "📝", title: "Government Exams", desc: "Prepare for GATE/PSU/UPSC and public sector" },
+                  { id: "HIGHER_STUDIES", icon: "🎓", title: "Higher Studies", desc: "Prepare for MS/M.Tech/PhD and research opportunities" },
                   { id: "NOT_SURE", icon: "🤔", title: "Not Sure Yet", desc: "Keep all options open with balanced recommendations" },
                 ].map((goal) => (
                   <div
