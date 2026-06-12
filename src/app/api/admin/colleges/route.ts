@@ -26,7 +26,7 @@ export async function GET() {
     }
 
     const colleges = await prisma.college.findMany({
-      include: { branches: true },
+      include: { branches: true, scholarships: true },
       orderBy: { name: "asc" },
     });
 

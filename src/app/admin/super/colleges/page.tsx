@@ -10,6 +10,16 @@ interface CollegeBranch {
   branchCode: string;
   tuitionFeeAnnual: number;
   hostelFeeAnnual: number;
+  avgSalary: number | null;
+  placementPercentage: number | null;
+  minJeePercentileCutoff: number | null;
+  branchStrengthScore: number;
+}
+
+interface Scholarship {
+  id: string;
+  name: string;
+  isActive: boolean;
 }
 
 interface College {
@@ -19,18 +29,38 @@ interface College {
   state: string;
   city: string;
   isPartner: boolean;
+  isNewGen: boolean;
   commissionRate: number;
   placementScore: number;
   collegeLifeScore: number;
   curriculumScore: number;
-  metadata: string | null; // JSON String
+  metadata: string | null;
+  website: string | null;
   branches: CollegeBranch[];
+  scholarships: Scholarship[];
 }
 
 interface CustomAttr {
   key: string;
   label: string;
   defaultValue: number;
+}
+
+function calculateCompleteness(col: College): { score: number; missing: string[] } {
+  const missing: string[] = [];
+  const checks = [
+    { label: "Fees", pass: col.branches.length > 0 && col.branches.every(b => b.tuitionFeeAnnual > 0 && b.hostelFeeAnnual > 0) },
+    { label: "Salary", pass: col.branches.some(b => b.avgSalary !== null && b.avgSalary > 0) },
+    { label: "Placements", pass: col.branches.some(b => b.placementPercentage !== null && b.placementPercentage > 0) },
+    { label: "Cutoffs", pass: col.branches.some(b => b.minJeePercentileCutoff !== null && b.minJeePercentileCutoff > 0) },
+    { label: "Scholarships", pass: col.scholarships.length > 0 },
+    { label: "Website", pass: !!col.website },
+    { label: "NIRF", pass: (() => { try { const m = col.metadata ? JSON.parse(col.metadata) : {}; return !!m.nirf_ranking; } catch { return false; } })() },
+    { label: "Infra", pass: (() => { try { const m = col.metadata ? JSON.parse(col.metadata) : {}; return !!m.infra_rating; } catch { return false; } })() },
+    { label: "Strength", pass: col.branches.some(b => b.branchStrengthScore > 0) },
+  ];
+  checks.forEach(c => { if (!c.pass) missing.push(c.label); });
+  return { score: Math.round((checks.filter(c => c.pass).length / checks.length) * 100), missing };
 }
 
 export default function SuperadminColleges() {
@@ -215,6 +245,9 @@ export default function SuperadminColleges() {
                   if (col.metadata) parsedMeta = JSON.parse(col.metadata);
                 } catch (e) {}
 
+                const { score, missing } = calculateCompleteness(col);
+                const scoreColor = score >= 80 ? "#16a34a" : score >= 50 ? "#d97706" : "#dc2626";
+
                 return (
                   <div 
                     key={col.id} 
@@ -224,6 +257,9 @@ export default function SuperadminColleges() {
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                       <strong>{col.name}</strong>
                       <div style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
+                        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: scoreColor, background: `${scoreColor}15`, padding: "0.15rem 0.45rem", borderRadius: "6px" }}>
+                          {score}%
+                        </span>
                         <span className={styles.partnerBadge}>
                           {col.isPartner ? "Partner" : "Standard"}
                         </span>
@@ -244,8 +280,13 @@ export default function SuperadminColleges() {
                       </div>
                     </div>
                     <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "0.25rem" }}>
-                      📍 {col.city}, {col.state} | Rate: ₹{col.commissionRate.toLocaleString("en-IN")}
+                      📍 {col.city}, {col.state} | Rate: ₹{col.commissionRate.toLocaleString("en-IN")} | {col.branches.length} branches
                     </p>
+                    {missing.length > 0 && (
+                      <p style={{ fontSize: "0.72rem", color: "#d97706", marginTop: "0.2rem" }}>
+                        Missing: {missing.join(", ")}
+                      </p>
+                    )}
                     <div className={styles.attributesRow} style={{ marginTop: "0.5rem" }}>
                       <span>Placement: {col.placementScore}</span>
                       <span>Life: {col.collegeLifeScore}</span>
