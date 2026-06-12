@@ -78,6 +78,8 @@ export default function SuperadminDashboard() {
   const [recentLeads, setRecentLeads] = useState<RecentLead[]>([]);
   const [collegesList, setCollegesList] = useState<CollegeRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [recomputing, setRecomputing] = useState(false);
+  const [recomputeResult, setRecomputeResult] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     try {
@@ -97,6 +99,25 @@ export default function SuperadminDashboard() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const handleRecompute = async () => {
+    if (!confirm("This will regenerate recommendations for ALL students using current college data. Continue?")) return;
+    setRecomputing(true);
+    setRecomputeResult(null);
+    try {
+      const res = await fetch("/api/admin/recompute-recommendations", { method: "POST" });
+      const data = await res.json();
+      if (res.ok) {
+        setRecomputeResult(`Done: ${data.updated}/${data.totalStudents} students updated. ${data.errors > 0 ? `${data.errors} errors.` : ""}`);
+      } else {
+        setRecomputeResult(`Error: ${data.error}`);
+      }
+    } catch {
+      setRecomputeResult("Error: Network request failed");
+    } finally {
+      setRecomputing(false);
+    }
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -134,6 +155,42 @@ export default function SuperadminDashboard() {
               </div>
             </>
           )}
+        </section>
+
+        {/* Recompute Action */}
+        <section style={{ marginBottom: "2rem" }}>
+          <div className="glass-card" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1rem 1.5rem" }}>
+            <div>
+              <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "#0F2D52", margin: 0 }}>Recompute Recommendations</h3>
+              <p style={{ fontSize: "0.8rem", color: "#8c8c8c", margin: "0.25rem 0 0" }}>
+                Regenerate all student recommendations using current college data (placement, cutoffs, scores, New Gen status)
+              </p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              {recomputeResult && (
+                <span style={{ fontSize: "0.8rem", color: recomputeResult.startsWith("Done") ? "#16a34a" : "#dc2626", fontWeight: 500 }}>
+                  {recomputeResult}
+                </span>
+              )}
+              <button
+                onClick={handleRecompute}
+                disabled={recomputing}
+                style={{
+                  padding: "0.6rem 1.25rem",
+                  background: recomputing ? "#94a3b8" : "#0F2D52",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontWeight: 600,
+                  fontSize: "0.85rem",
+                  cursor: recomputing ? "not-allowed" : "pointer",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {recomputing ? "Recomputing..." : "Recompute All"}
+              </button>
+            </div>
+          </div>
         </section>
 
         {/* main Grid layouts */}
