@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./wizard.module.css";
+import { BRANCH_OPTIONS } from "@/lib/branches";
 
 interface LocationPreference {
   state: string;
@@ -108,14 +109,6 @@ export default function Wizard() {
     { state: "Uttar Pradesh", city: "Noida" },
     { state: "Uttar Pradesh", city: "Greater Noida" },
     { state: "Odisha", city: "Bhubaneswar" },
-  ];
-
-  const BRANCH_OPTIONS = [
-    { code: "CSE", label: "Computer Science & Engineering (CSE)" },
-    { code: "IT", label: "Information Technology (IT)" },
-    { code: "ECE", label: "Electronics & Communication (ECE)" },
-    { code: "ME", label: "Mechanical Engineering (ME)" },
-    { code: "CE", label: "Civil Engineering (CE)" },
   ];
 
   const handleAddLocation = () => {

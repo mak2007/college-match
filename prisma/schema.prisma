@@ -120,16 +120,18 @@ model StudentPriority {
 }
 
 model Recommendation {
-  id           String   @id @default(uuid())
-  studentId    String
-  collegeId    String
-  branchCode   String
-  matchScore   Float
-  rankPosition Int
-  reasons      String
-  createdAt    DateTime @default(now())
-  college      College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
-  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  id                   String   @id @default(uuid())
+  studentId            String
+  collegeId            String
+  branchCode           String
+  matchScore           Float
+  qualityScore         Float    @default(0)
+  admissionProbability Float    @default(50)
+  rankPosition         Int
+  reasons              String
+  createdAt            DateTime @default(now())
+  college              College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  student              Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@map("recommendations")
 }

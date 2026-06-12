@@ -9,6 +9,7 @@ import {
   ScoringConfig,
   CareerGoalType,
 } from "@/lib/recommendation";
+import { normalizeBranchCode } from "@/lib/branches";
 
 function getDefaultConfig(): ScoringConfig {
   return {
@@ -181,8 +182,9 @@ export async function POST(request: Request) {
     let candidates: CollegeCandidate[] = dbBranches.map(mapCandidate);
 
     if (quizData.preferredBranches && quizData.preferredBranches.length > 0) {
+      const targetBranches = quizData.preferredBranches.map((b: string) => normalizeBranchCode(b));
       candidates = candidates.filter((c) =>
-        quizData.preferredBranches.map((b: string) => b.toUpperCase()).includes(c.branchCode.toUpperCase())
+        targetBranches.includes(normalizeBranchCode(c.branchCode))
       );
     }
 
@@ -210,6 +212,8 @@ export async function POST(request: Request) {
           collegeId: r.collegeId,
           branchCode: r.branchCode,
           matchScore: r.matchScore,
+          qualityScore: r.qualityScore,
+          admissionProbability: r.admissionProbability,
           rankPosition: r.rankPosition,
           reasons: JSON.stringify(r.keyReasons),
         })),

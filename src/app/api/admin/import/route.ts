@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth";
+import { normalizeBranchCode } from "@/lib/branches";
 
 async function verifySuperadmin() {
   const cookieStore = await cookies();
@@ -46,6 +47,50 @@ function str(val: unknown): string {
   return String(val ?? "").trim();
 }
 
+function normalizeName(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/\s*\([^)]*\)\s*/g, "") // strip parenthetical abbreviations
+    .replace(/[^a-z0-9]/g, "");
+}
+
+// ─── DUPLICATE DETECTION ──────────────────────────────────────────
+async function findDuplicateCollege(name: string, state: string, city: string, website: string) {
+  const normalizedName = normalizeName(name);
+  const slug = slugify(name);
+
+  // 1. Exact slug match
+  const bySlug = await prisma.college.findUnique({ where: { slug } });
+  if (bySlug) return bySlug;
+
+  // 2. Normalized name match (handles "VIT" vs "Vellore Institute of Technology")
+  const allColleges = await prisma.college.findMany();
+  for (const c of allColleges) {
+    if (normalizeName(c.name) === normalizedName) return c;
+  }
+
+  // 3. Same city + state + similar name (fuzzy: first 10 chars of normalized name match)
+  const namePrefix = normalizedName.substring(0, 10);
+  for (const c of allColleges) {
+    if (
+      c.state.toLowerCase() === state.toLowerCase() &&
+      c.city.toLowerCase() === city.toLowerCase() &&
+      normalizeName(c.name).substring(0, 10) === namePrefix
+    ) {
+      return c;
+    }
+  }
+
+  // 4. Website URL match (if provided)
+  if (website) {
+    for (const c of allColleges) {
+      if (c.website && c.website.toLowerCase() === website.toLowerCase()) return c;
+    }
+  }
+
+  return null;
+}
+
 // ─── COLLEGE IMPORT ───────────────────────────────────────────────
 async function importColleges(rows: ImportRow[]): Promise<ImportResult> {
   const errors: ImportError[] = [];
@@ -83,7 +128,7 @@ async function importColleges(rows: ImportRow[]): Promise<ImportResult> {
     }
 
     try {
-      const existing = await prisma.college.findUnique({ where: { slug } });
+      const existing = await findDuplicateCollege(name, state, city, str(row.website));
       if (existing) {
         const mergedMeta = { ...JSON.parse(existing.metadata || "{}"), ...metadata };
         await prisma.college.update({
@@ -148,7 +193,7 @@ async function importBranches(rows: ImportRow[]): Promise<ImportResult> {
     const rowNum = i + 2;
 
     const collegeName = str(row.collegeName || row.college);
-    const branchCode = str(row.branchCode).toUpperCase();
+    const branchCode = normalizeBranchCode(str(row.branchCode));
     const branchName = str(row.branchName);
 
     if (!collegeName) { errors.push({ row: rowNum, field: "collegeName", message: "Required" }); skipped++; continue; }
@@ -278,7 +323,7 @@ async function importAdmissionPathways(rows: ImportRow[]): Promise<ImportResult>
     const rowNum = i + 2;
 
     const collegeName = str(row.collegeName || row.college);
-    const branchCode = str(row.branchCode).toUpperCase();
+    const branchCode = normalizeBranchCode(str(row.branchCode));
     const admissionExam = str(row.admissionExam);
 
     if (!collegeName) { errors.push({ row: rowNum, field: "collegeName", message: "Required" }); skipped++; continue; }

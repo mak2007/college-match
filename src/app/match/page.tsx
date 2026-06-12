@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import styles from "./match.module.css";
+import { BRANCH_OPTIONS } from "@/lib/branches";
 
 interface LocationPreference {
   state: string;
@@ -39,7 +40,7 @@ interface MatchResult {
     highestSalary: number | null;
   };
   admissionCompetitiveness: {
-    category: "Safe" | "Target" | "Reach" | "Unlikely";
+    category: "Dream" | "Target" | "Safe";
     badgeText: string;
   };
   keyReasons: string[];
@@ -83,14 +84,6 @@ export default function LiveMatcher() {
     { state: "Uttar Pradesh", city: "Noida" },
     { state: "Uttar Pradesh", city: "Greater Noida" },
     { state: "Odisha", city: "Bhubaneswar" },
-  ];
-
-  const BRANCH_OPTIONS = [
-    { code: "CSE", label: "Computer Science (CSE)" },
-    { code: "IT", label: "Information Tech (IT)" },
-    { code: "ECE", label: "Electronics (ECE)" },
-    { code: "ME", label: "Mechanical (ME)" },
-    { code: "CE", label: "Civil Eng (CE)" },
   ];
 
   // Helper: Shift priorities
@@ -462,10 +455,8 @@ export default function LiveMatcher() {
                   let competitivenessClass = styles.badgeTarget;
                   if (item.admissionCompetitiveness.category === "Safe") {
                     competitivenessClass = styles.badgeSafe;
-                  } else if (item.admissionCompetitiveness.category === "Reach") {
-                    competitivenessClass = styles.badgeReach;
-                  } else if (item.admissionCompetitiveness.category === "Unlikely") {
-                    competitivenessClass = styles.badgeUnlikely;
+                  } else if (item.admissionCompetitiveness.category === "Dream") {
+                    competitivenessClass = styles.badgeDream;
                   }
 
                   const totalCost = item.feeInfo.total4YrCost;

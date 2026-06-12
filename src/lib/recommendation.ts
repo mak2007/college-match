@@ -8,6 +8,8 @@ export type CareerGoalType =
   | "GOVERNMENT_EXAMS"
   | "NOT_SURE";
 
+export type RecommendationMode = "best_fit" | "best_colleges" | "admission_chance";
+
 export interface StudentProfile {
   jeePercentile?: number | null;
   class12Percentage?: number | null;
@@ -156,7 +158,9 @@ export interface MatchResult {
 
   branchName: string;
   branchCode: string;
+  qualityScore: number;
   matchScore: number;
+  admissionProbability: number;
   rankPosition: number;
 
   feeInfo: {
@@ -173,8 +177,9 @@ export interface MatchResult {
   };
 
   admissionCompetitiveness: {
-    category: "Safe" | "Target" | "Reach" | "Unlikely";
+    category: "Dream" | "Target" | "Safe";
     badgeText: string;
+    jeeGap: number | null;
   };
 
   keyReasons: string[];
@@ -378,7 +383,8 @@ export function getWeights(
 export function generateRecommendations(
   student: StudentProfile,
   candidates: CollegeCandidate[],
-  config: ScoringConfig
+  config: ScoringConfig,
+  mode: RecommendationMode = "best_fit"
 ): MatchResult[] {
   if (candidates.length === 0) return [];
 
@@ -457,9 +463,8 @@ export function generateRecommendations(
       }
     }
 
-    // --- STAGE 3: ACADEMIC FIT & PENALTY ---
-    let academicPenaltyVal = 0;
-    let category: "Safe" | "Target" | "Reach" | "Unlikely" = "Target";
+    // --- STAGE 3: ACADEMIC FIT (admission probability ONLY — does NOT affect ranking) ---
+    let category: "Dream" | "Target" | "Safe" = "Target";
     let badgeText = "Good Fit";
 
     const jeeGap =
@@ -485,31 +490,17 @@ export function generateRecommendations(
       if (bestGap < activeLimits.excludeLimit) {
         continue;
       } else if (bestGap < activeLimits.unlikelyThreshold) {
-        category = "Unlikely";
-        badgeText = "Competitiveness: Unlikely";
-        academicPenaltyVal = Math.abs(bestGap) * activeLimits.unlikelyPenaltyScale;
-        appliedPenalties.push({
-          id: "academic_unlikely",
-          type: "PENALTY",
-          value: Math.round(academicPenaltyVal * 10) / 10,
-          reason: `Academic score gap of ${bestGap.toFixed(1)} is below target cutoff thresholds`,
-        });
+        category = "Dream";
+        badgeText = "Admission: Dream — low chance, but worth trying";
       } else if (bestGap < activeLimits.reachThreshold) {
-        category = "Reach";
-        badgeText = "Competitiveness: Reach";
-        academicPenaltyVal = Math.abs(bestGap) * activeLimits.reachPenaltyScale;
-        appliedPenalties.push({
-          id: "academic_reach",
-          type: "PENALTY",
-          value: Math.round(academicPenaltyVal * 10) / 10,
-          reason: `Academic score gap of ${bestGap.toFixed(1)} requires competitive reach admissions`,
-        });
+        category = "Dream";
+        badgeText = "Admission: Dream — competitive, requires strong profile";
       } else if (bestGap >= activeLimits.safeThreshold) {
         category = "Safe";
-        badgeText = "Competitiveness: Safe";
+        badgeText = "Admission: Safe — strong chances";
       } else {
         category = "Target";
-        badgeText = "Competitiveness: Target";
+        badgeText = "Admission: Target — good fit for your profile";
       }
     }
 
@@ -658,8 +649,8 @@ export function generateRecommendations(
       }
     });
 
-    // Final score sum
-    const totalPenalty = budgetPenaltyVal + academicPenaltyVal;
+    // Final score = base + bonuses - budget penalty ONLY (no academic penalty)
+    const totalPenalty = budgetPenaltyVal;
     const rawFinalScore = baseScoreVal + bonusSum - totalPenalty;
     const finalScoreVal = Math.max(0, Math.min(100, rawFinalScore));
 
@@ -709,6 +700,20 @@ export function generateRecommendations(
       keyReasons.push("Strong balanced scores across all categories");
     }
 
+    // --- ADMISSION PROBABILITY (separate from ranking) ---
+    // Calculates probability based on academic gap vs cutoff thresholds
+    let admissionProb = 50; // default if no cutoff data
+    if (bestGap !== null) {
+      if (bestGap >= 10) admissionProb = 95;
+      else if (bestGap >= 7) admissionProb = 85;
+      else if (bestGap >= 5) admissionProb = 75;
+      else if (bestGap >= 3) admissionProb = 60;
+      else if (bestGap >= 1) admissionProb = 45;
+      else if (bestGap >= 0) admissionProb = 35;
+      else if (bestGap >= -2) admissionProb = 20;
+      else admissionProb = 10;
+    }
+
     results.push({
       collegeId: c.id,
       name: c.name,
@@ -723,7 +728,9 @@ export function generateRecommendations(
 
       branchName: c.branchName,
       branchCode: c.branchCode,
+      qualityScore: Math.round(baseScoreVal * 10) / 10,
       matchScore: Math.round(finalScoreVal * 10) / 10,
+      admissionProbability: admissionProb,
       rankPosition: 0,
 
       feeInfo: {
@@ -742,6 +749,7 @@ export function generateRecommendations(
       admissionCompetitiveness: {
         category,
         badgeText,
+        jeeGap: bestGap,
       },
 
       keyReasons: keyReasons.slice(0, 3),
@@ -755,9 +763,22 @@ export function generateRecommendations(
     });
   }
 
-  // Sort descending with tie-breaking, then enforce college diversity (max 2 per college)
-  const sorted = results
-    .sort((a, b) => {
+  // Sort based on mode
+  const sorted = results.sort((a, b) => {
+    if (mode === "best_colleges") {
+      // Sort by quality score descending (non-personalized)
+      if (b.qualityScore !== a.qualityScore) return b.qualityScore - a.qualityScore;
+      if (b.placementInfo.avgSalary !== a.placementInfo.avgSalary) {
+        return (b.placementInfo.avgSalary || 0) - (a.placementInfo.avgSalary || 0);
+      }
+      return a.name.localeCompare(b.name);
+    } else if (mode === "admission_chance") {
+      // Sort by admission probability descending
+      if (b.admissionProbability !== a.admissionProbability) return b.admissionProbability - a.admissionProbability;
+      if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
+      return a.name.localeCompare(b.name);
+    } else {
+      // best_fit: sort by match score descending (personalized)
       if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
       if (b.placementInfo.placementPercentage !== a.placementInfo.placementPercentage) {
         return (b.placementInfo.placementPercentage || 0) - (a.placementInfo.placementPercentage || 0);
@@ -770,7 +791,8 @@ export function generateRecommendations(
       }
       if (a.isPartner !== b.isPartner) return a.isPartner ? -1 : 1;
       return a.name.localeCompare(b.name);
-    });
+    }
+  });
 
   // Enforce max 2 entries per college for diversity
   const collegeCount: Record<string, number> = {};

@@ -249,16 +249,177 @@
   border: 1px solid rgba(15, 45, 82, 0.15);
 }
 
-.badgeReach {
-  background-color: #fcf4e8;
-  color: #C4A484;
-  border: 1px solid rgba(196, 164, 132, 0.3);
+.badgeDream {
+  background-color: #f3e8ff;
+  color: #7c3aed;
+  border: 1px solid rgba(124, 58, 237, 0.2);
 }
 
-.badgeUnlikely {
-  background-color: rgba(239, 68, 68, 0.08);
-  color: #dc2626;
-  border: 1px solid rgba(239, 68, 68, 0.15);
+/* ─── Mode Selector ─────────────────────────────────── */
+.modeSelector {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.modeLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.modeButtons {
+  display: flex;
+  gap: 0.5rem;
+  background: white;
+  border: 1px solid #e5e3dc;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.modeBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #4a4a4a;
+  transition: all 0.2s;
+}
+
+.modeBtn:hover {
+  background: #f4eee2;
+}
+
+.modeBtnActive {
+  background: #0F2D52;
+  color: white;
+}
+
+.modeBtnActive:hover {
+  background: #0a1f3a;
+}
+
+.modeHint {
+  font-size: 0.65rem;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+/* ─── Bucket Filters ────────────────────────────────── */
+.bucketFilters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.bucketBtn {
+  padding: 0.4rem 1rem;
+  border: 1px solid #e5e3dc;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #4a4a4a;
+  transition: all 0.2s;
+}
+
+.bucketBtn:hover {
+  border-color: #C4A484;
+}
+
+.bucketBtnActive {
+  background: #0F2D52;
+  color: white;
+  border-color: #0F2D52;
+}
+
+.bucketBtnDream {
+  background: #f3e8ff;
+  color: #7c3aed;
+  border-color: rgba(124, 58, 237, 0.3);
+}
+
+.bucketBtnTarget {
+  background: #e5edf5;
+  color: #1e40af;
+  border-color: rgba(30, 64, 175, 0.2);
+}
+
+.bucketBtnSafe {
+  background: #f4eee2;
+  color: #0F2D52;
+  border-color: rgba(15, 45, 82, 0.15);
+}
+
+/* ─── Score Row ─────────────────────────────────────── */
+.scoresRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.scoreBlock {
+  text-align: center;
+}
+
+.scoreLabel {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: #8c8c8c;
+  letter-spacing: 0.05em;
+}
+
+.scoreVal {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0F2D52;
+}
+
+.scoreValSmall {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #4a4a4a;
+}
+
+.bucketBadgeWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.bucketBadge {
+  display: inline-flex;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.bucketBadge.bucketBadgeDream {
+  background: #f3e8ff;
+  color: #7c3aed;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.bucketBadge.bucketBadgeTarget {
+  background: #e5edf5;
+  color: #1e40af;
+  border: 1px solid rgba(30, 64, 175, 0.15);
+}
+
+.bucketBadge.bucketBadgeSafe {
+  background: #f4eee2;
+  color: #0F2D52;
+  border: 1px solid rgba(15, 45, 82, 0.15);
 }
 
 .cutoffSubtext {

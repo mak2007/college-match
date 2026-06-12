@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "./predict.module.css";
 import Navbar from "@/components/Navbar";
+import { BRANCH_OPTIONS } from "@/lib/branches";
 
 const PENDING_QUIZ_KEY = "cm_pending_quiz";
 const PROGRESS_KEY = "cm_predictor_progress";
@@ -482,20 +483,15 @@ export default function Predictor() {
             <p className={styles.questionSubtitle}>Select the engineering specializations you are open to</p>
 
             <div className={styles.optionsGrid}>
-              {["CSE", "IT", "ECE", "ME", "CE"].map(branch => (
+              {BRANCH_OPTIONS.map(branch => (
                 <div
-                  key={branch}
-                  className={`${styles.optionCard} ${preferredBranches.includes(branch) ? styles.optionCardActive : ""}`}
-                  onClick={() => handleBranchToggle(branch)}
+                  key={branch.code}
+                  className={`${styles.optionCard} ${preferredBranches.includes(branch.code) ? styles.optionCardActive : ""}`}
+                  onClick={() => handleBranchToggle(branch.code)}
                 >
-                  <input type="checkbox" checked={preferredBranches.includes(branch)} readOnly />
-                  <span className={styles.optionTitle}>{branch}</span>
-                  <span className={styles.optionDesc}>
-                    {branch === "CSE" ? "Computer Science" :
-                     branch === "IT" ? "Information Tech" :
-                     branch === "ECE" ? "Electronics & Comm" :
-                     branch === "ME" ? "Mechanical Eng" : "Civil Engineering"}
-                  </span>
+                  <input type="checkbox" checked={preferredBranches.includes(branch.code)} readOnly />
+                  <span className={styles.optionTitle}>{branch.code}</span>
+                  <span className={styles.optionDesc}>{branch.shortLabel}</span>
                 </div>
               ))}
             </div>
