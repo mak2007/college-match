@@ -231,6 +231,7 @@ async function main() {
     officialApplyUrl: b.college.officialApplyUrl,
     website: b.college.website,
     isPartner: b.college.isPartner,
+    isNewGen: b.college.isNewGen,
     commissionRate: b.college.commissionRate,
     placementScore: b.college.placementScore,
     collegeLifeScore: b.college.collegeLifeScore,

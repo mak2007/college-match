@@ -30,7 +30,7 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
     where: { id: studentId },
     include: {
       locations: true,
-      priorities: true,
+      priorities: { orderBy: { rankOrder: "asc" } },
     },
   });
 
@@ -70,6 +70,11 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
         jeePercentile: student.jeePercentile,
         class12Percentage: student.class12Percentage,
         budgetLimit: student.budgetLimit,
+        isBudgetConstraint: student.isBudgetConstraint,
+        restrictLocation: student.restrictLocation,
+        careerGoal: student.careerGoal || "NOT_SURE",
+        locations: student.locations.map((l) => ({ state: l.state, city: l.city })),
+        priorities: student.priorities.map((p) => ({ criteria: p.criteria, rankOrder: p.rankOrder })),
       }}
       recommendations={dbRecommendations as any}
     />

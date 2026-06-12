@@ -32,6 +32,7 @@ interface CollegeFormData {
   coverImageUrl: string;
   brochureUrl: string;
   isPartner: boolean;
+  isNewGen: boolean;
   commissionRate: string;
   placementScore: string;
   collegeLifeScore: string;
@@ -95,6 +96,7 @@ export default function CollegeForm() {
     coverImageUrl: "",
     brochureUrl: "",
     isPartner: false,
+    isNewGen: false,
     commissionRate: "0",
     placementScore: "7",
     collegeLifeScore: "7",
@@ -130,6 +132,7 @@ export default function CollegeForm() {
           coverImageUrl: college.coverImageUrl || "",
           brochureUrl: college.brochureUrl || "",
           isPartner: college.isPartner || false,
+          isNewGen: college.isNewGen || false,
           commissionRate: String(college.commissionRate || 0),
           placementScore: String(college.placementScore || 7),
           collegeLifeScore: String(college.collegeLifeScore || 7),
@@ -222,6 +225,7 @@ export default function CollegeForm() {
             coverImageUrl: form.coverImageUrl,
             brochureUrl: form.brochureUrl,
             isPartner: form.isPartner,
+            isNewGen: form.isNewGen,
             commissionRate: form.commissionRate,
             placementScore: form.placementScore,
             collegeLifeScore: form.collegeLifeScore,
@@ -272,7 +276,7 @@ export default function CollegeForm() {
         const res = await fetch("/api/admin/colleges", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+        body: JSON.stringify({
             name: form.name,
             state: form.state,
             city: form.city,
@@ -282,17 +286,17 @@ export default function CollegeForm() {
             coverImageUrl: form.coverImageUrl,
             brochureUrl: form.brochureUrl,
             isPartner: form.isPartner,
+            isNewGen: form.isNewGen,
             commissionRate: form.commissionRate,
             placementScore: form.placementScore,
             collegeLifeScore: form.collegeLifeScore,
             curriculumScore: form.curriculumScore,
             metadata: form.metadata,
-            branches: form.branches.map((b) => ({ ...b, id: undefined })),
           }),
         });
         if (!res.ok) {
           const data = await res.json();
-          throw new Error(data.error || "Failed to create college");
+          throw new Error(data.error || "Failed to update college");
         }
         setMessage("College created successfully!");
       }
@@ -435,6 +439,12 @@ export default function CollegeForm() {
                 <label>
                   <input type="checkbox" checked={form.isPartner} onChange={(e) => updateField("isPartner", e.target.checked)} style={{ marginRight: "0.5rem" }} />
                   Partner College
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="checkbox" checked={form.isNewGen} onChange={(e) => updateField("isNewGen", e.target.checked)} style={{ marginRight: "0.5rem" }} />
+                  New Gen College
                 </label>
               </div>
               <div>

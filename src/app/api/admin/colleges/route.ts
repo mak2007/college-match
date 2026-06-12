@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     const {
       name, state, city, officialApplyUrl, website,
       logoUrl, coverImageUrl, brochureUrl,
-      isPartner, commissionRate,
+      isPartner, isNewGen, commissionRate,
       placementScore, collegeLifeScore, curriculumScore,
       metadata, branches,
     } = body;
@@ -76,6 +76,7 @@ export async function POST(request: Request) {
         coverImageUrl: coverImageUrl || null,
         brochureUrl: brochureUrl || null,
         isPartner: Boolean(isPartner),
+        isNewGen: Boolean(isNewGen),
         commissionRate: parseFloat(commissionRate) || 0,
         placementScore: parseFloat(placementScore) || 0,
         collegeLifeScore: parseFloat(collegeLifeScore) || 0,
@@ -119,7 +120,7 @@ export async function PATCH(request: Request) {
     }
 
     const body = await request.json();
-    const { collegeId, name, state, city, officialApplyUrl, website, logoUrl, coverImageUrl, brochureUrl, isPartner, commissionRate, placementScore, collegeLifeScore, curriculumScore, metadata } = body;
+    const { collegeId, name, state, city, officialApplyUrl, website, logoUrl, coverImageUrl, brochureUrl, isPartner, isNewGen, commissionRate, placementScore, collegeLifeScore, curriculumScore, metadata } = body;
 
     if (!collegeId) {
       return NextResponse.json({ error: "Missing collegeId parameter" }, { status: 400 });
@@ -137,6 +138,7 @@ export async function PATCH(request: Request) {
         ...(coverImageUrl !== undefined && { coverImageUrl }),
         ...(brochureUrl !== undefined && { brochureUrl }),
         ...(isPartner !== undefined && { isPartner: Boolean(isPartner) }),
+        ...(isNewGen !== undefined && { isNewGen: Boolean(isNewGen) }),
         ...(commissionRate !== undefined && { commissionRate: parseFloat(commissionRate) }),
         ...(placementScore !== undefined && { placementScore: parseFloat(placementScore) }),
         ...(collegeLifeScore !== undefined && { collegeLifeScore: parseFloat(collegeLifeScore) }),

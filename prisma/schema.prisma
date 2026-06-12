@@ -35,6 +35,7 @@ model College {
   metadata          String?
   createdAt         DateTime              @default(now())
   website           String?
+  isNewGen          Boolean               @default(false)
   admissionPathways AdmissionPathway[]
   adminProfiles     CollegeAdminProfile[]
   branches          CollegeBranch[]

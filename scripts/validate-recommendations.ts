@@ -49,6 +49,7 @@ async function importData() {
         curriculumScore: Number(r.curriculumScore || 0),
         officialApplyUrl: String(r.officialApplyUrl || "https://example.com"),
         isPartner: Boolean(r.isPartner),
+        isNewGen: Boolean(r.isNewGen),
         metadata: Object.keys(metadata).length > 0 ? JSON.stringify(metadata) : null,
       },
       create: {
@@ -58,6 +59,7 @@ async function importData() {
         curriculumScore: Number(r.curriculumScore || 0),
         officialApplyUrl: String(r.officialApplyUrl || "https://example.com"),
         isPartner: Boolean(r.isPartner),
+        isNewGen: Boolean(r.isNewGen),
         metadata: Object.keys(metadata).length > 0 ? JSON.stringify(metadata) : null,
       },
     });
@@ -199,6 +201,7 @@ async function runValidation() {
     logoUrl: b.college.logoUrl, coverImageUrl: b.college.coverImageUrl,
     brochureUrl: b.college.brochureUrl, officialApplyUrl: b.college.officialApplyUrl,
     website: b.college.website, isPartner: b.college.isPartner,
+    isNewGen: b.college.isNewGen,
     commissionRate: b.college.commissionRate, placementScore: b.college.placementScore,
     collegeLifeScore: b.college.collegeLifeScore, curriculumScore: b.college.curriculumScore,
     metadata: b.college.metadata,
@@ -531,6 +534,7 @@ function generateReport(allResults: { profile: any; top10: any[]; totalMatches: 
         avgSalary: r.placementInfo.avgSalary,
         placementPct: r.placementInfo.placementPercentage,
         isPartner: r.isPartner,
+        isNewGen: r.isNewGen,
         keyReasons: r.keyReasons.join(" | "),
       });
     }

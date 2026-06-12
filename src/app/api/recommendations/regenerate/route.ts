@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/db";
+import { verifyToken } from "@/lib/auth";
 import {
   generateRecommendations,
   StudentProfile,
@@ -89,98 +91,121 @@ function mapCandidate(b: any): CollegeCandidate {
   };
 }
 
+/**
+ * POST /api/recommendations/regenerate
+ *
+ * Called from the results page sidebar when the user modifies quiz answers.
+ * Updates student record, re-runs the engine, stores new recommendations,
+ * and returns them.
+ *
+ * Body: {
+ *   studentId: string,
+ *   quizData: {
+ *     careerGoal: string,
+ *     jeePercentile: number | null,
+ *     class12Percentage: number | null,
+ *     budgetLimit: number | null,
+ *     isBudgetConstraint: boolean,
+ *     restrictLocation: boolean,
+ *     selectedLocations: Array<{ state: string; city: string }>,
+ *     priorities: Array<{ criteria: string; rankOrder: number }>,
+ *     preferredBranches: string[],
+ *   }
+ * }
+ */
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { student, priorities, preferred_branches } = body;
-
-    if (!student || !student.name || !student.email || !student.phone || !priorities) {
-      return NextResponse.json({ error: "Missing required student profile parameters" }, { status: 400 });
+    const cookieStore = await cookies();
+    const token = cookieStore.get("cm_auth_token")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    }
+    const session = await verifyToken(token);
+    if (!session) {
+      return NextResponse.json({ error: "Invalid or expired session" }, { status: 401 });
     }
 
-    const careerGoal: CareerGoalType = student.career_goal || student.careerGoal || "NOT_SURE";
+    const body = await request.json();
+    const { studentId, quizData } = body;
 
-    const dbStudent = await prisma.student.upsert({
-      where: { email: student.email },
-      update: {
-        name: student.name,
-        phone: student.phone,
-        jeePercentile: student.jee_percentile,
-        class12Percentage: student.class_12_percentage,
-        budgetLimit: student.budget_limit,
-        isBudgetConstraint: student.is_budget_constraint,
-        restrictLocation: student.restrict_location,
+    if (!studentId || !quizData) {
+      return NextResponse.json({ error: "Missing studentId or quizData" }, { status: 400 });
+    }
+
+    const careerGoal: CareerGoalType = quizData.careerGoal || "NOT_SURE";
+
+    // 1. Update student record
+    await prisma.student.update({
+      where: { id: studentId },
+      data: {
+        jeePercentile: quizData.jeePercentile,
+        class12Percentage: quizData.class12Percentage,
+        budgetLimit: quizData.budgetLimit,
+        isBudgetConstraint: quizData.isBudgetConstraint,
+        restrictLocation: quizData.restrictLocation,
         careerGoal: careerGoal as any,
-        examType: student.exam_type || student.examType || null,
-      },
-      create: {
-        name: student.name,
-        email: student.email,
-        phone: student.phone,
-        jeePercentile: student.jee_percentile,
-        class12Percentage: student.class_12_percentage,
-        budgetLimit: student.budget_limit,
-        isBudgetConstraint: student.is_budget_constraint,
-        restrictLocation: student.restrict_location,
-        careerGoal: careerGoal as any,
-        examType: student.exam_type || student.examType || null,
       },
     });
 
-    await prisma.studentLocation.deleteMany({ where: { studentId: dbStudent.id } });
-    await prisma.studentPriority.deleteMany({ where: { studentId: dbStudent.id } });
-
-    if (student.locations && student.locations.length > 0) {
+    // 2. Sync locations
+    await prisma.studentLocation.deleteMany({ where: { studentId } });
+    if (quizData.selectedLocations && quizData.selectedLocations.length > 0) {
       await prisma.studentLocation.createMany({
-        data: student.locations.map((loc: { state: string; city: string }) => ({
-          studentId: dbStudent.id,
+        data: quizData.selectedLocations.map((loc: { state: string; city: string }) => ({
+          studentId,
           state: loc.state,
           city: loc.city || "",
         })),
       });
     }
 
-    await prisma.studentPriority.createMany({
-      data: priorities.map((p: { criteria: string; rankOrder: number }) => ({
-        studentId: dbStudent.id,
-        criteria: p.criteria.toUpperCase(),
-        rankOrder: p.rankOrder,
-      })),
-    });
+    // 3. Sync priorities
+    await prisma.studentPriority.deleteMany({ where: { studentId } });
+    if (quizData.priorities && quizData.priorities.length > 0) {
+      await prisma.studentPriority.createMany({
+        data: quizData.priorities.map((p: { criteria: string; rankOrder: number }) => ({
+          studentId,
+          criteria: p.criteria.toUpperCase(),
+          rankOrder: p.rankOrder,
+        })),
+      });
+    }
 
+    // 4. Run recommendation engine
     const dbConfig = await prisma.systemConfig.findUnique({ where: { key: "matching_rules" } });
     let config: ScoringConfig = dbConfig ? JSON.parse(dbConfig.value) : getDefaultConfig();
 
     const dbBranches = await prisma.collegeBranch.findMany({ include: { college: true } });
     let candidates: CollegeCandidate[] = dbBranches.map(mapCandidate);
 
-    if (preferred_branches && preferred_branches.length > 0) {
-      const targetBranches = preferred_branches.map((b: string) => normalizeBranchCode(b));
+    if (quizData.preferredBranches && quizData.preferredBranches.length > 0) {
+      const targetBranches = quizData.preferredBranches.map((b: string) => normalizeBranchCode(b));
       candidates = candidates.filter((c) =>
         targetBranches.includes(normalizeBranchCode(c.branchCode))
       );
     }
 
     const engineProfile: StudentProfile = {
-      jeePercentile: student.jee_percentile,
-      class12Percentage: student.class_12_percentage,
-      budgetLimit: student.budget_limit,
-      isBudgetConstraint: student.is_budget_constraint,
-      restrictLocation: student.restrict_location,
-      preferredLocations: student.locations || [],
-      priorities: priorities,
-      preferredBranches: preferred_branches || [],
+      jeePercentile: quizData.jeePercentile,
+      class12Percentage: quizData.class12Percentage,
+      budgetLimit: quizData.budgetLimit,
+      isBudgetConstraint: quizData.isBudgetConstraint,
+      restrictLocation: quizData.restrictLocation,
+      preferredLocations: quizData.selectedLocations || [],
+      priorities: quizData.priorities || [],
+      preferredBranches: quizData.preferredBranches || [],
       careerGoal: careerGoal || "NOT_SURE",
     };
 
     const recommendations = generateRecommendations(engineProfile, candidates, config);
-    const top10 = recommendations.slice(0, 10);
+    const top15 = recommendations.slice(0, 15);
 
-    await prisma.recommendation.deleteMany({ where: { studentId: dbStudent.id } });
-    if (top10.length > 0) {
+    // 5. Store new recommendations
+    await prisma.recommendation.deleteMany({ where: { studentId } });
+    if (top15.length > 0) {
       await prisma.recommendation.createMany({
-        data: top10.map((r) => ({
-          studentId: dbStudent.id,
+        data: top15.map((r) => ({
+          studentId,
           collegeId: r.collegeId,
           branchCode: r.branchCode,
           matchScore: r.matchScore,
@@ -192,9 +217,20 @@ export async function POST(request: Request) {
       });
     }
 
-    return NextResponse.json({ student_id: dbStudent.id, recommendations: top10 });
+    // 6. Return fresh recommendations with college data
+    const freshRecs = await prisma.recommendation.findMany({
+      where: { studentId },
+      orderBy: { rankPosition: "asc" },
+      include: {
+        college: {
+          include: { branches: true },
+        },
+      },
+    });
+
+    return NextResponse.json({ recommendations: freshRecs });
   } catch (error: any) {
-    console.error("Recommendations API Error:", error);
+    console.error("Regenerate API Error:", error);
     return NextResponse.json({ error: "Internal Server Error", details: error.message }, { status: 500 });
   }
 }

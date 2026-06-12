@@ -8,7 +8,7 @@ export type CareerGoalType =
   | "GOVERNMENT_EXAMS"
   | "NOT_SURE";
 
-export type RecommendationMode = "best_fit" | "best_colleges" | "admission_chance";
+export type RecommendationMode = "best_fit" | "admission_chance";
 
 export interface StudentProfile {
   jeePercentile?: number | null;
@@ -34,6 +34,7 @@ export interface CollegeCandidate {
   officialApplyUrl: string;
   website: string | null;
   isPartner: boolean;
+  isNewGen: boolean;
   commissionRate: number;
   placementScore: number;
   collegeLifeScore: number;
@@ -155,6 +156,7 @@ export interface MatchResult {
   officialApplyUrl: string;
   website: string | null;
   isPartner: boolean;
+  isNewGen: boolean;
 
   branchName: string;
   branchCode: string;
@@ -780,6 +782,7 @@ export function generateRecommendations(
       officialApplyUrl: c.officialApplyUrl,
       website: c.website,
       isPartner: c.isPartner,
+      isNewGen: c.isNewGen,
 
       branchName: c.branchName,
       branchCode: c.branchCode,
@@ -820,14 +823,7 @@ export function generateRecommendations(
 
   // Sort based on mode
   const sorted = results.sort((a, b) => {
-    if (mode === "best_colleges") {
-      // Sort by quality score descending (non-personalized)
-      if (b.qualityScore !== a.qualityScore) return b.qualityScore - a.qualityScore;
-      if (b.placementInfo.avgSalary !== a.placementInfo.avgSalary) {
-        return (b.placementInfo.avgSalary || 0) - (a.placementInfo.avgSalary || 0);
-      }
-      return a.name.localeCompare(b.name);
-    } else if (mode === "admission_chance") {
+    if (mode === "admission_chance") {
       // Sort by admission probability descending
       if (b.admissionProbability !== a.admissionProbability) return b.admissionProbability - a.admissionProbability;
       if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
