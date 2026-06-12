@@ -38,11 +38,11 @@ async function main() {
       CURRICULUM: 0.10,
     },
     careerGoalWeights: {
-      PLACEMENT: { PLACEMENTS: 0.35, ROI: 0.25, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.10, CURRICULUM: 0.15 },
-      STARTUP: { PLACEMENTS: 0.15, ROI: 0.15, BRANCH_STRENGTH: 0.20, COLLEGE_LIFE: 0.15, CURRICULUM: 0.35 },
-      HIGHER_STUDIES_INDIA: { PLACEMENTS: 0.10, ROI: 0.20, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.10, CURRICULUM: 0.45 },
-      HIGHER_STUDIES_ABROAD: { PLACEMENTS: 0.05, ROI: 0.15, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.15, CURRICULUM: 0.50 },
-      GOVERNMENT_EXAMS: { PLACEMENTS: 0.15, ROI: 0.35, BRANCH_STRENGTH: 0.10, COLLEGE_LIFE: 0.10, CURRICULUM: 0.30 },
+      PLACEMENT: { PLACEMENTS: 0.40, ROI: 0.20, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.10, CURRICULUM: 0.15 },
+      STARTUP: { PLACEMENTS: 0.10, ROI: 0.10, BRANCH_STRENGTH: 0.20, COLLEGE_LIFE: 0.15, CURRICULUM: 0.45 },
+      HIGHER_STUDIES_INDIA: { PLACEMENTS: 0.05, ROI: 0.15, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.10, CURRICULUM: 0.55 },
+      HIGHER_STUDIES_ABROAD: { PLACEMENTS: 0.05, ROI: 0.10, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.15, CURRICULUM: 0.55 },
+      GOVERNMENT_EXAMS: { PLACEMENTS: 0.10, ROI: 0.40, BRANCH_STRENGTH: 0.10, COLLEGE_LIFE: 0.10, CURRICULUM: 0.30 },
       NOT_SURE: { PLACEMENTS: 0.20, ROI: 0.20, BRANCH_STRENGTH: 0.20, COLLEGE_LIFE: 0.20, CURRICULUM: 0.20 },
     },
     priorityAdjustment: {
@@ -52,34 +52,34 @@ async function main() {
     },
     careerGoalExtraDimensions: {
       PLACEMENT: [
-        { key: "PLACEMENT_PERCENTAGE", label: "Branch placement rate", weight: 0.10, source: "branch_metadata", computation: "placement_percentage" },
+        { key: "PLACEMENT_PERCENTAGE", label: "Branch placement rate", weight: 0.15, source: "branch_metadata", computation: "placement_percentage" },
       ],
       STARTUP: [
-        { key: "STARTUP_ECOSYSTEM", label: "Startup ecosystem & incubation", weight: 0.10, source: "college_metadata", metadataKey: "startup_ecosystem" },
+        { key: "STARTUP_ECOSYSTEM", label: "Startup ecosystem & incubation", weight: 0.15, source: "college_metadata", metadataKey: "startup_ecosystem" },
       ],
       HIGHER_STUDIES_INDIA: [
-        { key: "RESEARCH_OUTPUT", label: "Research output & publications", weight: 0.10, source: "college_metadata", metadataKey: "research_output" },
+        { key: "RESEARCH_OUTPUT", label: "Research output & publications", weight: 0.15, source: "college_metadata", metadataKey: "research_output" },
       ],
       HIGHER_STUDIES_ABROAD: [
         { key: "INTERNATIONAL_EXPOSURE", label: "International exposure & exchange programs", weight: 0.10, source: "college_metadata", metadataKey: "international_exposure" },
-        { key: "RESEARCH_OUTPUT", label: "Research output & publications", weight: 0.05, source: "college_metadata", metadataKey: "research_output" },
+        { key: "RESEARCH_OUTPUT", label: "Research output & publications", weight: 0.10, source: "college_metadata", metadataKey: "research_output" },
       ],
       GOVERNMENT_EXAMS: [],
       NOT_SURE: [],
     },
     budgetPenalty: {
       active: true,
-      thresholdMultiplier: 1.3,
-      basePenaltyWeight: 40.0,
-      exponent: 2.0,
+      thresholdMultiplier: 1.15,
+      basePenaltyWeight: 50.0,
+      exponent: 2.5,
     },
     academicCompetitiveness: {
       active: true,
       safeThreshold: 5.0,
       reachThreshold: 0.0,
       unlikelyThreshold: -5.0,
-      reachPenaltyScale: 3.0,
-      unlikelyPenaltyScale: 5.0,
+      reachPenaltyScale: 5.0,
+      unlikelyPenaltyScale: 8.0,
       excludeLimit: -15.0,
     },
     bonusRules: [
@@ -87,8 +87,8 @@ async function main() {
       { id: "partner_b", type: "IS_PARTNER", bonus: 2.0, reason: "Exclusive CollegeMatch Partner" }
     ],
     customScoringAttributes: [
-      { key: "nirf_ranking", label: "NIRF Ranking Score", weight: 0.05, defaultValue: 70 },
-      { key: "infra_rating", label: "Infrastructure Score", weight: 0.05, defaultValue: 80 }
+      { key: "nirf_ranking", label: "NIRF Ranking Score", weight: 0.03, defaultValue: 70 },
+      { key: "infra_rating", label: "Infrastructure Score", weight: 0.02, defaultValue: 80 }
     ]
   };
 

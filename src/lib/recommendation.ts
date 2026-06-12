@@ -183,36 +183,36 @@ export interface MatchResult {
 
 const DEFAULT_CAREER_GOAL_WEIGHTS: Record<CareerGoalType, CareerGoalWeights> = {
   PLACEMENT: {
-    PLACEMENTS: 0.35,
-    ROI: 0.25,
+    PLACEMENTS: 0.40,
+    ROI: 0.20,
     BRANCH_STRENGTH: 0.15,
     COLLEGE_LIFE: 0.10,
     CURRICULUM: 0.15,
   },
   STARTUP: {
-    PLACEMENTS: 0.15,
-    ROI: 0.15,
+    PLACEMENTS: 0.10,
+    ROI: 0.10,
     BRANCH_STRENGTH: 0.20,
     COLLEGE_LIFE: 0.15,
-    CURRICULUM: 0.35,
-  },
-  HIGHER_STUDIES_INDIA: {
-    PLACEMENTS: 0.10,
-    ROI: 0.20,
-    BRANCH_STRENGTH: 0.15,
-    COLLEGE_LIFE: 0.10,
     CURRICULUM: 0.45,
   },
-  HIGHER_STUDIES_ABROAD: {
+  HIGHER_STUDIES_INDIA: {
     PLACEMENTS: 0.05,
     ROI: 0.15,
     BRANCH_STRENGTH: 0.15,
+    COLLEGE_LIFE: 0.10,
+    CURRICULUM: 0.55,
+  },
+  HIGHER_STUDIES_ABROAD: {
+    PLACEMENTS: 0.05,
+    ROI: 0.10,
+    BRANCH_STRENGTH: 0.15,
     COLLEGE_LIFE: 0.15,
-    CURRICULUM: 0.50,
+    CURRICULUM: 0.55,
   },
   GOVERNMENT_EXAMS: {
-    PLACEMENTS: 0.15,
-    ROI: 0.35,
+    PLACEMENTS: 0.10,
+    ROI: 0.40,
     BRANCH_STRENGTH: 0.10,
     COLLEGE_LIFE: 0.10,
     CURRICULUM: 0.30,
@@ -231,7 +231,7 @@ const DEFAULT_EXTRA_DIMENSIONS: Record<CareerGoalType, CareerGoalExtraDimension[
     {
       key: "PLACEMENT_PERCENTAGE",
       label: "Branch placement rate",
-      weight: 0.10,
+      weight: 0.15,
       source: "branch_metadata",
       computation: "placement_percentage",
     },
@@ -240,7 +240,7 @@ const DEFAULT_EXTRA_DIMENSIONS: Record<CareerGoalType, CareerGoalExtraDimension[
     {
       key: "STARTUP_ECOSYSTEM",
       label: "Startup ecosystem & incubation",
-      weight: 0.10,
+      weight: 0.15,
       source: "college_metadata",
       metadataKey: "startup_ecosystem",
     },
@@ -249,7 +249,7 @@ const DEFAULT_EXTRA_DIMENSIONS: Record<CareerGoalType, CareerGoalExtraDimension[
     {
       key: "RESEARCH_OUTPUT",
       label: "Research output & publications",
-      weight: 0.10,
+      weight: 0.15,
       source: "college_metadata",
       metadataKey: "research_output",
     },
@@ -265,7 +265,7 @@ const DEFAULT_EXTRA_DIMENSIONS: Record<CareerGoalType, CareerGoalExtraDimension[
     {
       key: "RESEARCH_OUTPUT",
       label: "Research output & publications",
-      weight: 0.05,
+      weight: 0.10,
       source: "college_metadata",
       metadataKey: "research_output",
     },
@@ -382,15 +382,16 @@ export function generateRecommendations(
 ): MatchResult[] {
   if (candidates.length === 0) return [];
 
-  // Pre-calculate ROI ranges for normalization
+  // Pre-calculate ROI ranges for normalization (log-scaled to compress extremes)
   const roiRatios = candidates.map((c) => {
-    const total4YrTuition = c.tuitionFeeAnnual * 4;
+    const total4YrCost = (c.tuitionFeeAnnual + c.hostelFeeAnnual) * 4;
     const avgSal = c.avgSalary || 450000;
-    return total4YrTuition > 0 ? avgSal / total4YrTuition : 0;
+    return total4YrCost > 0 ? avgSal / total4YrCost : 0;
   });
 
-  const maxRoi = Math.max(...roiRatios, 0.1);
-  const minRoi = Math.min(...roiRatios, maxRoi);
+  const logRoiRatios = roiRatios.map((r) => Math.log(1 + r));
+  const maxLogRoi = Math.max(...logRoiRatios, 0.1);
+  const minLogRoi = Math.min(...logRoiRatios, maxLogRoi);
 
   // Calculate dynamic normalized weights
   const weights = getWeights(student.priorities, config, student.careerGoal);
@@ -559,11 +560,12 @@ export function generateRecommendations(
       contribution: Math.round(sCurriculum * wCurriculum * 10) / 10,
     });
 
-    // Core 5: ROI (min-max normalization with floor at 30, ceiling at 100)
-    const currentRoiRatio = (c.avgSalary || 450000) / (c.tuitionFeeAnnual * 4);
-    const roiRange = maxRoi - minRoi;
+    // Core 5: ROI (log-scaled normalization with floor at 30, ceiling at 100)
+    const currentRoiRatio = (c.avgSalary || 450000) / total4YrCost;
+    const currentLogRoi = Math.log(1 + currentRoiRatio);
+    const logRoiRange = maxLogRoi - minLogRoi;
     const sRoi =
-      roiRange > 0 ? 30 + ((currentRoiRatio - minRoi) / roiRange) * 70 : 75;
+      logRoiRange > 0 ? 30 + ((currentLogRoi - minLogRoi) / logRoiRange) * 70 : 75;
     const wRoi = weights.ROI || 0;
     factorContributions.push({
       factor: "ROI",
@@ -753,8 +755,8 @@ export function generateRecommendations(
     });
   }
 
-  // Sort descending with tie-breaking
-  return results
+  // Sort descending with tie-breaking, then enforce college diversity (max 2 per college)
+  const sorted = results
     .sort((a, b) => {
       if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
       if (b.placementInfo.placementPercentage !== a.placementInfo.placementPercentage) {
@@ -768,9 +770,22 @@ export function generateRecommendations(
       }
       if (a.isPartner !== b.isPartner) return a.isPartner ? -1 : 1;
       return a.name.localeCompare(b.name);
-    })
-    .map((item, idx) => {
-      item.rankPosition = idx + 1;
-      return item;
     });
+
+  // Enforce max 2 entries per college for diversity
+  const collegeCount: Record<string, number> = {};
+  const MAX_PER_COLLEGE = 2;
+  const diverseResults: MatchResult[] = [];
+  for (const item of sorted) {
+    const count = collegeCount[item.name] || 0;
+    if (count < MAX_PER_COLLEGE) {
+      collegeCount[item.name] = count + 1;
+      diverseResults.push(item);
+    }
+  }
+
+  return diverseResults.map((item, idx) => {
+    item.rankPosition = idx + 1;
+    return item;
+  });
 }

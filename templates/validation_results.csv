@@ -1,0 +1,16 @@
+﻿profile,goal,jee,budget,branches,totalMatches,top1,top2,top3
+Top-tier CSE Placement,PLACEMENT,98,2000000,CSE,24,NIT Warangal (CSE) 98.9%,IIIT Hyderabad (CSE) 96.4%,RV College of Engineering (CSE) 91.5%
+Mid-tier CSE Placement,PLACEMENT,88,1500000,CSE,22,Thapar Institute of Engineering and Technology (CSE) 77.8%,SRM Institute of Science and Technology (CSE) 76.8%,Amrita Vishwa Vidyapeetham (CSE) 76.5%
+Low-tier CSE Budget,PLACEMENT,72,800000,CSE,11,Dayananda Sagar College of Engineering (CSE) 68.3%,Chandigarh University (CSE) 62.7%,Lovely Professional University (CSE) 59.5%
+ECE Placement Focus,PLACEMENT,92,1800000,ECE,18,NIT Warangal (ECE) 97.4%,IIIT Hyderabad (ECE) 95.7%,Manipal Institute of Technology (ECE) 88.1%
+Mechanical Placement,PLACEMENT,85,1200000,ME,3,Vellore Institute of Technology (ME) 87.3%,SRM Institute of Science and Technology (ME) 72.6%,Lovely Professional University (ME) 68.4%
+Startup Dreamer (CSE),STARTUP,90,2000000,CSE,24,Vellore Institute of Technology (CSE) 91.9%,Vellore Institute of Technology (VIT) (CSE) 80.8%,BMS College of Engineering (CSE) 80.7%
+Higher Studies India (ECE),HIGHER_STUDIES_INDIA,94,1600000,ECE,18,IIIT Hyderabad (ECE) 96.6%,NIT Warangal (ECE) 94.4%,Manipal Institute of Technology (ECE) 89%
+Higher Studies Abroad (CSE),HIGHER_STUDIES_ABROAD,96,2500000,CSE,24,IIIT Hyderabad (CSE) 96.9%,Manipal Institute of Technology (CSE) 92.5%,NIT Warangal (CSE) 92.3%
+Govt Exams (Mechanical),GOVERNMENT_EXAMS,80,1000000,ME,2,Lovely Professional University (ME) 80.7%,Vellore Institute of Technology (ME) 75.6%,none
+Not Sure (Multi-branch),NOT_SURE,86,1400000,"CSE,ECE,IT",40,NIT Warangal (ECE) 82.5%,Vellore Institute of Technology (IT) 82%,Vellore Institute of Technology (ECE) 80.6%
+South India Only (CSE),PLACEMENT,91,1600000,CSE,12,Vellore Institute of Technology (CSE) 90%,BMS College of Engineering (CSE) 78.9%,MAHE Manipal (CSE) 77.4%
+No Budget Constraint (CSE),PLACEMENT,95,,CSE,24,NIT Warangal (CSE) 98.6%,RV College of Engineering (CSE) 92.7%,IIIT Hyderabad (CSE) 92.6%
+Civil Engineering (Budget),PLACEMENT,75,800000,CE,0,none,none,none
+IT Startup (Low Budget),STARTUP,82,900000,IT,1,Pune Institute of Computer Technology (IT) 63%,none,none
+Extreme Reach (99 percentile),PLACEMENT,99,3000000,CSE,24,NIT Warangal (CSE) 98.6%,IIIT Hyderabad (CSE) 97.6%,RV College of Engineering (CSE) 92.7%
