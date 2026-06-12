@@ -379,7 +379,62 @@ export function getWeights(
   return weights;
 }
 
-// 3. Main Configurable Recommendation Scoring Algorithm
+// 3. Standalone Quality Score (objective, student-independent)
+// Used for "Best Colleges" mode — ranks colleges by intrinsic quality only.
+const QUALITY_WEIGHTS = {
+  PLACEMENT: 0.25,
+  CURRICULUM: 0.20,
+  BRANCH_STRENGTH: 0.20,
+  ROI: 0.15,
+  NIRF: 0.10,
+  INFRA: 0.05,
+  PLACEMENT_PCT: 0.05,
+};
+
+function computeQualityScore(
+  c: CollegeCandidate,
+  collegeMeta: Record<string, any>,
+  total4YrCost: number,
+  logRoiRange: number,
+  minLogRoi: number
+): number {
+  // 1. Placement outcomes (0-100)
+  const sPlacement = c.placementScore * 10;
+
+  // 2. Curriculum (0-100)
+  const sCurriculum = c.curriculumScore * 10;
+
+  // 3. Branch strength (0-100)
+  const sBranch = c.branchStrengthScore * 10;
+
+  // 4. ROI (log-scaled, 0-100)
+  const roiRatio = total4YrCost > 0 ? (c.avgSalary || 450000) / total4YrCost : 0;
+  const logRoi = Math.log(1 + roiRatio);
+  const sRoi = logRoiRange > 0 ? 30 + ((logRoi - minLogRoi) / logRoiRange) * 70 : 50;
+
+  // 5. NIRF ranking (0-100, from metadata)
+  const nirf = Math.min(100, Math.max(0, Number(collegeMeta.nirf_ranking) || 50));
+
+  // 6. Infrastructure (0-100, from metadata)
+  const infra = Math.min(100, Math.max(0, Number(collegeMeta.infra_rating) || 50));
+
+  // 7. Placement percentage (0-100)
+  const placementPct = c.placementPercentage != null ? Math.min(100, Math.max(0, c.placementPercentage)) : 50;
+
+  // Weighted sum
+  const quality =
+    sPlacement * QUALITY_WEIGHTS.PLACEMENT +
+    sCurriculum * QUALITY_WEIGHTS.CURRICULUM +
+    sBranch * QUALITY_WEIGHTS.BRANCH_STRENGTH +
+    sRoi * QUALITY_WEIGHTS.ROI +
+    nirf * QUALITY_WEIGHTS.NIRF +
+    infra * QUALITY_WEIGHTS.INFRA +
+    placementPct * QUALITY_WEIGHTS.PLACEMENT_PCT;
+
+  return Math.round(quality * 10) / 10;
+}
+
+// 4. Main Configurable Recommendation Scoring Algorithm
 export function generateRecommendations(
   student: StudentProfile,
   candidates: CollegeCandidate[],
@@ -728,7 +783,7 @@ export function generateRecommendations(
 
       branchName: c.branchName,
       branchCode: c.branchCode,
-      qualityScore: Math.round(baseScoreVal * 10) / 10,
+      qualityScore: computeQualityScore(c, collegeMeta, total4YrCost, maxLogRoi - minLogRoi, minLogRoi),
       matchScore: Math.round(finalScoreVal * 10) / 10,
       admissionProbability: admissionProb,
       rankPosition: 0,
