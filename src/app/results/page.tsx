@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 import styles from "./results.module.css";
-import { cookies } from "next/headers";
-import { verifyToken } from "@/lib/auth";
 
 interface ResultsProps {
   searchParams: Promise<{ student_id?: string }>;
@@ -11,12 +9,6 @@ interface ResultsProps {
 export default async function ResultsPage({ searchParams }: ResultsProps) {
   const params = await searchParams;
   const studentId = params.student_id;
-
-  // Verify Student Session via HTTP Cookie
-  const cookieStore = await cookies();
-  const token = cookieStore.get("cm_auth_token")?.value;
-  const session = token ? await verifyToken(token) : null;
-  const isLoggedIn = session && session.role === "STUDENT";
 
   if (!studentId) {
     return (
@@ -108,63 +100,8 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
             </Link>
           </div>
         ) : (
-          <div style={{ position: "relative" }}>
-            {/* Gating Overlay */}
-            {!isLoggedIn && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  zIndex: 20,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: "rgba(250, 249, 245, 0.85)",
-                  backdropFilter: "blur(10px)",
-                  borderRadius: "16px",
-                  padding: "2rem",
-                }}
-              >
-                <div
-                  className="glass-card text-center animate-slide"
-                  style={{
-                    maxWidth: "480px",
-                    padding: "3rem 2rem",
-                    border: "1px solid var(--light-border)",
-                    boxShadow: "0 20px 50px rgba(15, 45, 82, 0.1)",
-                    background: "var(--light-surface)",
-                  }}
-                >
-                  <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔒</div>
-                  <h2 style={{ fontSize: "1.75rem", fontWeight: 700, color: "var(--light-text)", marginBottom: "1rem" }}>
-                    Unlock Your College Matches
-                  </h2>
-                  <p style={{ color: "var(--light-text-secondary)", marginBottom: "2rem", fontSize: "0.95rem", lineHeight: "1.6" }}>
-                    Create a free student account to view matching scores, tuition breakdown, placement statistics, and direct application links for your top colleges.
-                  </p>
-                  <Link
-                    href={`/login?redirect=/results?student_id=${student.id}`}
-                    className="btn btn-primary"
-                    style={{
-                      display: "inline-block",
-                      padding: "1rem 2rem",
-                      fontSize: "1rem",
-                      fontWeight: 600,
-                      borderRadius: "50px",
-                      width: "100%",
-                      textDecoration: "none",
-                    }}
-                  >
-                    Unlock Matches Now
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            <div className={styles.resultsList} style={!isLoggedIn ? { filter: "blur(10px)", pointerEvents: "none", userSelect: "none" } : undefined}>
+          <div>
+            <div className={styles.resultsList}>
               {dbRecommendations.map((rec) => {
                 const college = rec.college;
                 const branch = college.branches.find((b) => b.branchCode === rec.branchCode);
