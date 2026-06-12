@@ -90,7 +90,7 @@ export async function GET() {
     branchMap.set(code, entry);
   }
 
-  const branchDistribution: BranchDistribution[] = ["CSE", "IT", "ECE", "EE", "ME"].map((code) => {
+  const branchDistribution: BranchDistribution[] = ["CSE", "IT", "ECE"].map((code) => {
     const e = branchMap.get(code);
     return {
       branchCode: code,

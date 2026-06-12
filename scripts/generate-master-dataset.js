@@ -6,7 +6,7 @@ const OUT_DIR = path.join(__dirname, "..", "templates");
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
 // ═══════════════════════════════════════════════════════════════════
-// SUPPORTED BRANCHES: CSE, IT, ECE, EE, ME
+// SUPPORTED BRANCHES: CSE, IT, ECE
 // ═══════════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════════
@@ -37,8 +37,8 @@ const colleges = [
 ];
 
 // ═══════════════════════════════════════════════════════════════════
-// BRANCHES — Only CSE, IT, ECE, EE, ME
-// ISE normalized to IT, CE removed, EE added where data exists
+// BRANCHES — Only CSE, IT, ECE
+// ISE normalized to IT, CE removed
 // ═══════════════════════════════════════════════════════════════════
 
 const branchData = [
@@ -46,15 +46,10 @@ const branchData = [
   { collegeName: "Vellore Institute of Technology", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 198000, hostelFeeAnnual: 95000, seatCapacity: 1200, avgSalary: 920000, medianSalary: 850000, highestSalary: 4400000, minJeePercentileCutoff: 94.5, minClass12Cutoff: 85.0, branchStrengthScore: 9.5, placementPercentage: 95.0 },
   { collegeName: "Vellore Institute of Technology", branchCode: "IT", branchName: "Information Technology", tuitionFeeAnnual: 198000, hostelFeeAnnual: 95000, seatCapacity: 300, avgSalary: 860000, medianSalary: 800000, highestSalary: 3200000, minJeePercentileCutoff: 93.0, minClass12Cutoff: 82.0, branchStrengthScore: 9.2, placementPercentage: 92.0 },
   { collegeName: "Vellore Institute of Technology", branchCode: "ECE", branchName: "Electronics & Communication Engineering", tuitionFeeAnnual: 195000, hostelFeeAnnual: 95000, seatCapacity: 600, avgSalary: 750000, medianSalary: 700000, highestSalary: 2200000, minJeePercentileCutoff: 90.0, minClass12Cutoff: 80.0, branchStrengthScore: 8.8, placementPercentage: 88.0 },
-  { collegeName: "Vellore Institute of Technology", branchCode: "EE", branchName: "Electrical Engineering", tuitionFeeAnnual: 185000, hostelFeeAnnual: 95000, seatCapacity: 200, avgSalary: 600000, medianSalary: 550000, highestSalary: 1500000, minJeePercentileCutoff: 85.0, minClass12Cutoff: 75.0, branchStrengthScore: 7.8, placementPercentage: 82.0 },
-  { collegeName: "Vellore Institute of Technology", branchCode: "ME", branchName: "Mechanical Engineering", tuitionFeeAnnual: 175000, hostelFeeAnnual: 95000, seatCapacity: 400, avgSalary: 520000, medianSalary: 480000, highestSalary: 1200000, minJeePercentileCutoff: 82.0, minClass12Cutoff: 72.0, branchStrengthScore: 7.5, placementPercentage: 78.0 },
-
   // MIT Manipal
   { collegeName: "Manipal Institute of Technology", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 335000, hostelFeeAnnual: 110000, seatCapacity: 400, avgSalary: 1250000, medianSalary: 1100000, highestSalary: 5400000, minJeePercentileCutoff: 96.0, minClass12Cutoff: 88.0, branchStrengthScore: 9.4, placementPercentage: 97.0 },
   { collegeName: "Manipal Institute of Technology", branchCode: "IT", branchName: "Information Technology", tuitionFeeAnnual: 320000, hostelFeeAnnual: 110000, seatCapacity: 180, avgSalary: 1100000, medianSalary: 980000, highestSalary: 4200000, minJeePercentileCutoff: 94.0, minClass12Cutoff: 85.0, branchStrengthScore: 9.0, placementPercentage: 95.0 },
   { collegeName: "Manipal Institute of Technology", branchCode: "ECE", branchName: "Electronics & Communication Engineering", tuitionFeeAnnual: 290000, hostelFeeAnnual: 110000, seatCapacity: 240, avgSalary: 900000, medianSalary: 820000, highestSalary: 2800000, minJeePercentileCutoff: 91.5, minClass12Cutoff: 80.0, branchStrengthScore: 8.9, placementPercentage: 90.0 },
-  { collegeName: "Manipal Institute of Technology", branchCode: "EE", branchName: "Electrical Engineering", tuitionFeeAnnual: 270000, hostelFeeAnnual: 110000, seatCapacity: 120, avgSalary: 750000, medianSalary: 680000, highestSalary: 2200000, minJeePercentileCutoff: 88.0, minClass12Cutoff: 76.0, branchStrengthScore: 8.2, placementPercentage: 86.0 },
-
   // RVCE — ISE → IT
   { collegeName: "RV College of Engineering", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 120000, hostelFeeAnnual: 85000, seatCapacity: 180, avgSalary: 1100000, medianSalary: 1000000, highestSalary: 4800000, minJeePercentileCutoff: 97.0, minClass12Cutoff: 90.0, branchStrengthScore: 9.3, placementPercentage: 96.0 },
   { collegeName: "RV College of Engineering", branchCode: "IT", branchName: "Information Technology", tuitionFeeAnnual: 120000, hostelFeeAnnual: 85000, seatCapacity: 120, avgSalary: 1000000, medianSalary: 920000, highestSalary: 3800000, minJeePercentileCutoff: 95.0, minClass12Cutoff: 87.0, branchStrengthScore: 9.0, placementPercentage: 94.0 },
@@ -69,9 +64,6 @@ const branchData = [
   { collegeName: "SRM Institute of Science and Technology", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 250000, hostelFeeAnnual: 100000, seatCapacity: 800, avgSalary: 800000, medianSalary: 720000, highestSalary: 4100000, minJeePercentileCutoff: 92.0, minClass12Cutoff: 82.0, branchStrengthScore: 8.8, placementPercentage: 90.0 },
   { collegeName: "SRM Institute of Science and Technology", branchCode: "IT", branchName: "Information Technology", tuitionFeeAnnual: 250000, hostelFeeAnnual: 100000, seatCapacity: 300, avgSalary: 750000, medianSalary: 680000, highestSalary: 3200000, minJeePercentileCutoff: 90.0, minClass12Cutoff: 80.0, branchStrengthScore: 8.5, placementPercentage: 88.0 },
   { collegeName: "SRM Institute of Science and Technology", branchCode: "ECE", branchName: "Electronics & Communication Engineering", tuitionFeeAnnual: 230000, hostelFeeAnnual: 100000, seatCapacity: 400, avgSalary: 620000, medianSalary: 580000, highestSalary: 2000000, minJeePercentileCutoff: 86.0, minClass12Cutoff: 75.0, branchStrengthScore: 7.8, placementPercentage: 82.0 },
-  { collegeName: "SRM Institute of Science and Technology", branchCode: "EE", branchName: "Electrical Engineering", tuitionFeeAnnual: 210000, hostelFeeAnnual: 100000, seatCapacity: 200, avgSalary: 520000, medianSalary: 480000, highestSalary: 1400000, minJeePercentileCutoff: 80.0, minClass12Cutoff: 70.0, branchStrengthScore: 7.2, placementPercentage: 78.0 },
-  { collegeName: "SRM Institute of Science and Technology", branchCode: "ME", branchName: "Mechanical Engineering", tuitionFeeAnnual: 200000, hostelFeeAnnual: 100000, seatCapacity: 300, avgSalary: 480000, medianSalary: 440000, highestSalary: 1100000, minJeePercentileCutoff: 78.0, minClass12Cutoff: 68.0, branchStrengthScore: 7.0, placementPercentage: 75.0 },
-
   // Amrita
   { collegeName: "Amrita Vishwa Vidyapeetham", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 200000, hostelFeeAnnual: 85000, seatCapacity: 350, avgSalary: 780000, medianSalary: 720000, highestSalary: 3500000, minJeePercentileCutoff: 91.0, minClass12Cutoff: 82.0, branchStrengthScore: 8.5, placementPercentage: 88.0 },
   { collegeName: "Amrita Vishwa Vidyapeetham", branchCode: "IT", branchName: "Information Technology", tuitionFeeAnnual: 200000, hostelFeeAnnual: 85000, seatCapacity: 180, avgSalary: 720000, medianSalary: 660000, highestSalary: 2800000, minJeePercentileCutoff: 89.0, minClass12Cutoff: 78.0, branchStrengthScore: 8.2, placementPercentage: 86.0 },
@@ -110,8 +102,6 @@ const branchData = [
   { collegeName: "Lovely Professional University", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 120000, hostelFeeAnnual: 55000, seatCapacity: 800, avgSalary: 450000, medianSalary: 400000, highestSalary: 1800000, minJeePercentileCutoff: 70.0, minClass12Cutoff: 60.0, branchStrengthScore: 6.2, placementPercentage: 70.0 },
   { collegeName: "Lovely Professional University", branchCode: "IT", branchName: "Information Technology", tuitionFeeAnnual: 120000, hostelFeeAnnual: 55000, seatCapacity: 400, avgSalary: 420000, medianSalary: 380000, highestSalary: 1600000, minJeePercentileCutoff: 68.0, minClass12Cutoff: 58.0, branchStrengthScore: 6.0, placementPercentage: 68.0 },
   { collegeName: "Lovely Professional University", branchCode: "ECE", branchName: "Electronics & Communication Engineering", tuitionFeeAnnual: 110000, hostelFeeAnnual: 55000, seatCapacity: 400, avgSalary: 350000, medianSalary: 320000, highestSalary: 1000000, minJeePercentileCutoff: 62.0, minClass12Cutoff: 55.0, branchStrengthScore: 5.5, placementPercentage: 62.0 },
-  { collegeName: "Lovely Professional University", branchCode: "ME", branchName: "Mechanical Engineering", tuitionFeeAnnual: 100000, hostelFeeAnnual: 55000, seatCapacity: 300, avgSalary: 320000, medianSalary: 280000, highestSalary: 800000, minJeePercentileCutoff: 58.0, minClass12Cutoff: 50.0, branchStrengthScore: 5.0, placementPercentage: 58.0 },
-
   // SRM AP
   { collegeName: "SRM University AP", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 180000, hostelFeeAnnual: 75000, seatCapacity: 250, avgSalary: 650000, medianSalary: 600000, highestSalary: 2800000, minJeePercentileCutoff: 85.0, minClass12Cutoff: 75.0, branchStrengthScore: 7.5, placementPercentage: 82.0 },
   { collegeName: "SRM University AP", branchCode: "IT", branchName: "Information Technology", tuitionFeeAnnual: 180000, hostelFeeAnnual: 75000, seatCapacity: 150, avgSalary: 600000, medianSalary: 550000, highestSalary: 2400000, minJeePercentileCutoff: 83.0, minClass12Cutoff: 72.0, branchStrengthScore: 7.2, placementPercentage: 80.0 },
@@ -120,8 +110,6 @@ const branchData = [
   // NIT Warangal
   { collegeName: "NIT Warangal", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 65000, hostelFeeAnnual: 35000, seatCapacity: 120, avgSalary: 1400000, medianSalary: 1200000, highestSalary: 6200000, minJeePercentileCutoff: 98.0, minClass12Cutoff: 90.0, branchStrengthScore: 9.5, placementPercentage: 98.0 },
   { collegeName: "NIT Warangal", branchCode: "ECE", branchName: "Electronics & Communication Engineering", tuitionFeeAnnual: 65000, hostelFeeAnnual: 35000, seatCapacity: 90, avgSalary: 1000000, medianSalary: 900000, highestSalary: 3500000, minJeePercentileCutoff: 95.0, minClass12Cutoff: 85.0, branchStrengthScore: 8.8, placementPercentage: 94.0 },
-  { collegeName: "NIT Warangal", branchCode: "EE", branchName: "Electrical Engineering", tuitionFeeAnnual: 65000, hostelFeeAnnual: 35000, seatCapacity: 70, avgSalary: 800000, medianSalary: 720000, highestSalary: 2800000, minJeePercentileCutoff: 93.0, minClass12Cutoff: 82.0, branchStrengthScore: 8.5, placementPercentage: 92.0 },
-
   // MAHE Manipal
   { collegeName: "MAHE Manipal", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 320000, hostelFeeAnnual: 110000, seatCapacity: 200, avgSalary: 1200000, medianSalary: 1050000, highestSalary: 5000000, minJeePercentileCutoff: 95.5, minClass12Cutoff: 87.0, branchStrengthScore: 9.2, placementPercentage: 96.0 },
   { collegeName: "MAHE Manipal", branchCode: "IT", branchName: "Information Technology", tuitionFeeAnnual: 320000, hostelFeeAnnual: 110000, seatCapacity: 120, avgSalary: 1050000, medianSalary: 950000, highestSalary: 4000000, minJeePercentileCutoff: 93.0, minClass12Cutoff: 84.0, branchStrengthScore: 8.8, placementPercentage: 94.0 },
@@ -178,7 +166,7 @@ const scholarships = [
 ];
 
 // ═══════════════════════════════════════════════════════════════════
-// ADMISSION PATHWAYS — Only CSE, IT, ECE, EE, ME
+// ADMISSION PATHWAYS — Only CSE, IT, ECE
 // ISE → IT normalization applied
 // ═══════════════════════════════════════════════════════════════════
 
@@ -187,13 +175,10 @@ const pathways = [
   { collegeName: "Vellore Institute of Technology", branchCode: "CSE", admissionExam: "VITEEE", equivalentJeePercentile: 92.0, admissionMode: "Entrance Exam" },
   { collegeName: "Vellore Institute of Technology", branchCode: "IT", admissionExam: "VITEEE", equivalentJeePercentile: 90.0, admissionMode: "Entrance Exam" },
   { collegeName: "Vellore Institute of Technology", branchCode: "ECE", admissionExam: "VITEEE", equivalentJeePercentile: 88.0, admissionMode: "Entrance Exam" },
-  { collegeName: "Vellore Institute of Technology", branchCode: "EE", admissionExam: "VITEEE", equivalentJeePercentile: 84.0, admissionMode: "Entrance Exam" },
-  { collegeName: "Vellore Institute of Technology", branchCode: "ME", admissionExam: "VITEEE", equivalentJeePercentile: 80.0, admissionMode: "Entrance Exam" },
   // MIT
   { collegeName: "Manipal Institute of Technology", branchCode: "CSE", admissionExam: "MU-OET", equivalentJeePercentile: 94.0, admissionMode: "Entrance Exam" },
   { collegeName: "Manipal Institute of Technology", branchCode: "IT", admissionExam: "MU-OET", equivalentJeePercentile: 92.0, admissionMode: "Entrance Exam" },
   { collegeName: "Manipal Institute of Technology", branchCode: "ECE", admissionExam: "MU-OET", equivalentJeePercentile: 89.0, admissionMode: "Entrance Exam" },
-  { collegeName: "Manipal Institute of Technology", branchCode: "EE", admissionExam: "MU-OET", equivalentJeePercentile: 86.0, admissionMode: "Entrance Exam" },
   // RVCE
   { collegeName: "RV College of Engineering", branchCode: "CSE", admissionExam: "COMEDK", equivalentJeePercentile: 96.0, admissionMode: "Counseling" },
   { collegeName: "RV College of Engineering", branchCode: "CSE", admissionExam: "KCET", equivalentJeePercentile: 95.0, admissionMode: "State Quota" },
@@ -207,8 +192,6 @@ const pathways = [
   { collegeName: "SRM Institute of Science and Technology", branchCode: "CSE", admissionExam: "SRMJEEE", equivalentJeePercentile: 90.0, admissionMode: "Entrance Exam" },
   { collegeName: "SRM Institute of Science and Technology", branchCode: "IT", admissionExam: "SRMJEEE", equivalentJeePercentile: 88.0, admissionMode: "Entrance Exam" },
   { collegeName: "SRM Institute of Science and Technology", branchCode: "ECE", admissionExam: "SRMJEEE", equivalentJeePercentile: 84.0, admissionMode: "Entrance Exam" },
-  { collegeName: "SRM Institute of Science and Technology", branchCode: "EE", admissionExam: "SRMJEEE", equivalentJeePercentile: 79.0, admissionMode: "Entrance Exam" },
-  { collegeName: "SRM Institute of Science and Technology", branchCode: "ME", admissionExam: "SRMJEEE", equivalentJeePercentile: 76.0, admissionMode: "Entrance Exam" },
   // Amrita
   { collegeName: "Amrita Vishwa Vidyapeetham", branchCode: "CSE", admissionExam: "AEEE", equivalentJeePercentile: 89.0, admissionMode: "Entrance Exam" },
   { collegeName: "Amrita Vishwa Vidyapeetham", branchCode: "IT", admissionExam: "AEEE", equivalentJeePercentile: 87.0, admissionMode: "Entrance Exam" },
@@ -240,7 +223,6 @@ const pathways = [
   { collegeName: "Lovely Professional University", branchCode: "CSE", admissionExam: "LPUNEST", equivalentJeePercentile: 68.0, admissionMode: "Entrance Exam" },
   { collegeName: "Lovely Professional University", branchCode: "IT", admissionExam: "LPUNEST", equivalentJeePercentile: 66.0, admissionMode: "Entrance Exam" },
   { collegeName: "Lovely Professional University", branchCode: "ECE", admissionExam: "LPUNEST", equivalentJeePercentile: 60.0, admissionMode: "Entrance Exam" },
-  { collegeName: "Lovely Professional University", branchCode: "ME", admissionExam: "LPUNEST", equivalentJeePercentile: 55.0, admissionMode: "Entrance Exam" },
   // SRM AP
   { collegeName: "SRM University AP", branchCode: "CSE", admissionExam: "SRMJEEE", equivalentJeePercentile: 83.0, admissionMode: "Entrance Exam" },
   { collegeName: "SRM University AP", branchCode: "IT", admissionExam: "SRMJEEE", equivalentJeePercentile: 81.0, admissionMode: "Entrance Exam" },
@@ -248,7 +230,6 @@ const pathways = [
   // NIT Warangal
   { collegeName: "NIT Warangal", branchCode: "CSE", admissionExam: "JEE Main", equivalentJeePercentile: 98.0, admissionMode: "Counseling" },
   { collegeName: "NIT Warangal", branchCode: "ECE", admissionExam: "JEE Main", equivalentJeePercentile: 95.0, admissionMode: "Counseling" },
-  { collegeName: "NIT Warangal", branchCode: "EE", admissionExam: "JEE Main", equivalentJeePercentile: 93.0, admissionMode: "Counseling" },
   // MAHE
   { collegeName: "MAHE Manipal", branchCode: "CSE", admissionExam: "MET", equivalentJeePercentile: 93.0, admissionMode: "Entrance Exam" },
   { collegeName: "MAHE Manipal", branchCode: "IT", admissionExam: "MET", equivalentJeePercentile: 91.0, admissionMode: "Entrance Exam" },

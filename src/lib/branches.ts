@@ -12,15 +12,13 @@ export const BRANCH_OPTIONS: BranchOption[] = [
   { code: "CSE", label: "Computer Science & Engineering (CSE)", shortLabel: "Computer Science" },
   { code: "IT", label: "Information Technology (IT)", shortLabel: "Information Tech" },
   { code: "ECE", label: "Electronics & Communication (ECE)", shortLabel: "Electronics & Comm" },
-  { code: "EE", label: "Electrical Engineering (EE)", shortLabel: "Electrical Eng" },
-  { code: "ME", label: "Mechanical Engineering (ME)", shortLabel: "Mechanical Eng" },
 ];
 
 export const SUPPORTED_BRANCH_CODES = BRANCH_OPTIONS.map((b) => b.code);
 
 // ─── BRANCH FAMILY MAPPINGS ───────────────────────────────────────
 // Maps variant codes to their canonical supported code.
-// E.g., "EEE" → "EE", "Electrical & Electronics" → "EE"
+// E.g., "ISE" → "IT", "EIE" → "ECE"
 const BRANCH_FAMILY_MAP: Record<string, string> = {
   // CSE family
   CSE: "CSE",
@@ -37,17 +35,6 @@ const BRANCH_FAMILY_MAP: Record<string, string> = {
   // ECE family
   ECE: "ECE",
   EIE: "ECE", // Electronics & Instrumentation → ECE
-
-  // EE family
-  EE: "EE",
-  EEE: "EE", // Electrical & Electronics → EE
-  ELECTRICAL: "EE",
-  ELECTRICAL_ENGINEERING: "EE",
-  EEEA: "EE",
-
-  // ME family
-  ME: "ME",
-  MECHANICAL: "ME",
 };
 
 // ─── NORMALIZATION FUNCTIONS ──────────────────────────────────────

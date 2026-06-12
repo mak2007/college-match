@@ -41,8 +41,6 @@ const branchData = [
   { collegeName: "Vellore Institute of Technology", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 198000, hostelFeeAnnual: 95000, seatCapacity: 1200, avgSalary: 920000, medianSalary: 850000, highestSalary: 4400000, minJeePercentileCutoff: 94.5, minClass12Cutoff: 85.0, branchStrengthScore: 9.5, placementPercentage: 95.0 },
   { collegeName: "Vellore Institute of Technology", branchCode: "ECE", branchName: "Electronics & Communication Engineering", tuitionFeeAnnual: 195000, hostelFeeAnnual: 95000, seatCapacity: 600, avgSalary: 750000, medianSalary: 700000, highestSalary: 2200000, minJeePercentileCutoff: 90.0, minClass12Cutoff: 80.0, branchStrengthScore: 8.8, placementPercentage: 88.0 },
   { collegeName: "Vellore Institute of Technology", branchCode: "IT", branchName: "Information Technology", tuitionFeeAnnual: 198000, hostelFeeAnnual: 95000, seatCapacity: 300, avgSalary: 860000, medianSalary: 800000, highestSalary: 3200000, minJeePercentileCutoff: 93.0, minClass12Cutoff: 82.0, branchStrengthScore: 9.2, placementPercentage: 92.0 },
-  { collegeName: "Vellore Institute of Technology", branchCode: "ME", branchName: "Mechanical Engineering", tuitionFeeAnnual: 175000, hostelFeeAnnual: 95000, seatCapacity: 400, avgSalary: 520000, medianSalary: 480000, highestSalary: 1200000, minJeePercentileCutoff: 82.0, minClass12Cutoff: 72.0, branchStrengthScore: 7.5, placementPercentage: 78.0 },
-
   // MIT Manipal
   { collegeName: "Manipal Institute of Technology", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 335000, hostelFeeAnnual: 110000, seatCapacity: 400, avgSalary: 1250000, medianSalary: 1100000, highestSalary: 5400000, minJeePercentileCutoff: 96.0, minClass12Cutoff: 88.0, branchStrengthScore: 9.4, placementPercentage: 97.0 },
   { collegeName: "Manipal Institute of Technology", branchCode: "ECE", branchName: "Electronics & Communication Engineering", tuitionFeeAnnual: 290000, hostelFeeAnnual: 110000, seatCapacity: 240, avgSalary: 900000, medianSalary: 820000, highestSalary: 2800000, minJeePercentileCutoff: 91.5, minClass12Cutoff: 80.0, branchStrengthScore: 8.9, placementPercentage: 90.0 },
@@ -58,8 +56,6 @@ const branchData = [
   // SRM
   { collegeName: "SRM Institute of Science and Technology", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 250000, hostelFeeAnnual: 100000, seatCapacity: 800, avgSalary: 800000, medianSalary: 720000, highestSalary: 4100000, minJeePercentileCutoff: 92.0, minClass12Cutoff: 82.0, branchStrengthScore: 8.8, placementPercentage: 90.0 },
   { collegeName: "SRM Institute of Science and Technology", branchCode: "ECE", branchName: "Electronics & Communication Engineering", tuitionFeeAnnual: 230000, hostelFeeAnnual: 100000, seatCapacity: 400, avgSalary: 620000, medianSalary: 580000, highestSalary: 2000000, minJeePercentileCutoff: 86.0, minClass12Cutoff: 75.0, branchStrengthScore: 7.8, placementPercentage: 82.0 },
-  { collegeName: "SRM Institute of Science and Technology", branchCode: "ME", branchName: "Mechanical Engineering", tuitionFeeAnnual: 200000, hostelFeeAnnual: 100000, seatCapacity: 300, avgSalary: 480000, medianSalary: 440000, highestSalary: 1100000, minJeePercentileCutoff: 78.0, minClass12Cutoff: 68.0, branchStrengthScore: 7.0, placementPercentage: 75.0 },
-
   // Amrita
   { collegeName: "Amrita Vishwa Vidyapeetham", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 200000, hostelFeeAnnual: 85000, seatCapacity: 350, avgSalary: 780000, medianSalary: 720000, highestSalary: 3500000, minJeePercentileCutoff: 91.0, minClass12Cutoff: 82.0, branchStrengthScore: 8.5, placementPercentage: 88.0 },
   { collegeName: "Amrita Vishwa Vidyapeetham", branchCode: "ECE", branchName: "Electronics & Communication Engineering", tuitionFeeAnnual: 185000, hostelFeeAnnual: 85000, seatCapacity: 200, avgSalary: 600000, medianSalary: 550000, highestSalary: 1800000, minJeePercentileCutoff: 85.0, minClass12Cutoff: 75.0, branchStrengthScore: 7.8, placementPercentage: 82.0 },
@@ -91,8 +87,6 @@ const branchData = [
   // LPU
   { collegeName: "Lovely Professional University", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 120000, hostelFeeAnnual: 55000, seatCapacity: 800, avgSalary: 450000, medianSalary: 400000, highestSalary: 1800000, minJeePercentileCutoff: 70.0, minClass12Cutoff: 60.0, branchStrengthScore: 6.2, placementPercentage: 70.0 },
   { collegeName: "Lovely Professional University", branchCode: "ECE", branchName: "Electronics & Communication Engineering", tuitionFeeAnnual: 110000, hostelFeeAnnual: 55000, seatCapacity: 400, avgSalary: 350000, medianSalary: 320000, highestSalary: 1000000, minJeePercentileCutoff: 62.0, minClass12Cutoff: 55.0, branchStrengthScore: 5.5, placementPercentage: 62.0 },
-  { collegeName: "Lovely Professional University", branchCode: "ME", branchName: "Mechanical Engineering", tuitionFeeAnnual: 100000, hostelFeeAnnual: 55000, seatCapacity: 300, avgSalary: 320000, medianSalary: 280000, highestSalary: 800000, minJeePercentileCutoff: 58.0, minClass12Cutoff: 50.0, branchStrengthScore: 5.0, placementPercentage: 58.0 },
-
   // SRM AP
   { collegeName: "SRM University AP", branchCode: "CSE", branchName: "Computer Science & Engineering", tuitionFeeAnnual: 180000, hostelFeeAnnual: 75000, seatCapacity: 250, avgSalary: 650000, medianSalary: 600000, highestSalary: 2800000, minJeePercentileCutoff: 85.0, minClass12Cutoff: 75.0, branchStrengthScore: 7.5, placementPercentage: 82.0 },
   { collegeName: "SRM University AP", branchCode: "ECE", branchName: "Electronics & Communication Engineering", tuitionFeeAnnual: 170000, hostelFeeAnnual: 75000, seatCapacity: 150, avgSalary: 500000, medianSalary: 460000, highestSalary: 1600000, minJeePercentileCutoff: 78.0, minClass12Cutoff: 68.0, branchStrengthScore: 6.8, placementPercentage: 75.0 },
@@ -172,7 +166,6 @@ const pathways = [
   // SRM
   { collegeName: "SRM Institute of Science and Technology", branchCode: "CSE", admissionExam: "SRMJEEE", equivalentJeePercentile: 90.0, admissionMode: "Entrance Exam" },
   { collegeName: "SRM Institute of Science and Technology", branchCode: "ECE", admissionExam: "SRMJEEE", equivalentJeePercentile: 84.0, admissionMode: "Entrance Exam" },
-  { collegeName: "SRM Institute of Science and Technology", branchCode: "ME", admissionExam: "SRMJEEE", equivalentJeePercentile: 76.0, admissionMode: "Entrance Exam" },
   // Amrita
   { collegeName: "Amrita Vishwa Vidyapeetham", branchCode: "CSE", admissionExam: "AEEE", equivalentJeePercentile: 89.0, admissionMode: "Entrance Exam" },
   { collegeName: "Amrita Vishwa Vidyapeetham", branchCode: "ECE", admissionExam: "AEEE", equivalentJeePercentile: 83.0, admissionMode: "Entrance Exam" },
@@ -197,7 +190,6 @@ const pathways = [
   // LPU
   { collegeName: "Lovely Professional University", branchCode: "CSE", admissionExam: "LPUNEST", equivalentJeePercentile: 68.0, admissionMode: "Entrance Exam" },
   { collegeName: "Lovely Professional University", branchCode: "ECE", admissionExam: "LPUNEST", equivalentJeePercentile: 60.0, admissionMode: "Entrance Exam" },
-  { collegeName: "Lovely Professional University", branchCode: "ME", admissionExam: "LPUNEST", equivalentJeePercentile: 55.0, admissionMode: "Entrance Exam" },
   // SRM AP
   { collegeName: "SRM University AP", branchCode: "CSE", admissionExam: "SRMJEEE", equivalentJeePercentile: 83.0, admissionMode: "Entrance Exam" },
   { collegeName: "SRM University AP", branchCode: "ECE", admissionExam: "SRMJEEE", equivalentJeePercentile: 76.0, admissionMode: "Entrance Exam" },

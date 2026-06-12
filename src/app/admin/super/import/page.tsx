@@ -79,7 +79,7 @@ const SCHEMAS: Record<ImportType, { label: string; description: string; required
     description: "Import or update branch/program records. Matched by college name + branch code.",
     required: [
       { field: "collegeName", note: "Must match existing college name" },
-      { field: "branchCode", note: "e.g. CSE, ECE, ME, IT" },
+      { field: "branchCode", note: "e.g. CSE, ECE, IT" },
       { field: "branchName", note: "Full name" },
       { field: "tuitionFeeAnnual", note: "Annual tuition INR" },
       { field: "hostelFeeAnnual", note: "Annual hostel INR" },
