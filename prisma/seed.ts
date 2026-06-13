@@ -81,7 +81,8 @@ async function main() {
       { id: "partner_b", type: "IS_PARTNER", bonus: 2.0, reason: "Exclusive CollegeMatch Partner" }
     ],
     customScoringAttributes: [
-      { key: "infra_rating", label: "Infrastructure Score", weight: 0.05, defaultValue: 80 }
+      { key: "nirf_ranking", label: "NIRF Ranking Score", weight: 0.03, defaultValue: 70 },
+      { key: "infra_rating", label: "Infrastructure Score", weight: 0.02, defaultValue: 80 }
     ]
   };
 
@@ -142,7 +143,7 @@ async function main() {
       collegeLifeScore: 8.8,
       curriculumScore: 9.0,
       adminEmail: "admissions@vit.edu",
-      metadata: JSON.stringify({ infra_rating: 90, startup_ecosystem: 8.5, research_output: 7.0, international_exposure: 6.5 }),
+      metadata: JSON.stringify({ nirf_ranking: 11, infra_rating: 90, startup_ecosystem: 8.5, research_output: 7.0, international_exposure: 6.5 }),
       branches: [
         { branchName: "Computer Science & Engineering", branchCode: "CSE", tuitionFeeAnnual: 198000, hostelFeeAnnual: 95000, seatCapacity: 1200, avgSalary: 920000, medianSalary: 850000, highestSalary: 4400000, minJeePercentileCutoff: 94.5, minClass12Cutoff: 85.0, branchStrengthScore: 9.5, placementPercentage: 95.0, metadata: JSON.stringify({ lab_rating: 9.2 }) },
         { branchName: "Electronics & Communication Engineering", branchCode: "ECE", tuitionFeeAnnual: 195000, hostelFeeAnnual: 95000, seatCapacity: 600, avgSalary: 750000, medianSalary: 700000, highestSalary: 2200000, minJeePercentileCutoff: 90.0, minClass12Cutoff: 80.0, branchStrengthScore: 8.8, placementPercentage: 88.0, metadata: JSON.stringify({ lab_rating: 8.5 }) },
@@ -165,7 +166,7 @@ async function main() {
       collegeLifeScore: 9.6,
       curriculumScore: 8.7,
       adminEmail: "admissions@manipal.edu",
-      metadata: JSON.stringify({ infra_rating: 95, startup_ecosystem: 9.0, research_output: 8.5, international_exposure: 9.2 }),
+      metadata: JSON.stringify({ nirf_ranking: 21, infra_rating: 95, startup_ecosystem: 9.0, research_output: 8.5, international_exposure: 9.2 }),
       branches: [
         { branchName: "Computer Science & Engineering", branchCode: "CSE", tuitionFeeAnnual: 335000, hostelFeeAnnual: 110000, seatCapacity: 400, avgSalary: 1250000, medianSalary: 1100000, highestSalary: 5400000, minJeePercentileCutoff: 96.0, minClass12Cutoff: 88.0, branchStrengthScore: 9.4, placementPercentage: 97.0, metadata: JSON.stringify({ lab_rating: 9.5 }) },
         { branchName: "Electronics & Communication Engineering", branchCode: "ECE", tuitionFeeAnnual: 290000, hostelFeeAnnual: 110000, seatCapacity: 240, avgSalary: 900000, medianSalary: 820000, highestSalary: 2800000, minJeePercentileCutoff: 91.5, minClass12Cutoff: 80.0, branchStrengthScore: 8.9, placementPercentage: 90.0, metadata: JSON.stringify({ lab_rating: 8.8 }) },
@@ -186,7 +187,7 @@ async function main() {
       placementScore: 9.6,
       collegeLifeScore: 7.2,
       curriculumScore: 8.5,
-      metadata: JSON.stringify({ infra_rating: 78, startup_ecosystem: 7.5, research_output: 9.0, international_exposure: 7.0 }),
+      metadata: JSON.stringify({ nirf_ranking: 9, infra_rating: 78, startup_ecosystem: 7.5, research_output: 9.0, international_exposure: 7.0 }),
       branches: [
         { branchName: "Computer Science & Engineering", branchCode: "CSE", tuitionFeeAnnual: 250000, hostelFeeAnnual: 85000, seatCapacity: 240, avgSalary: 1540000, medianSalary: 1400000, highestSalary: 5700000, minJeePercentileCutoff: 97.2, minClass12Cutoff: 90.0, branchStrengthScore: 9.8, placementPercentage: 98.0, metadata: JSON.stringify({ lab_rating: 9.4 }) },
         { branchName: "Information Science & Engineering", branchCode: "ISE", tuitionFeeAnnual: 250000, hostelFeeAnnual: 85000, seatCapacity: 180, avgSalary: 1320000, medianSalary: 1200000, highestSalary: 4200000, minJeePercentileCutoff: 96.5, minClass12Cutoff: 88.0, branchStrengthScore: 9.5, placementPercentage: 96.0, metadata: JSON.stringify({ lab_rating: 9.2 }) },
@@ -207,7 +208,7 @@ async function main() {
       placementScore: 7.7,
       collegeLifeScore: 8.4,
       curriculumScore: 7.9,
-      metadata: JSON.stringify({ infra_rating: 84, startup_ecosystem: 6.0, research_output: 5.5, international_exposure: 5.0 }),
+      metadata: JSON.stringify({ nirf_ranking: 150, infra_rating: 84, startup_ecosystem: 6.0, research_output: 5.5, international_exposure: 5.0 }),
       branches: [
         { branchName: "Computer Engineering", branchCode: "CSE", tuitionFeeAnnual: 135000, hostelFeeAnnual: 90000, seatCapacity: 180, avgSalary: 580000, medianSalary: 520000, highestSalary: 1800000, minJeePercentileCutoff: 87.0, minClass12Cutoff: 75.0, branchStrengthScore: 8.0, placementPercentage: 82.0, metadata: JSON.stringify({ lab_rating: 8.0 }) },
       ]
