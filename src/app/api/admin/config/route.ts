@@ -65,7 +65,6 @@ function getDefaultMatchingRules() {
       { id: "partner_b", type: "IS_PARTNER", bonus: 2.0, reason: "Exclusive CollegeMatch Partner" },
     ],
     customScoringAttributes: [
-      { key: "nirf_ranking", label: "NIRF Ranking Score", weight: 0.05, defaultValue: 70 },
       { key: "infra_rating", label: "Infrastructure Score", weight: 0.05, defaultValue: 80 },
     ],
   };

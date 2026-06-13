@@ -122,7 +122,7 @@ async function importColleges(rows: ImportRow[]): Promise<ImportResult> {
     if (errors.some(e => e.row === rowNum)) { skipped++; continue; }
 
     const metadata: Record<string, number> = {};
-    for (const key of ["nirf_ranking", "infra_rating", "startup_ecosystem", "research_output", "international_exposure"]) {
+    for (const key of ["infra_rating", "startup_ecosystem", "research_output", "international_exposure"]) {
       const v = num(row[key], NaN);
       if (!isNaN(v)) metadata[key] = v;
     }

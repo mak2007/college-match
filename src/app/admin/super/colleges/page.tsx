@@ -55,7 +55,6 @@ function calculateCompleteness(col: College): { score: number; missing: string[]
     { label: "Cutoffs", pass: col.branches.some(b => b.minJeePercentileCutoff !== null && b.minJeePercentileCutoff > 0) },
     { label: "Scholarships", pass: col.scholarships.length > 0 },
     { label: "Website", pass: !!col.website },
-    { label: "NIRF", pass: (() => { try { const m = col.metadata ? JSON.parse(col.metadata) : {}; return !!m.nirf_ranking; } catch { return false; } })() },
     { label: "Infra", pass: (() => { try { const m = col.metadata ? JSON.parse(col.metadata) : {}; return !!m.infra_rating; } catch { return false; } })() },
     { label: "Strength", pass: col.branches.some(b => b.branchStrengthScore > 0) },
   ];

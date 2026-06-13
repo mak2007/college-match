@@ -71,7 +71,6 @@ const CAREER_GOAL_META_KEYS = [
 ];
 
 const COMMON_CUSTOM_ATTRS = [
-  { key: "nirf_ranking", label: "NIRF Ranking Score" },
   { key: "infra_rating", label: "Infrastructure Score" },
 ];
 
@@ -101,7 +100,7 @@ export default function CollegeForm() {
     placementScore: "7",
     collegeLifeScore: "7",
     curriculumScore: "7",
-    metadata: { nirf_ranking: 70, infra_rating: 70, startup_ecosystem: 50, research_output: 50, international_exposure: 50 },
+    metadata: { infra_rating: 70, startup_ecosystem: 50, research_output: 50, international_exposure: 50 },
     branches: [],
   });
 
@@ -138,7 +137,6 @@ export default function CollegeForm() {
           collegeLifeScore: String(college.collegeLifeScore || 7),
           curriculumScore: String(college.curriculumScore || 7),
           metadata: {
-            nirf_ranking: meta.nirf_ranking ?? 70,
             infra_rating: meta.infra_rating ?? 70,
             startup_ecosystem: meta.startup_ecosystem ?? 50,
             research_output: meta.research_output ?? 50,
