@@ -662,3 +662,85 @@
     width: 100%;
   }
 }
+
+/* ===== Score Breakdown explainability ===== */
+.scoreBreakdownContainer {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background-color: #fcfbf7;
+  border: 1px solid #e5e3dc;
+  border-radius: 12px;
+  width: 100%;
+}
+
+.breakdownHeader {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #0F2D52;
+  margin-bottom: 0.75rem;
+  border-bottom: 1.5px dashed #e5e3dc;
+  padding-bottom: 0.5rem;
+}
+
+.breakdownGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.breakdownRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #4a4a4a;
+}
+
+.factorName {
+  font-weight: 500;
+}
+
+.factorValue {
+  text-align: right;
+}
+
+.modifiersSection {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #e5e3dc;
+}
+
+.modifierTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0F2D52;
+  margin-bottom: 0.4rem;
+  text-align: left;
+}
+
+.modifierRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.bonusBadge {
+  background-color: #d1fae5;
+  color: #065f46;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+.penaltyBadge {
+  background-color: #fee2e2;
+  color: #991b1b;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+.modifierReason {
+  flex: 1;
+}

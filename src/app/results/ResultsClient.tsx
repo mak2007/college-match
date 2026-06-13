@@ -37,6 +37,29 @@ interface Recommendation {
       placementPercentage: number | null;
     }>;
   };
+  scoreBreakdown?: {
+    baseScore: number;
+    factorContributions: Array<{
+      factor: string;
+      label: string;
+      score: number;
+      weight: number;
+      contribution: number;
+    }>;
+    appliedBonuses: Array<{
+      id: string;
+      type: "BONUS" | "PENALTY";
+      value: number;
+      reason: string;
+    }>;
+    appliedPenalties: Array<{
+      id: string;
+      type: "BONUS" | "PENALTY";
+      value: number;
+      reason: string;
+    }>;
+    finalScore: number;
+  };
 }
 
 interface QuizAnswers {
@@ -102,6 +125,11 @@ export default function ResultsClient({
   const [recommendations, setRecommendations] = useState(initialRecommendations);
   const [isRegenerating, setIsRegenerating] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [expandedBreakdowns, setExpandedBreakdowns] = useState<Record<string, boolean>>({});
+
+  const toggleBreakdown = (recId: string) => {
+    setExpandedBreakdowns(prev => ({ ...prev, [recId]: !prev[recId] }));
+  };
 
   const [quizAnswers, setQuizAnswers] = useState<QuizAnswers>({
     careerGoal: student.careerGoal,
@@ -509,6 +537,72 @@ export default function ResultsClient({
                         </p>
                       </div>
                     </div>
+
+                    {rec.scoreBreakdown && (
+                      <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                        <button
+                          onClick={() => toggleBreakdown(rec.id)}
+                          className="btn"
+                          style={{
+                            background: "transparent",
+                            color: "#0F2D52",
+                            border: "1px solid #e5e3dc",
+                            padding: "0.4rem 0.8rem",
+                            fontSize: "0.8rem",
+                            fontWeight: 600,
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "0.4rem"
+                          }}
+                        >
+                          {expandedBreakdowns[rec.id] ? "Hide Calculation Breakdown ▴" : "Show Calculation Breakdown ▾"}
+                        </button>
+                        
+                        {expandedBreakdowns[rec.id] && (
+                          <div className={styles.scoreBreakdownContainer}>
+                            <div className={styles.breakdownHeader}>
+                              <span>🧮 Score Calculation Breakdown</span>
+                            </div>
+                            <div className={styles.breakdownGrid}>
+                              {rec.scoreBreakdown.factorContributions?.map((contrib) => (
+                                <div key={contrib.factor} className={styles.breakdownRow}>
+                                  <span className={styles.factorName}>{contrib.label}</span>
+                                  <span className={styles.factorValue}>
+                                    Score: <strong>{contrib.score}</strong> × Wt: <strong>{contrib.weight.toFixed(2)}</strong> = <strong>+{contrib.contribution.toFixed(1)}</strong>
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                            
+                            {rec.scoreBreakdown.appliedBonuses?.length > 0 && (
+                              <div className={styles.modifiersSection}>
+                                <div className={styles.modifierTitle}>🎁 Applied Bonuses:</div>
+                                {rec.scoreBreakdown.appliedBonuses.map((bonus, idx) => (
+                                  <div key={idx} className={styles.modifierRow}>
+                                    <span className={styles.bonusBadge}>+{bonus.value}</span>
+                                    <span className={styles.modifierReason}>{bonus.reason}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {rec.scoreBreakdown.appliedPenalties?.length > 0 && (
+                              <div className={styles.modifiersSection}>
+                                <div className={styles.modifierTitle}>⚠️ Applied Penalties:</div>
+                                {rec.scoreBreakdown.appliedPenalties.map((penalty, idx) => (
+                                  <div key={idx} className={styles.modifierRow}>
+                                    <span className={styles.penaltyBadge}>-{penalty.value}</span>
+                                    <span className={styles.modifierReason}>{penalty.reason}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className={styles.cardFooter}>
                       <div className={styles.reasonsList}>
