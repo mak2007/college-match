@@ -184,10 +184,11 @@ export default function ResultsClient({
   };
 
   const enriched = useMemo(() => {
+    console.log("Enriching recommendations:", recommendations.length);
     return recommendations.map((rec) => {
-      const branch = rec.college.branches.find((b) => b.branchCode === rec.branchCode);
+      const branch = rec.college?.branches?.find((b) => b.branchCode === rec.branchCode);
       const category = rec.admissionProbability >= 70 ? "Safe" : rec.admissionProbability >= 35 ? "Target" : "Dream";
-      return { ...rec, category, admissionProb: rec.admissionProbability };
+      return { ...rec, category, admissionProb: rec.admissionProbability ?? 0 };
     });
   }, [recommendations]);
 
@@ -422,8 +423,12 @@ export default function ResultsClient({
           ) : (
             <div className={styles.resultsList}>
               {filtered.map((rec, idx) => {
-                const branch = rec.college.branches.find((b) => b.branchCode === rec.branchCode);
-                if (!branch) return null;
+                console.log("Rendering rec:", rec.id, rec.college?.name, rec.category);
+                const branch = rec.college?.branches?.find((b) => b.branchCode === rec.branchCode);
+                if (!branch) {
+                  console.warn("Missing branch for rec:", rec.id, rec.branchCode);
+                  return null;
+                }
 
                 let reasonsList: string[] = [];
                 try { reasonsList = JSON.parse(rec.reasons); } catch { reasonsList = [String(rec.reasons)]; }
@@ -468,11 +473,11 @@ export default function ResultsClient({
                         <h4 className={styles.sectionTitle}>Placements</h4>
                         <div className={styles.statRow}>
                           <span>Average Package:</span>
-                          <strong>₹{(Number(branch.avgSalary) / 100000).toFixed(2)} LPA</strong>
+                          <strong>₹{branch.avgSalary ? (Number(branch.avgSalary) / 100000).toFixed(2) : "N/A"} LPA</strong>
                         </div>
                         <div className={styles.statRow}>
                           <span>Median Package:</span>
-                          <strong>₹{(Number(branch.medianSalary) / 100000).toFixed(2)} LPA</strong>
+                          <strong>₹{branch.medianSalary ? (Number(branch.medianSalary) / 100000).toFixed(2) : "N/A"} LPA</strong>
                         </div>
                         {branch.highestSalary && (
                           <div className={styles.statRow}>
@@ -485,11 +490,11 @@ export default function ResultsClient({
                         <h4 className={styles.sectionTitle}>4-Year Financials</h4>
                         <div className={styles.statRow}>
                           <span>Annual Tuition:</span>
-                          <strong>₹{(Number(branch.tuitionFeeAnnual) / 100000).toFixed(2)} L</strong>
+                          <strong>₹{branch.tuitionFeeAnnual ? (Number(branch.tuitionFeeAnnual) / 100000).toFixed(2) : "N/A"} L</strong>
                         </div>
                         <div className={styles.statRow}>
                           <span>Annual Hostel:</span>
-                          <strong>₹{(Number(branch.hostelFeeAnnual) / 100000).toFixed(2)} L</strong>
+                          <strong>₹{branch.hostelFeeAnnual ? (Number(branch.hostelFeeAnnual) / 100000).toFixed(2) : "N/A"} L</strong>
                         </div>
                         <div className={styles.totalRow}>
                           <span>Est. Total Cost:</span>

@@ -213,8 +213,21 @@ export async function POST(request: Request) {
       });
     }
 
-    // 6. Return full engine results with admissionCompetitiveness
-    return NextResponse.json({ recommendations: top15 });
+    // 6. Fetch college data with branches for UI
+    const collegeIds = [...new Set(top15.map((r) => r.collegeId))];
+    const colleges = await prisma.college.findMany({
+      where: { id: { in: collegeIds } },
+      include: { branches: true },
+    });
+    const collegeMap = new Map(colleges.map((c) => [c.id, c]));
+
+    // 7. Attach college data with branches to each recommendation
+    const recommendationsWithBranches = top15.map((r) => ({
+      ...r,
+      college: collegeMap.get(r.collegeId) || { id: r.collegeId, name: r.name, slug: r.slug, state: r.state, city: r.city, isNewGen: r.isNewGen, branches: [] },
+    }));
+
+    return NextResponse.json({ recommendations: recommendationsWithBranches });
   } catch (error: any) {
     console.error("Regenerate API Error:", error);
     return NextResponse.json({ error: "Internal Server Error", details: error.message }, { status: 500 });
