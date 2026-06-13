@@ -16,8 +16,9 @@ const PROTECTED_PREFIXES = ["/admin", "/dashboard"];
 
 // Routes within protected prefixes that should remain public
 const PUBLIC_EXCEPTIONS = [
-  "/admin/login", // Login page itself must be accessible
-  "/api/auth",    // Auth API routes (login, logout, etc.)
+  "/admin/login",     // Login page itself must be accessible
+  "/api/auth",        // Auth API routes (login, logout, me, etc.)
+  "/api/admin",       // Admin API routes handle their own auth
 ];
 
 // Role-based access control map
@@ -62,17 +63,15 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Skip non-protected routes and public exceptions
-  if (!isProtectedRoute(pathname) || isPublicException(pathname)) {
+  // Also skip API routes - they handle their own authentication
+  if (!isProtectedRoute(pathname) || isPublicException(pathname) || pathname.startsWith("/api/")) {
     return NextResponse.next();
   }
 
   // 2. Extract JWT token from cookie
   const token = request.cookies.get("cm_auth_token")?.value;
 
-  console.log(`[Middleware] Path: ${pathname}, Token present: ${!!token}`);
-
   if (!token) {
-    console.log(`[Middleware] Redirecting to login: No token for ${pathname}`);
     const loginUrl = new URL("/admin/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
@@ -81,7 +80,6 @@ export async function middleware(request: NextRequest) {
   // 3. Verify JWT signature and expiration
   const payload = await verifyToken(token);
   if (!payload) {
-    console.log(`[Middleware] Redirecting to login: Token verification failed for ${pathname}`);
     const loginUrl = new URL("/admin/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     loginUrl.searchParams.set("reason", "session_expired");
@@ -90,12 +88,9 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // 4. Check role-based access
+  // 4. Check role-based access (only for specific admin routes)
   const requiredRoles = getRequiredRoles(pathname);
-  console.log(`[Middleware] Payload Role: ${payload.role}, Required Roles for ${pathname}: ${JSON.stringify(requiredRoles)}`);
-
   if (requiredRoles && !requiredRoles.includes(payload.role)) {
-    console.log(`[Middleware] Role mismatch. Redirecting payload.role: ${payload.role}`);
     let redirectTarget = "/";
     switch (payload.role) {
       case "SUPERADMIN":

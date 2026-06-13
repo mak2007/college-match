@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import styles from "./discovery.module.css";
+import { BRANCH_OPTIONS, SUPPORTED_BRANCH_CODES } from "@/lib/branches";
 
 interface CollegeBranch {
   id: string;
@@ -239,14 +240,14 @@ export default function DiscoveryClient({ initialColleges }: DiscoveryClientProp
         {/* Branch Filter */}
         <div className={styles.filterGroup}>
           <div className={styles.filterTitle}>Preferred Branch</div>
-          {["CSE", "IT", "ECE", "ME", "CE"].map((code) => (
+          {SUPPORTED_BRANCH_CODES.map((code) => (
             <label key={code} className={styles.checkboxLabel}>
               <input
                 type="checkbox"
                 checked={selectedBranches.includes(code)}
                 onChange={() => handleBranchToggle(code)}
               />
-              {code}
+              {BRANCH_OPTIONS.find(b => b.code === code)?.shortLabel || code}
             </label>
           ))}
         </div>

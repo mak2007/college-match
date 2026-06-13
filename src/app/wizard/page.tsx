@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./wizard.module.css";
+import { BRANCH_OPTIONS } from "@/lib/branches";
 
 interface LocationPreference {
   state: string;
@@ -13,6 +14,8 @@ interface PriorityItem {
   id: string;
   label: string;
 }
+
+const WIZARD_STORAGE_KEY = "cm_wizard_progress";
 
 export default function Wizard() {
   const router = useRouter();
@@ -27,17 +30,20 @@ export default function Wizard() {
   const [cityInput, setCityInput] = useState("");
 
   // Step 2: Budget state
-  const [budgetLimit, setBudgetLimit] = useState(1500000); // 15 Lakh default
+  const [budgetLimit, setBudgetLimit] = useState(1500000);
   const [isBudgetConstraint, setIsBudgetConstraint] = useState(true);
 
   // Step 3: Academic profile state
   const [jeePercentile, setJeePercentile] = useState<string>("");
   const [class12Percentage, setClass12Percentage] = useState<string>("");
 
-  // Step 4: Branch Preferences state
+  // Step 4: Career Goal state
+  const [careerGoal, setCareerGoal] = useState<string>("NOT_SURE");
+
+  // Step 5: Branch Preferences state
   const [preferredBranches, setPreferredBranches] = useState<string[]>(["CSE"]);
 
-  // Step 5: Priorities state (with up/down ranking interface)
+  // Step 6: Priorities state
   const [priorities, setPriorities] = useState<PriorityItem[]>([
     { id: "placements", label: "Placements & Salaries" },
     { id: "roi", label: "Value for Money (ROI)" },
@@ -46,12 +52,52 @@ export default function Wizard() {
     { id: "curriculum", label: "Modern Curriculum & Faculty" },
   ]);
 
-  // Student details state
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const TOTAL_STEPS = 6;
 
-  // Available options for suggestions
+  // Load from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(WIZARD_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.step !== undefined) setStep(parsed.step);
+        if (parsed.restrictLocation !== undefined) setRestrictLocation(parsed.restrictLocation);
+        if (parsed.selectedLocations !== undefined) setSelectedLocations(parsed.selectedLocations);
+        if (parsed.budgetLimit !== undefined) setBudgetLimit(parsed.budgetLimit);
+        if (parsed.isBudgetConstraint !== undefined) setIsBudgetConstraint(parsed.isBudgetConstraint);
+        if (parsed.jeePercentile !== undefined) setJeePercentile(parsed.jeePercentile);
+        if (parsed.class12Percentage !== undefined) setClass12Percentage(parsed.class12Percentage);
+        if (parsed.careerGoal !== undefined) setCareerGoal(parsed.careerGoal);
+        if (parsed.preferredBranches !== undefined) setPreferredBranches(parsed.preferredBranches);
+        if (parsed.priorities !== undefined) setPriorities(parsed.priorities);
+      }
+    } catch (e) {
+      console.error("Error loading wizard progress from localStorage", e);
+    }
+  }, []);
+
+  // Save to localStorage when values change
+  useEffect(() => {
+    if (step <= TOTAL_STEPS) {
+      const progress = {
+        step,
+        restrictLocation,
+        selectedLocations,
+        budgetLimit,
+        isBudgetConstraint,
+        jeePercentile,
+        class12Percentage,
+        careerGoal,
+        preferredBranches,
+        priorities,
+      };
+      localStorage.setItem(WIZARD_STORAGE_KEY, JSON.stringify(progress));
+    }
+  }, [
+    step, restrictLocation, selectedLocations, budgetLimit, isBudgetConstraint,
+    jeePercentile, class12Percentage, careerGoal, preferredBranches, priorities,
+  ]);
+
   const AVAILABLE_LOCATIONS = [
     { state: "Karnataka", city: "Bengaluru" },
     { state: "Karnataka", city: "Manipal" },
@@ -65,21 +111,10 @@ export default function Wizard() {
     { state: "Odisha", city: "Bhubaneswar" },
   ];
 
-  const BRANCH_OPTIONS = [
-    { code: "CSE", label: "Computer Science & Engineering (CSE)" },
-    { code: "IT", label: "Information Technology (IT)" },
-    { code: "ECE", label: "Electronics & Communication (ECE)" },
-    { code: "ME", label: "Mechanical Engineering (ME)" },
-    { code: "CE", label: "Civil Engineering (CE)" },
-  ];
-
-  // Helper: Add preferred location
   const handleAddLocation = () => {
     if (!stateInput) return;
-    
-    // Check duplication
     const duplicate = selectedLocations.some(
-      loc => loc.state.toLowerCase() === stateInput.toLowerCase() && 
+      loc => loc.state.toLowerCase() === stateInput.toLowerCase() &&
              loc.city.toLowerCase() === cityInput.toLowerCase()
     );
     if (!duplicate) {
@@ -89,12 +124,10 @@ export default function Wizard() {
     setCityInput("");
   };
 
-  // Helper: Remove location
   const handleRemoveLocation = (index: number) => {
     setSelectedLocations(selectedLocations.filter((_, idx) => idx !== index));
   };
 
-  // Helper: Toggle branch selection
   const handleBranchToggle = (code: string) => {
     if (preferredBranches.includes(code)) {
       if (preferredBranches.length > 1) {
@@ -105,7 +138,6 @@ export default function Wizard() {
     }
   };
 
-  // Helper: Shift priorities in ranking
   const handleMovePriority = (index: number, direction: "up" | "down") => {
     if (direction === "up" && index === 0) return;
     if (direction === "down" && index === priorities.length - 1) return;
@@ -115,7 +147,7 @@ export default function Wizard() {
     const temp = newPriorities[index];
     newPriorities[index] = newPriorities[targetIdx];
     newPriorities[targetIdx] = temp;
-    
+
     setPriorities(newPriorities);
   };
 
@@ -141,7 +173,13 @@ export default function Wizard() {
         return;
       }
     }
-    setStep(step + 1);
+
+    if (step === TOTAL_STEPS) {
+      // Quiz complete — save and redirect to login
+      handleQuizComplete();
+    } else {
+      setStep(step + 1);
+    }
   };
 
   const handleBack = () => {
@@ -149,69 +187,40 @@ export default function Wizard() {
     setStep(step - 1);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    if (!name || !email || !phone) {
-      setError("Please fill in all contact information fields.");
-      return;
-    }
-
+  const handleQuizComplete = () => {
     setLoading(true);
-
-    try {
-      const payload = {
-        student: {
-          name,
-          email,
-          phone,
-          jee_percentile: jeePercentile ? parseFloat(jeePercentile) : null,
-          class_12_percentage: class12Percentage ? parseFloat(class12Percentage) : null,
-          budget_limit: isBudgetConstraint ? budgetLimit : null,
-          is_budget_constraint: isBudgetConstraint,
-          restrict_location: restrictLocation,
-          locations: selectedLocations,
-        },
-        priorities: priorities.map((p, index) => ({
-          criteria: p.id,
-          rankOrder: index + 1,
-        })),
-        preferred_branches: preferredBranches,
-      };
-
-      const res = await fetch("/api/recommendations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to generate recommendations");
-      }
-
-      // Route to results page passing the student_id
-      router.push(`/results?student_id=${data.student_id}`);
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "An error occurred. Please try again.");
-      setLoading(false);
-    }
+    // Save final quiz data to localStorage
+    const quizData = {
+      restrictLocation,
+      selectedLocations,
+      budgetLimit,
+      isBudgetConstraint,
+      jeePercentile: jeePercentile ? parseFloat(jeePercentile) : null,
+      class12Percentage: class12Percentage ? parseFloat(class12Percentage) : null,
+      careerGoal,
+      preferredBranches,
+      priorities: priorities.map((p, index) => ({
+        criteria: p.id,
+        rankOrder: index + 1,
+      })),
+    };
+    localStorage.setItem("cm_pending_quiz", JSON.stringify(quizData));
+    localStorage.removeItem(WIZARD_STORAGE_KEY);
+    // Redirect to login — after auth, login page will create student and run engine
+    router.push("/login?mode=signup&redirect=/wizard");
   };
 
   return (
     <div className={styles.container}>
       <header className={styles.wizardHeader}>
         <div className={styles.logo}>CollegeMatch</div>
-        <div className={styles.stepIndicator}>Step {step} of 6</div>
+        <div className={styles.stepIndicator}>Step {step} of {TOTAL_STEPS}</div>
       </header>
 
       <div className={styles.progressTrack}>
-        <div 
-          className={styles.progressBar} 
-          style={{ width: `${(step / 6) * 100}%` }}
+        <div
+          className={styles.progressBar}
+          style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
         />
       </div>
 
@@ -230,8 +239,8 @@ export default function Wizard() {
               <div className={styles.formGroup}>
                 <label>Select state & city</label>
                 <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1rem" }}>
-                  <select 
-                    value={stateInput} 
+                  <select
+                    value={stateInput}
                     onChange={(e) => {
                       setStateInput(e.target.value);
                       setCityInput("");
@@ -244,8 +253,8 @@ export default function Wizard() {
                     ))}
                   </select>
 
-                  <select 
-                    value={cityInput} 
+                  <select
+                    value={cityInput}
                     onChange={(e) => setCityInput(e.target.value)}
                     style={{ flex: 1, minWidth: "150px" }}
                     disabled={!stateInput}
@@ -258,9 +267,9 @@ export default function Wizard() {
                       ))}
                   </select>
 
-                  <button 
-                    type="button" 
-                    className="btn btn-secondary" 
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
                     onClick={handleAddLocation}
                     disabled={!stateInput}
                   >
@@ -280,10 +289,10 @@ export default function Wizard() {
                 )}
 
                 <div className={styles.checkboxWrapper} style={{ marginTop: "1.5rem" }}>
-                  <input 
-                    type="checkbox" 
-                    id="restrictLocation" 
-                    checked={restrictLocation} 
+                  <input
+                    type="checkbox"
+                    id="restrictLocation"
+                    checked={restrictLocation}
                     onChange={(e) => setRestrictLocation(e.target.checked)}
                   />
                   <label htmlFor="restrictLocation">
@@ -311,10 +320,10 @@ export default function Wizard() {
 
               <div className={styles.formGroup} style={{ margin: "2rem 0" }}>
                 <div className={styles.checkboxWrapper} style={{ marginBottom: "2rem" }}>
-                  <input 
-                    type="checkbox" 
-                    id="noBudget" 
-                    checked={!isBudgetConstraint} 
+                  <input
+                    type="checkbox"
+                    id="noBudget"
+                    checked={!isBudgetConstraint}
                     onChange={(e) => setIsBudgetConstraint(!e.target.checked)}
                   />
                   <label htmlFor="noBudget">
@@ -327,12 +336,12 @@ export default function Wizard() {
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
                       <label>Maximum Budget: <strong>₹{(budgetLimit / 100000).toFixed(1)} Lakh</strong></label>
                     </div>
-                    <input 
-                      type="range" 
-                      min={400000} 
-                      max={3000000} 
+                    <input
+                      type="range"
+                      min={400000}
+                      max={3000000}
                       step={50000}
-                      value={budgetLimit} 
+                      value={budgetLimit}
                       onChange={(e) => setBudgetLimit(parseInt(e.target.value))}
                       style={{ width: "100%", accentColor: "var(--primary-color)" }}
                     />
@@ -341,7 +350,7 @@ export default function Wizard() {
                       <span>₹15 Lakh</span>
                       <span>₹30 Lakh</span>
                     </div>
-                    
+
                     <div className={styles.infoBox} style={{ marginTop: "1.5rem" }}>
                       💡 <strong>Note:</strong> Budget is treated as a soft cutoff. If a college costs slightly more than your budget but provides excellent ROI, it will still be ranked with a penalty.
                     </div>
@@ -374,10 +383,10 @@ export default function Wizard() {
                     <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.95rem" }}>
                       JEE Main Percentile
                     </label>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       step="0.01"
-                      placeholder="e.g. 91.5" 
+                      placeholder="e.g. 91.5"
                       value={jeePercentile}
                       onChange={(e) => setJeePercentile(e.target.value)}
                     />
@@ -386,10 +395,10 @@ export default function Wizard() {
                     <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.95rem" }}>
                       Class 12 Board Percentage
                     </label>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       step="0.1"
-                      placeholder="e.g. 85.4" 
+                      placeholder="e.g. 85.4"
                       value={class12Percentage}
                       onChange={(e) => setClass12Percentage(e.target.value)}
                     />
@@ -408,8 +417,51 @@ export default function Wizard() {
             </div>
           )}
 
-          {/* STEP 4: BRANCH PREFERENCES */}
+          {/* STEP 4: CAREER GOAL */}
           {step === 4 && (
+            <div>
+              <h2 className={styles.stepTitle}>What is your career goal after B.Tech?</h2>
+              <p className={styles.stepDesc}>
+                This is the primary factor driving your college recommendations.
+              </p>
+
+              <div className={styles.formGroup} style={{ display: "flex", flexDirection: "column", gap: "1rem", margin: "1.5rem 0" }}>
+                {[
+                  { id: "PLACEMENT", icon: "💼", title: "Get Placed", desc: "Secure a high-paying job right after graduation" },
+                  { id: "STARTUP", icon: "🚀", title: "Start a Startup", desc: "Build entrepreneurial skills and access incubation" },
+                  { id: "HIGHER_STUDIES", icon: "🎓", title: "Higher Studies", desc: "Prepare for MS/M.Tech/PhD and research opportunities" },
+                  { id: "NOT_SURE", icon: "🤔", title: "Not Sure Yet", desc: "Keep all options open with balanced recommendations" },
+                ].map((goal) => (
+                  <div
+                    key={goal.id}
+                    className={`${styles.selectionRow} ${careerGoal === goal.id ? styles.selectionRowActive : ""}`}
+                    onClick={() => setCareerGoal(goal.id)}
+                    style={{ cursor: "pointer", padding: "1rem", borderRadius: "8px", border: careerGoal === goal.id ? "2px solid var(--primary-color)" : "1px solid #e0ddd5" }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                      <span style={{ fontSize: "1.5rem" }}>{goal.icon}</span>
+                      <div>
+                        <strong>{goal.title}</strong>
+                        <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--text-secondary)" }}>{goal.desc}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className={styles.actions}>
+                <button type="button" className="btn btn-secondary" onClick={handleBack}>
+                  Back
+                </button>
+                <button type="button" className="btn btn-primary" onClick={handleNext}>
+                  Continue
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 5: BRANCH PREFERENCES */}
+          {step === 5 && (
             <div>
               <h2 className={styles.stepTitle}>Select your preferred B.Tech branch</h2>
               <p className={styles.stepDesc}>
@@ -420,17 +472,17 @@ export default function Wizard() {
                 {BRANCH_OPTIONS.map((branch) => {
                   const selected = preferredBranches.includes(branch.code);
                   return (
-                    <div 
-                      key={branch.code} 
+                    <div
+                      key={branch.code}
                       className={`${styles.selectionRow} ${selected ? styles.selectionRowActive : ""}`}
                       onClick={() => handleBranchToggle(branch.code)}
                     >
                       <div className={styles.checkboxWrapper}>
-                        <input 
-                          type="checkbox" 
+                        <input
+                          type="checkbox"
                           id={`branch_${branch.code}`}
                           checked={selected}
-                          onChange={() => {}} // Controlled by row click
+                          onChange={() => {}}
                         />
                         <label htmlFor={`branch_${branch.code}`}>
                           <strong>{branch.label}</strong>
@@ -452,12 +504,12 @@ export default function Wizard() {
             </div>
           )}
 
-          {/* STEP 5: PRIORITY RANKING */}
-          {step === 5 && (
+          {/* STEP 6: PRIORITY RANKING (Final Step) */}
+          {step === 6 && (
             <div>
               <h2 className={styles.stepTitle}>Rank your preferences</h2>
               <p className={styles.stepDesc}>
-                Arrange the categories from **MOST IMPORTANT** (top) to **LEAST IMPORTANT** (bottom). 
+                Arrange the categories from <strong>MOST IMPORTANT</strong> (top) to <strong>LEAST IMPORTANT</strong> (bottom).
                 Use the arrows to re-order.
               </p>
 
@@ -467,16 +519,16 @@ export default function Wizard() {
                     <div className={styles.priorityRank}>{index + 1}</div>
                     <div className={styles.priorityLabel}>{item.label}</div>
                     <div className={styles.priorityControls}>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className={styles.arrowBtn}
                         onClick={() => handleMovePriority(index, "up")}
                         disabled={index === 0}
                       >
                         ▲
                       </button>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className={styles.arrowBtn}
                         onClick={() => handleMovePriority(index, "down")}
                         disabled={index === priorities.length - 1}
@@ -489,66 +541,14 @@ export default function Wizard() {
               </div>
 
               <div className={styles.actions}>
-                <button type="button" className="btn btn-secondary" onClick={handleBack}>
-                  Back
-                </button>
-                <button type="button" className="btn btn-primary" onClick={handleNext}>
-                  Continue
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 6: CONTACT INFORMATION & SUBMIT */}
-          {step === 6 && (
-            <form onSubmit={handleSubmit}>
-              <h2 className={styles.stepTitle}>Where should we send your results?</h2>
-              <p className={styles.stepDesc}>
-                Enter your details to generate your customized top 10 best-fit college recommendation sheet.
-              </p>
-
-              <div className={styles.formGroup} style={{ display: "flex", flexDirection: "column", gap: "1.25rem", margin: "1.5rem 0" }}>
-                <div>
-                  <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.95rem" }}>Full Name</label>
-                  <input 
-                    type="text" 
-                    required 
-                    placeholder="e.g. Rohan Sharma" 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.95rem" }}>Email Address</label>
-                  <input 
-                    type="email" 
-                    required 
-                    placeholder="e.g. rohan.sharma@example.com" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.95rem" }}>Mobile Number</label>
-                  <input 
-                    type="tel" 
-                    required 
-                    placeholder="e.g. +91 98765 43210" 
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.actions}>
                 <button type="button" className="btn btn-secondary" onClick={handleBack} disabled={loading}>
                   Back
                 </button>
-                <button type="submit" className="btn btn-primary glow-effect" disabled={loading}>
-                  {loading ? "Calculating Matches..." : "Get My Matches"}
+                <button type="button" className="btn btn-primary glow-effect" onClick={handleNext} disabled={loading}>
+                  {loading ? "Saving..." : "Get My Matches"}
                 </button>
               </div>
-            </form>
+            </div>
           )}
 
         </div>

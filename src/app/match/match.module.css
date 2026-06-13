@@ -534,16 +534,10 @@
   color: #1e40af;
 }
 
-.badgeReach {
-  background-color: rgba(245, 158, 11, 0.1);
-  border: 1px solid rgba(245, 158, 11, 0.2);
-  color: #b45309;
-}
-
-.badgeUnlikely {
-  background-color: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.15);
-  color: #dc2626;
+.badgeDream {
+  background-color: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  color: #7c3aed;
 }
 
 .eligibilityText {

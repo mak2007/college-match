@@ -3,13 +3,15 @@
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
 import styles from "./login.module.css";
 
 function AdminLoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect");
-  
+  const { login, setLastVisitedPath } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,27 +23,25 @@ function AdminLoginContent() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      // Use auth context login to set user state globally
+      await login(email, password);
 
+      // Determine target URL
+      const res = await fetch("/api/auth/me", { credentials: "include" });
       const data = await res.json();
+      const role = data?.user?.role;
+      const targetUrl = redirectUrl || (role === "SUPERADMIN" ? "/admin/super" : role === "COLLEGE_ADMIN" ? "/admin/college" : null);
 
-      if (!res.ok) {
-        throw new Error(data.error || "Login failed");
-      }
-
-      // Route based on user role or redirect query parameter
-      if (data.role === "SUPERADMIN") {
-        router.push(redirectUrl || "/admin/super");
-      } else if (data.role === "COLLEGE_ADMIN") {
-        router.push(redirectUrl || "/admin/college");
-      } else {
+      if (!targetUrl) {
         throw new Error("Unauthorized role");
       }
-      router.refresh();
+
+      setLastVisitedPath(targetUrl);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("cm_last_path", targetUrl);
+      }
+
+      router.push(targetUrl);
     } catch (err: any) {
       console.error("Login client error:", err);
       setError(err.message || "Invalid email or password");
@@ -95,7 +95,7 @@ function AdminLoginContent() {
           </form>
 
           <div className={styles.helpText}>
-            💡 <strong>Demo Credentials:</strong> <br />
+            <strong>Demo Credentials:</strong> <br />
             - Superadmin: <code>admin@collegematch.in</code> / <code>AdminPass123!</code> <br />
             - College Admin: <code>admissions@vit.edu</code> / <code>CollegePass123!</code>
           </div>

@@ -70,6 +70,21 @@
   border-color: rgba(255, 255, 255, 0.05);
 }
 
+.navLinkActive {
+  color: #ffffff;
+  background-color: rgba(196, 164, 132, 0.2);
+  border-color: rgba(196, 164, 132, 0.4);
+}
+
+.loadingOverlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
 .navIcon {
   font-size: 1.1rem;
 }

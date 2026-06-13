@@ -1,4 +1,13 @@
 // Configurable & Explainable Recommendation Engine Logic for CollegeMatch
+import { normalizeBranchCode, SUPPORTED_BRANCH_CODES, CSE_VARIANTS } from "@/lib/branches";
+
+export type CareerGoalType =
+  | "PLACEMENT"
+  | "STARTUP"
+  | "HIGHER_STUDIES"
+  | "NOT_SURE";
+
+export type RecommendationMode = "best_fit" | "admission_chance";
 
 export interface StudentProfile {
   jeePercentile?: number | null;
@@ -7,9 +16,9 @@ export interface StudentProfile {
   isBudgetConstraint: boolean;
   restrictLocation: boolean;
   preferredLocations: { state: string; city: string }[];
-  priorities: { criteria: string; rankOrder: number }[]; // 1 to 5
+  priorities: { criteria: string; rankOrder: number }[];
   preferredBranches: string[];
-  careerGoal?: string | null; // placement, startup, higher_studies
+  careerGoal?: CareerGoalType | null;
 }
 
 export interface CollegeCandidate {
@@ -22,13 +31,15 @@ export interface CollegeCandidate {
   coverImageUrl: string | null;
   brochureUrl: string | null;
   officialApplyUrl: string;
+  website: string | null;
   isPartner: boolean;
+  isNewGen: boolean;
   commissionRate: number;
   placementScore: number;
   collegeLifeScore: number;
   curriculumScore: number;
-  metadata: string | null; // College-level custom attributes JSON string
-  
+  metadata: string | null;
+
   // Branch details
   branchId: string;
   branchName: string;
@@ -42,11 +53,29 @@ export interface CollegeCandidate {
   minJeePercentileCutoff: number | null;
   minClass12Cutoff: number | null;
   branchStrengthScore: number;
-  branchMetadata: string | null; // Branch-level custom attributes JSON string
+  placementPercentage: number | null;
+  branchMetadata: string | null;
+}
+
+export interface CareerGoalWeights {
+  PLACEMENTS: number;
+  ROI: number;
+  BRANCH_STRENGTH: number;
+  COLLEGE_LIFE: number;
+  CURRICULUM: number;
+}
+
+export interface CareerGoalExtraDimension {
+  key: string;
+  label: string;
+  weight: number;
+  source: "college_metadata" | "branch_metadata" | "computed";
+  metadataKey?: string;
+  computation?: "placement_percentage" | "highest_salary" | "startup_ecosystem";
 }
 
 export interface ScoringConfig {
-  weightStrategy: "ROC" | "EQUAL" | "MANUAL";
+  weightStrategy: "CAREER_GOAL_PRIORITY" | "ROC" | "EQUAL" | "MANUAL";
   manualWeights: {
     PLACEMENTS: number;
     ROI: number;
@@ -54,6 +83,13 @@ export interface ScoringConfig {
     COLLEGE_LIFE: number;
     CURRICULUM: number;
   };
+  careerGoalWeights: Record<CareerGoalType, CareerGoalWeights>;
+  priorityAdjustment: {
+    active: boolean;
+    boostPerRank: number; // ±0.10 default
+    maxAdjustment: number; // ±0.30 default
+  };
+  careerGoalExtraDimensions: Record<CareerGoalType, CareerGoalExtraDimension[]>;
   budgetPenalty: {
     active: boolean;
     thresholdMultiplier: number;
@@ -88,9 +124,9 @@ export interface ScoringConfig {
 export interface FactorContribution {
   factor: string;
   label: string;
-  score: number;        // Normalized score of college for this factor (0-100)
-  weight: number;       // Applied weight (0.0 - 1.0)
-  contribution: number; // score * weight
+  score: number;
+  weight: number;
+  contribution: number;
 }
 
 export interface AppliedModifier {
@@ -101,7 +137,7 @@ export interface AppliedModifier {
 }
 
 export interface MatchScoreBreakdown {
-  baseScore: number;                 // Sum of all factor contributions
+  baseScore: number;
   factorContributions: FactorContribution[];
   appliedBonuses: AppliedModifier[];
   appliedPenalties: AppliedModifier[];
@@ -117,69 +153,183 @@ export interface MatchResult {
   logoUrl: string | null;
   coverImageUrl: string | null;
   officialApplyUrl: string;
+  website: string | null;
   isPartner: boolean;
-  
+  isNewGen: boolean;
+
   branchName: string;
   branchCode: string;
+  qualityScore: number;
   matchScore: number;
+  admissionProbability: number;
   rankPosition: number;
-  
+
   feeInfo: {
     annualTuition: number;
     annualHostel: number;
     total4YrCost: number;
   };
-  
+
   placementInfo: {
     avgSalary: number | null;
     medianSalary: number | null;
     highestSalary: number | null;
+    placementPercentage: number | null;
   };
-  
+
   admissionCompetitiveness: {
-    category: "Safe" | "Target" | "Reach" | "Unlikely";
+    category: "Dream" | "Target" | "Safe";
     badgeText: string;
+    jeeGap: number | null;
   };
-  
+
   keyReasons: string[];
   scoreBreakdown: MatchScoreBreakdown;
 }
 
-// 1. Calculate Weights dynamically based on strategy configuration
+const DEFAULT_CAREER_GOAL_WEIGHTS: Record<CareerGoalType, CareerGoalWeights> = {
+  PLACEMENT: {
+    PLACEMENTS: 0.40,
+    ROI: 0.20,
+    BRANCH_STRENGTH: 0.15,
+    COLLEGE_LIFE: 0.10,
+    CURRICULUM: 0.15,
+  },
+  STARTUP: {
+    PLACEMENTS: 0.10,
+    ROI: 0.10,
+    BRANCH_STRENGTH: 0.20,
+    COLLEGE_LIFE: 0.15,
+    CURRICULUM: 0.45,
+  },
+  HIGHER_STUDIES: {
+    PLACEMENTS: 0.05,
+    ROI: 0.12,
+    BRANCH_STRENGTH: 0.15,
+    COLLEGE_LIFE: 0.13,
+    CURRICULUM: 0.55,
+  },
+  NOT_SURE: {
+    PLACEMENTS: 0.20,
+    ROI: 0.20,
+    BRANCH_STRENGTH: 0.20,
+    COLLEGE_LIFE: 0.20,
+    CURRICULUM: 0.20,
+  },
+};
+
+const DEFAULT_EXTRA_DIMENSIONS: Record<CareerGoalType, CareerGoalExtraDimension[]> = {
+  PLACEMENT: [
+    {
+      key: "PLACEMENT_PERCENTAGE",
+      label: "Branch placement rate",
+      weight: 0.15,
+      source: "branch_metadata",
+      computation: "placement_percentage",
+    },
+  ],
+  STARTUP: [
+    {
+      key: "STARTUP_ECOSYSTEM",
+      label: "Startup ecosystem & incubation",
+      weight: 0.15,
+      source: "college_metadata",
+      metadataKey: "startup_ecosystem",
+    },
+  ],
+  HIGHER_STUDIES: [
+    {
+      key: "RESEARCH_OUTPUT",
+      label: "Research output & publications",
+      weight: 0.10,
+      source: "college_metadata",
+      metadataKey: "research_output",
+    },
+    {
+      key: "EXPOSURE_SCORE",
+      label: "Industry & internship exposure",
+      weight: 0.05,
+      source: "college_metadata",
+      metadataKey: "exposure_score",
+    },
+  ],
+  NOT_SURE: [],
+};
+
+// 1. Normalize weights to sum to 1.0
+function normalizeWeights(weights: Record<string, number>): Record<string, number> {
+  const total = Object.values(weights).reduce((a, b) => a + b, 0);
+  if (total === 0) return weights;
+  const normalized: Record<string, number> = {};
+  for (const key of Object.keys(weights)) {
+    normalized[key] = weights[key] / total;
+  }
+  return normalized;
+}
+
+// 2. Calculate Weights dynamically based on strategy configuration
 export function getWeights(
   priorities: { criteria: string; rankOrder: number }[],
-  config: ScoringConfig
+  config: ScoringConfig,
+  careerGoal?: CareerGoalType | null
 ): Record<string, number> {
   const weights: Record<string, number> = {};
 
   if (config.weightStrategy === "MANUAL") {
-    // Use manual weights from configuration
     Object.entries(config.manualWeights).forEach(([key, val]) => {
       weights[key.toUpperCase()] = val;
     });
   } else if (config.weightStrategy === "EQUAL") {
-    // Equal weighting for 5 core criteria
     const CORE_CRITERIA = ["PLACEMENTS", "ROI", "BRANCH_STRENGTH", "COLLEGE_LIFE", "CURRICULUM"];
     CORE_CRITERIA.forEach((key) => {
       weights[key] = 0.20;
     });
-  } else {
-    // Default to ROC Centroid Strategy for core criteria
+  } else if (config.weightStrategy === "ROC") {
     const sorted = [...priorities].sort((a, b) => a.rankOrder - b.rankOrder);
     const ROC_WEIGHTS = [0.4567, 0.2567, 0.1567, 0.0900, 0.0400];
-    
     sorted.forEach((p, idx) => {
       weights[p.criteria.toUpperCase()] = ROC_WEIGHTS[idx] || 0.04;
     });
+  } else {
+    // CAREER_GOAL_PRIORITY (default)
+    const goal = careerGoal || "NOT_SURE";
+    const template = config.careerGoalWeights?.[goal] || DEFAULT_CAREER_GOAL_WEIGHTS[goal];
+
+    // Layer 1: Career Goal template
+    Object.entries(template).forEach(([key, val]) => {
+      weights[key] = val;
+    });
+
+    // Layer 2: Priority adjustment (±30% max)
+    if (config.priorityAdjustment?.active && priorities.length > 0) {
+      const sorted = [...priorities].sort((a, b) => a.rankOrder - b.rankOrder);
+      const boostPerRank = config.priorityAdjustment.boostPerRank || 0.10;
+      const maxAdj = config.priorityAdjustment.maxAdjustment || 0.30;
+
+      sorted.forEach((p) => {
+        const criteria = p.criteria.toUpperCase();
+        if (weights[criteria] !== undefined) {
+          const rankFrom1 = p.rankOrder - 1;
+          const adjustment = -rankFrom1 * boostPerRank;
+          const clampedAdj = Math.max(-maxAdj, Math.min(maxAdj, adjustment));
+          weights[criteria] = weights[criteria] * (1 + clampedAdj);
+        }
+      });
+
+      // Normalize after adjustment
+      const normalized = normalizeWeights(weights);
+      Object.keys(weights).forEach((key) => {
+        weights[key] = normalized[key];
+      });
+    }
   }
 
   // Factor in custom attributes weights if defined
   let totalCoreWeight = Object.values(weights).reduce((a, b) => a + b, 0);
   let totalCustomWeight = config.customScoringAttributes.reduce((sum, attr) => sum + attr.weight, 0);
-  
-  // Normalize everything to sum to exactly 1.0
+
   const scaleFactor = 1.0 / (totalCoreWeight + totalCustomWeight);
-  
+
   Object.keys(weights).forEach((key) => {
     weights[key] = weights[key] * scaleFactor;
   });
@@ -188,38 +338,120 @@ export function getWeights(
     weights[attr.key.toUpperCase()] = attr.weight * scaleFactor;
   });
 
+  // Fold in career goal extra dimensions
+  const goal = careerGoal || "NOT_SURE";
+  const extras = config.careerGoalExtraDimensions?.[goal] || DEFAULT_EXTRA_DIMENSIONS[goal] || [];
+  let totalExtraWeight = extras.reduce((sum, e) => sum + e.weight, 0);
+
+  if (totalExtraWeight > 0) {
+    const extraScaleFactor = 1.0 / (1.0 + totalExtraWeight);
+    Object.keys(weights).forEach((key) => {
+      weights[key] = weights[key] * extraScaleFactor;
+    });
+    extras.forEach((extra) => {
+      weights[extra.key] = extra.weight * extraScaleFactor;
+    });
+  }
+
   return weights;
 }
 
-// 2. Main Configurable Recommendation Scoring Algorithm
+// 3. Standalone Quality Score (objective, student-independent)
+// Used for "Best Colleges" mode — ranks colleges by intrinsic quality only.
+const QUALITY_WEIGHTS = {
+  PLACEMENT: 0.25,
+  CURRICULUM: 0.20,
+  BRANCH_STRENGTH: 0.20,
+  ROI: 0.15,
+  EXPOSURE: 0.10,
+  INFRA: 0.05,
+  PLACEMENT_PCT: 0.05,
+};
+
+function computeQualityScore(
+  c: CollegeCandidate,
+  collegeMeta: Record<string, any>,
+  total4YrCost: number,
+  logRoiRange: number,
+  minLogRoi: number
+): number {
+  // 1. Placement outcomes (0-100)
+  const sPlacement = c.placementScore * 10;
+
+  // 2. Curriculum (0-100)
+  const sCurriculum = c.curriculumScore * 10;
+
+  // 3. Branch strength (0-100)
+  const sBranch = c.branchStrengthScore * 10;
+
+  // 4. ROI (log-scaled, 0-100)
+  const roiRatio = total4YrCost > 0 ? (c.avgSalary || 450000) / total4YrCost : 0;
+  const logRoi = Math.log(1 + roiRatio);
+  const sRoi = logRoiRange > 0 ? 30 + ((logRoi - minLogRoi) / logRoiRange) * 70 : 50;
+
+  // 5. Exposure score (0-100, from metadata)
+  const exposure = Math.min(100, Math.max(0, (Number(collegeMeta.exposure_score) || 5) * 10));
+
+  // 6. Infrastructure (0-100, from metadata)
+  const infra = Math.min(100, Math.max(0, Number(collegeMeta.infra_rating) || 50));
+
+  // 7. Placement percentage (0-100)
+  const placementPct = c.placementPercentage != null ? Math.min(100, Math.max(0, c.placementPercentage)) : 50;
+
+  // Weighted sum
+  const quality =
+    sPlacement * QUALITY_WEIGHTS.PLACEMENT +
+    sCurriculum * QUALITY_WEIGHTS.CURRICULUM +
+    sBranch * QUALITY_WEIGHTS.BRANCH_STRENGTH +
+    sRoi * QUALITY_WEIGHTS.ROI +
+    exposure * QUALITY_WEIGHTS.EXPOSURE +
+    infra * QUALITY_WEIGHTS.INFRA +
+    placementPct * QUALITY_WEIGHTS.PLACEMENT_PCT;
+
+  return Math.round(quality * 10) / 10;
+}
+
+// 4. Main Configurable Recommendation Scoring Algorithm
 export function generateRecommendations(
   student: StudentProfile,
   candidates: CollegeCandidate[],
-  config: ScoringConfig
+  config: ScoringConfig,
+  mode: RecommendationMode = "best_fit"
 ): MatchResult[] {
   if (candidates.length === 0) return [];
-  
-  // Pre-calculate ROI ranges for normalization
-  const roiRatios = candidates.map(c => {
-    const tuition = Math.max(50000, c.tuitionFeeAnnual);
-    const total4YrTuition = tuition * 4;
+
+  // V1: Only evaluate CSE variants (CSE, CSE_CAT1-4). IT/ECE deferred to V2/V3.
+  candidates = candidates.filter((c) =>
+    CSE_VARIANTS.includes(c.branchCode.toUpperCase().replace(/[^A-Z]/g, ""))
+  );
+  if (candidates.length === 0) return [];
+
+  // Pre-calculate ROI ranges for normalization (log-scaled to compress extremes)
+  const roiRatios = candidates.map((c) => {
+    const total4YrCost = (c.tuitionFeeAnnual + c.hostelFeeAnnual) * 4;
     const avgSal = c.avgSalary || 450000;
-    return avgSal / total4YrTuition;
+    return total4YrCost > 0 ? avgSal / total4YrCost : 0;
   });
-  
-  const maxRoi = Math.max(...roiRatios, 0.1);
-  const minRoi = Math.min(...roiRatios, maxRoi);
-  
+
+  const logRoiRatios = roiRatios.map((r) => Math.log(1 + r));
+  const maxLogRoi = Math.max(...logRoiRatios, 0.1);
+  const minLogRoi = Math.min(...logRoiRatios, maxLogRoi);
+
   // Calculate dynamic normalized weights
-  const weights = getWeights(student.priorities, config);
-  const topPriority = student.priorities.find(p => p.rankOrder === 1)?.criteria.toUpperCase() || "PLACEMENTS";
-  
+  const weights = getWeights(student.priorities, config, student.careerGoal);
+  const topPriority =
+    student.priorities.find((p) => p.rankOrder === 1)?.criteria.toUpperCase() || "PLACEMENTS";
+  const careerGoal = student.careerGoal || "NOT_SURE";
+
+  // Get extra dimensions for this career goal
+  const extras = config.careerGoalExtraDimensions?.[careerGoal] || DEFAULT_EXTRA_DIMENSIONS[careerGoal] || [];
+
   const results: MatchResult[] = [];
-  
+
   for (let i = 0; i < candidates.length; i++) {
     const c = candidates[i];
     const total4YrCost = (c.tuitionFeeAnnual + c.hostelFeeAnnual) * 4;
-    
+
     // Parse JSON Metadata
     let collegeMeta: Record<string, any> = {};
     try {
@@ -227,7 +459,7 @@ export function generateRecommendations(
     } catch (e) {
       console.warn("Failed to parse college metadata:", c.metadata);
     }
-    
+
     let branchMeta: Record<string, any> = {};
     try {
       if (c.branchMetadata) branchMeta = JSON.parse(c.branchMetadata);
@@ -238,92 +470,80 @@ export function generateRecommendations(
     // --- STAGE 1: GEOGRAPHIC FILTER ---
     if (student.restrictLocation && student.preferredLocations.length > 0) {
       const isLocationMatched = student.preferredLocations.some(
-        loc => loc.state.toLowerCase() === c.state.toLowerCase() && 
-               (!loc.city || loc.city.toLowerCase() === c.city.toLowerCase())
+        (loc) =>
+          loc.state.toLowerCase() === c.state.toLowerCase() &&
+          (!loc.city || loc.city.toLowerCase() === c.city.toLowerCase())
       );
-      if (!isLocationMatched) continue; // Skip completely
+      if (!isLocationMatched) continue;
     }
-    
+
     // --- STAGE 2: BUDGET PENALTY ---
     let budgetPenaltyVal = 0;
     const appliedPenalties: AppliedModifier[] = [];
-    
+
     if (config.budgetPenalty.active && student.isBudgetConstraint && student.budgetLimit) {
       const limit = student.budgetLimit;
-      const multiplier = config.budgetPenalty.thresholdMultiplier; // default 1.3
-      
+      const multiplier = config.budgetPenalty.thresholdMultiplier;
+
       if (total4YrCost > multiplier * limit) {
-        continue; // Exceeds upper limit threshold -> Filter out completely
+        continue;
       } else if (total4YrCost > limit) {
-        // Dynamic budget penalty calculation: ((Cost - Limit) / (Range))^exponent * baseWeight
         const range = (multiplier - 1.0) * limit;
-        budgetPenaltyVal = Math.pow((total4YrCost - limit) / range, config.budgetPenalty.exponent) * config.budgetPenalty.basePenaltyWeight;
+        budgetPenaltyVal =
+          Math.pow((total4YrCost - limit) / range, config.budgetPenalty.exponent) *
+          config.budgetPenalty.basePenaltyWeight;
         appliedPenalties.push({
           id: "budget_overrun",
           type: "PENALTY",
           value: Math.round(budgetPenaltyVal * 10) / 10,
-          reason: `Total cost (₹${(total4YrCost/100000).toFixed(1)}L) exceeds budget limit (₹${(limit/100000).toFixed(1)}L)`
+          reason: `Total cost (₹${(total4YrCost / 100000).toFixed(1)}L) exceeds budget limit (₹${(limit / 100000).toFixed(1)}L)`,
         });
       }
     }
-    
-    // --- STAGE 3: ACADEMIC FIT & PENALTY ---
-    let academicPenaltyVal = 0;
-    let category: "Safe" | "Target" | "Reach" | "Unlikely" = "Target";
+
+    // --- STAGE 3: ACADEMIC FIT (admission probability ONLY — does NOT affect ranking) ---
+    let category: "Dream" | "Target" | "Safe" = "Target";
     let badgeText = "Good Fit";
-    
-    const jeeGap = student.jeePercentile && c.minJeePercentileCutoff
-      ? student.jeePercentile - c.minJeePercentileCutoff
-      : null;
-      
-    const c12Gap = student.class12Percentage && c.minClass12Cutoff
-      ? student.class12Percentage - c.minClass12Cutoff
-      : null;
-      
-    let bestGap: number | null = null;
-    if (jeeGap !== null && c12Gap !== null) {
-      bestGap = Math.max(jeeGap, c12Gap);
-    } else {
-      bestGap = jeeGap !== null ? jeeGap : c12Gap;
-    }
-    
+
+    // Class 12 is eligibility only — if below cutoff, exclude entirely
+    const c12Eligible =
+      !student.class12Percentage || !c.minClass12Cutoff
+        ? true
+        : student.class12Percentage >= c.minClass12Cutoff;
+
+    if (!c12Eligible) continue;
+
+    // Admission probability is based on JEE gap only
+    const jeeGap =
+      student.jeePercentile && c.minJeePercentileCutoff
+        ? student.jeePercentile - c.minJeePercentileCutoff
+        : null;
+
+    const bestGap = jeeGap;
+
     if (config.academicCompetitiveness.active && bestGap !== null) {
       const activeLimits = config.academicCompetitiveness;
-      
+
       if (bestGap < activeLimits.excludeLimit) {
-        continue; // Exceeds eligibility gap limit -> Filter out completely
+        continue;
       } else if (bestGap < activeLimits.unlikelyThreshold) {
-        category = "Unlikely";
-        badgeText = "Competitiveness: Unlikely";
-        academicPenaltyVal = Math.abs(bestGap) * activeLimits.unlikelyPenaltyScale;
-        appliedPenalties.push({
-          id: "academic_unlikely",
-          type: "PENALTY",
-          value: Math.round(academicPenaltyVal * 10) / 10,
-          reason: `Academic score gap of ${bestGap.toFixed(1)} is below target cutoff thresholds`
-        });
+        category = "Dream";
+        badgeText = "Admission: Dream — low chance, but worth trying";
       } else if (bestGap < activeLimits.reachThreshold) {
-        category = "Reach";
-        badgeText = "Competitiveness: Reach";
-        academicPenaltyVal = Math.abs(bestGap) * activeLimits.reachPenaltyScale;
-        appliedPenalties.push({
-          id: "academic_reach",
-          type: "PENALTY",
-          value: Math.round(academicPenaltyVal * 10) / 10,
-          reason: `Academic score gap of ${bestGap.toFixed(1)} requires competitive reach admissions`
-        });
+        category = "Dream";
+        badgeText = "Admission: Dream — competitive, requires strong profile";
       } else if (bestGap >= activeLimits.safeThreshold) {
         category = "Safe";
-        badgeText = "Competitiveness: Safe";
+        badgeText = "Admission: Safe — strong chances";
       } else {
         category = "Target";
-        badgeText = "Competitiveness: Target";
+        badgeText = "Admission: Target — good fit for your profile";
       }
     }
-    
+
     // --- STAGE 4: FACTOR SUB-SCORES (0-100) & CONTRIBUTIONS ---
     const factorContributions: FactorContribution[] = [];
-    
+
     // Core 1: Placements
     const sPlacement = c.placementScore * 10;
     const wPlacement = weights.PLACEMENTS || 0;
@@ -332,9 +552,9 @@ export function generateRecommendations(
       label: "Placement outcomes",
       score: Math.round(sPlacement),
       weight: Math.round(wPlacement * 100) / 100,
-      contribution: Math.round(sPlacement * wPlacement * 10) / 10
+      contribution: Math.round(sPlacement * wPlacement * 10) / 10,
     });
-    
+
     // Core 2: College Life
     const sLife = c.collegeLifeScore * 10;
     const wLife = weights.COLLEGE_LIFE || 0;
@@ -343,9 +563,9 @@ export function generateRecommendations(
       label: "Campus life & hostels",
       score: Math.round(sLife),
       weight: Math.round(wLife * 100) / 100,
-      contribution: Math.round(sLife * wLife * 10) / 10
+      contribution: Math.round(sLife * wLife * 10) / 10,
     });
-    
+
     // Core 3: Branch Strength
     const sBranch = c.branchStrengthScore * 10;
     const wBranch = weights.BRANCH_STRENGTH || 0;
@@ -354,9 +574,9 @@ export function generateRecommendations(
       label: `${c.branchCode} department strength`,
       score: Math.round(sBranch),
       weight: Math.round(wBranch * 100) / 100,
-      contribution: Math.round(sBranch * wBranch * 10) / 10
+      contribution: Math.round(sBranch * wBranch * 10) / 10,
     });
-    
+
     // Core 4: Curriculum
     const sCurriculum = c.curriculumScore * 10;
     const wCurriculum = weights.CURRICULUM || 0;
@@ -365,61 +585,79 @@ export function generateRecommendations(
       label: "Curriculum & Faculty standards",
       score: Math.round(sCurriculum),
       weight: Math.round(wCurriculum * 100) / 100,
-      contribution: Math.round(sCurriculum * wCurriculum * 10) / 10
+      contribution: Math.round(sCurriculum * wCurriculum * 10) / 10,
     });
-    
-    // Core 5: ROI
-    const tuition = Math.max(50000, c.tuitionFeeAnnual);
-    const currentRoiRatio = (c.avgSalary || 450000) / (tuition * 4);
-    const range = maxRoi - minRoi;
-    const sRoi = Math.min(100, range > 0
-      ? 30 + ((currentRoiRatio - minRoi) / range) * 70
-      : 75);
+
+    // Core 5: ROI (log-scaled normalization with floor at 30, ceiling at 100)
+    const currentRoiRatio = (c.avgSalary || 450000) / total4YrCost;
+    const currentLogRoi = Math.log(1 + currentRoiRatio);
+    const logRoiRange = maxLogRoi - minLogRoi;
+    const sRoi =
+      logRoiRange > 0 ? 30 + ((currentLogRoi - minLogRoi) / logRoiRange) * 70 : 75;
     const wRoi = weights.ROI || 0;
     factorContributions.push({
       factor: "ROI",
       label: "Return on Investment (ROI)",
       score: Math.round(sRoi),
       weight: Math.round(wRoi * 100) / 100,
-      contribution: Math.round(sRoi * wRoi * 10) / 10
+      contribution: Math.round(sRoi * wRoi * 10) / 10,
     });
-    
+
     // Custom Attributes Calculation
     config.customScoringAttributes.forEach((attr) => {
-      // Check if attribute key exists in college level metadata
-      const rawVal = collegeMeta[attr.key] !== undefined ? collegeMeta[attr.key] : attr.defaultValue;
-      
-      let valNum = Number(rawVal);
-      if (attr.key === "nirf_ranking") {
-        // Convert NIRF rank to a 0-100 score: Rank 1-10 -> 95-100, Rank 11-30 -> 85-95, Rank 31-100 -> 70-85, others -> 50-70
-        if (valNum <= 0) valNum = attr.defaultValue;
-        else if (valNum <= 10) valNum = 98 - valNum; // Rank 1 -> 97, Rank 10 -> 88
-        else if (valNum <= 50) valNum = 90 - (valNum / 2); // Rank 50 -> 65
-        else valNum = Math.max(30, 70 - (valNum / 10)); // Rank 150 -> 55
-      } else if (valNum > 0 && valNum <= 10) {
-        // Scale 0-10 values to 0-100
-        valNum = valNum * 10;
-      }
-      
-      const score = Math.min(100, Math.max(0, valNum));
+      const rawVal =
+        collegeMeta[attr.key] !== undefined ? collegeMeta[attr.key] : attr.defaultValue;
+      const score = Math.min(100, Math.max(0, Number(rawVal)));
       const weight = weights[attr.key.toUpperCase()] || 0;
-      
+
       factorContributions.push({
         factor: attr.key.toUpperCase(),
         label: attr.label,
         score: Math.round(score),
         weight: Math.round(weight * 100) / 100,
-        contribution: Math.round(score * weight * 10) / 10
+        contribution: Math.round(score * weight * 10) / 10,
       });
     });
-    
+
+    // Career Goal Extra Dimensions Calculation
+    extras.forEach((extra) => {
+      let rawScore = 0;
+
+      if (extra.computation === "placement_percentage" && c.placementPercentage != null) {
+        rawScore = Math.min(100, Math.max(0, c.placementPercentage));
+      } else if (extra.computation === "highest_salary" && c.highestSalary != null) {
+        rawScore = Math.min(100, Math.max(0, (c.highestSalary / 5000000) * 100));
+      } else if (extra.metadataKey && extra.source === "college_metadata") {
+        let valNum = Number(collegeMeta[extra.metadataKey]) || 0;
+        if (valNum > 0 && valNum <= 10) {
+          valNum = valNum * 10;
+        }
+        rawScore = Math.min(100, Math.max(0, valNum));
+      } else if (extra.metadataKey && extra.source === "branch_metadata") {
+        let valNum = Number(branchMeta[extra.metadataKey]) || 0;
+        if (valNum > 0 && valNum <= 10) {
+          valNum = valNum * 10;
+        }
+        rawScore = Math.min(100, Math.max(0, valNum));
+      }
+
+      const weight = weights[extra.key] || 0;
+      factorContributions.push({
+        factor: extra.key,
+        label: extra.label,
+        score: Math.round(rawScore),
+        weight: Math.round(weight * 100) / 100,
+        contribution: Math.round(rawScore * weight * 10) / 10,
+      });
+    });
+
     // Base Score = Sum of all contributions
     const baseScoreVal = factorContributions.reduce((sum, item) => sum + item.contribution, 0);
-    
+
     // --- STAGE 5: BONUSES ---
     const appliedBonuses: AppliedModifier[] = [];
     let bonusSum = 0;
-    
+
     config.bonusRules.forEach((rule) => {
       if (rule.type === "IS_PARTNER" && c.isPartner) {
         bonusSum += rule.bonus;
@@ -427,15 +665,20 @@ export function generateRecommendations(
           id: rule.id,
           type: "BONUS",
           value: rule.bonus,
-          reason: rule.reason
+          reason: rule.reason,
         });
-      } else if (rule.type === "PLACEMENT_AVERAGE" && c.avgSalary && rule.threshold && c.avgSalary >= rule.threshold) {
+      } else if (
+        rule.type === "PLACEMENT_AVERAGE" &&
+        c.avgSalary &&
+        rule.threshold &&
+        c.avgSalary >= rule.threshold
+      ) {
         bonusSum += rule.bonus;
         appliedBonuses.push({
           id: rule.id,
           type: "BONUS",
           value: rule.bonus,
-          reason: rule.reason
+          reason: rule.reason,
         });
       } else if (rule.type === "CUSTOM_ATTRIBUTE" && rule.attributeKey) {
         const hasAttr = collegeMeta[rule.attributeKey] !== undefined;
@@ -445,14 +688,15 @@ export function generateRecommendations(
             id: rule.id,
             type: "BONUS",
             value: rule.bonus,
-            reason: rule.reason
+            reason: rule.reason,
           });
         }
       }
     });
 
-    // Career Goal Modifiers
-    if (student.careerGoal === "placement") {
+    // Career Goal Modifiers (dynamic bonuses based on student's chosen path)
+    const goalUpper = student.careerGoal?.toUpperCase();
+    if (goalUpper === "PLACEMENT") {
       if (c.placementScore >= 8.5 || (c.avgSalary && c.avgSalary >= 1200000)) {
         bonusSum += 5.0;
         appliedBonuses.push({
@@ -462,57 +706,90 @@ export function generateRecommendations(
           reason: "Excellent placement statistics align with your Corporate Career goal"
         });
       }
-    } else if (student.careerGoal === "startup") {
+    } else if (goalUpper === "STARTUP") {
       const startupEco = collegeMeta.startup_ecosystem ? Number(collegeMeta.startup_ecosystem) : 7.0;
-      if (startupEco >= 8.0) {
+      const threshold = startupEco <= 10 ? 8.0 : 80;
+      if (startupEco >= threshold) {
         bonusSum += 7.0;
         appliedBonuses.push({
           id: "career_startup_focus",
           type: "BONUS",
           value: 7.0,
-          reason: `Exceptional startup ecosystem (${startupEco}/10) supports your Entrepreneurship goal`
+          reason: `Exceptional startup ecosystem (${startupEco}${startupEco <= 10 ? "/10" : ""}) supports your Entrepreneurship goal`
         });
       }
-    } else if (student.careerGoal === "higher_studies") {
+    } else if (goalUpper === "HIGHER_STUDIES") {
       const researchOut = collegeMeta.research_output ? Number(collegeMeta.research_output) : 7.0;
-      if (researchOut >= 8.0) {
+      const threshold = researchOut <= 10 ? 8.0 : 80;
+      if (researchOut >= threshold) {
         bonusSum += 7.0;
         appliedBonuses.push({
           id: "career_research_focus",
           type: "BONUS",
           value: 7.0,
-          reason: `Outstanding research output (${researchOut}/10) supports your Higher Studies/Academia goal`
+          reason: `Outstanding research output (${researchOut}${researchOut <= 10 ? "/10" : ""}) supports your Higher Studies/Academia goal`
         });
       }
     }
-    
-    // Final score sum
-    const totalPenalty = budgetPenaltyVal + academicPenaltyVal;
+
+    // Final score = base + bonuses - budget penalty ONLY (no academic penalty)
+    const totalPenalty = budgetPenaltyVal;
     const rawFinalScore = baseScoreVal + bonusSum - totalPenalty;
     const finalScoreVal = Math.max(0, Math.min(100, rawFinalScore));
-    
+
     // Generate explainability text highlights
     const keyReasons: string[] = [];
-    
+
+    // Career Goal based reason
+    if (careerGoal !== "NOT_SURE") {
+      const goalLabels: Record<string, string> = {
+        PLACEMENT: "placement-focused",
+        STARTUP: "startup/entrepreneurship",
+        HIGHER_STUDIES: "higher studies & research",
+      };
+      const goalLabel = goalLabels[careerGoal] || careerGoal.toLowerCase();
+      if (careerGoal === "PLACEMENT" && c.placementScore >= 8.5) {
+        keyReasons.push(`Excellent fit for your ${goalLabel} goal — outstanding placements`);
+      } else if (careerGoal === "STARTUP" && Number(collegeMeta.startup_ecosystem) >= 7) {
+        keyReasons.push(`Strong ${goalLabel} ecosystem at this college`);
+      } else if (careerGoal === "HIGHER_STUDIES" && Number(collegeMeta.research_output) >= 7) {
+        keyReasons.push(`Strong research environment for ${goalLabel}`);
+      }
+    }
+
+    // Priority based reason
     if (topPriority === "PLACEMENTS" && c.placementScore >= 8.5) {
       keyReasons.push("Matches your #1 priority: Outstanding placements");
     } else if (topPriority === "ROI" && sRoi >= 80) {
       keyReasons.push("Matches your #1 priority: High ROI value");
     }
-    
+
     if (c.isPartner) {
       keyReasons.push("Direct admission referral support via partner link");
     }
-    
-    // Append any bonuses as highlights
-    appliedBonuses.forEach(b => {
+
+    appliedBonuses.forEach((b) => {
       keyReasons.push(b.reason);
     });
-    
+
     if (keyReasons.length === 0) {
       keyReasons.push("Strong balanced scores across all categories");
     }
-    
+
+    // --- ADMISSION PROBABILITY (separate from ranking) ---
+    // Calculates probability based on academic gap vs cutoff thresholds
+    let admissionProb = 50; // default if no cutoff data
+    if (bestGap !== null) {
+      if (bestGap >= 10) admissionProb = 95;
+      else if (bestGap >= 7) admissionProb = 85;
+      else if (bestGap >= 5) admissionProb = 75;
+      else if (bestGap >= 3) admissionProb = 60;
+      else if (bestGap >= 1) admissionProb = 45;
+      else if (bestGap >= 0) admissionProb = 35;
+      else if (bestGap >= -2) admissionProb = 20;
+      else admissionProb = 10;
+    }
+
     results.push({
       collegeId: c.id,
       name: c.name,
@@ -522,46 +799,85 @@ export function generateRecommendations(
       logoUrl: c.logoUrl,
       coverImageUrl: c.coverImageUrl,
       officialApplyUrl: c.officialApplyUrl,
+      website: c.website,
       isPartner: c.isPartner,
-      
+      isNewGen: c.isNewGen,
+
       branchName: c.branchName,
       branchCode: c.branchCode,
+      qualityScore: computeQualityScore(c, collegeMeta, total4YrCost, maxLogRoi - minLogRoi, minLogRoi),
       matchScore: Math.round(finalScoreVal * 10) / 10,
-      rankPosition: 0, // Assigned later after sorting
-      
+      admissionProbability: admissionProb,
+      rankPosition: 0,
+
       feeInfo: {
         annualTuition: c.tuitionFeeAnnual,
         annualHostel: c.hostelFeeAnnual,
-        total4YrCost: total4YrCost
+        total4YrCost: total4YrCost,
       },
-      
+
       placementInfo: {
         avgSalary: c.avgSalary,
         medianSalary: c.medianSalary,
-        highestSalary: c.highestSalary
+        highestSalary: c.highestSalary,
+        placementPercentage: c.placementPercentage,
       },
-      
+
       admissionCompetitiveness: {
         category,
         badgeText,
+        jeeGap: bestGap,
       },
-      
+
       keyReasons: keyReasons.slice(0, 3),
       scoreBreakdown: {
         baseScore: Math.round(baseScoreVal * 10) / 10,
         factorContributions: factorContributions,
         appliedBonuses: appliedBonuses,
         appliedPenalties: appliedPenalties,
-        finalScore: Math.round(finalScoreVal * 10) / 10
-      }
+        finalScore: Math.round(finalScoreVal * 10) / 10,
+      },
     });
   }
-  
-  // Sort descending and map positions
-  return results
-    .sort((a, b) => b.matchScore - a.matchScore)
-    .map((item, idx) => {
-      item.rankPosition = idx + 1;
-      return item;
-    });
+
+  // Sort based on mode
+  const sorted = results.sort((a, b) => {
+    if (mode === "admission_chance") {
+      // Sort by admission probability descending
+      if (b.admissionProbability !== a.admissionProbability) return b.admissionProbability - a.admissionProbability;
+      if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
+      return a.name.localeCompare(b.name);
+    } else {
+      // best_fit: sort by match score descending (personalized)
+      if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
+      if (b.placementInfo.placementPercentage !== a.placementInfo.placementPercentage) {
+        return (b.placementInfo.placementPercentage || 0) - (a.placementInfo.placementPercentage || 0);
+      }
+      if (b.placementInfo.avgSalary !== a.placementInfo.avgSalary) {
+        return (b.placementInfo.avgSalary || 0) - (a.placementInfo.avgSalary || 0);
+      }
+      if (a.feeInfo.total4YrCost !== b.feeInfo.total4YrCost) {
+        return a.feeInfo.total4YrCost - b.feeInfo.total4YrCost;
+      }
+      if (a.isPartner !== b.isPartner) return a.isPartner ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    }
+  });
+
+  // Enforce max 2 entries per college for diversity
+  const collegeCount: Record<string, number> = {};
+  const MAX_PER_COLLEGE = 2;
+  const diverseResults: MatchResult[] = [];
+  for (const item of sorted) {
+    const count = collegeCount[item.name] || 0;
+    if (count < MAX_PER_COLLEGE) {
+      collegeCount[item.name] = count + 1;
+      diverseResults.push(item);
+    }
+  }
+
+  return diverseResults.map((item, idx) => {
+    item.rankPosition = idx + 1;
+    return item;
+  });
 }

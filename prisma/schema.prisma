@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,69 +6,61 @@ datasource db {
   provider = "postgresql"
 }
 
-enum UserRole {
-  STUDENT
-  ADMIN
-  COLLEGE_ADMIN
-  SUPERADMIN
-}
-
-// Admins & College Representatives
 model User {
-  id                  String                 @id @default(uuid())
-  email               String                 @unique
+  id                  String                @id @default(uuid())
+  email               String                @unique
   passwordHash        String
-  role                UserRole               @default(STUDENT)
-  createdAt           DateTime               @default(now())
+  role                UserRole              @default(STUDENT)
+  createdAt           DateTime              @default(now())
   collegeAdminProfile CollegeAdminProfile[]
 
   @@map("users")
 }
 
-// Colleges onboarded on the platform
 model College {
-  id                 String                 @id @default(uuid())
-  name               String
-  slug               String                 @unique
-  state              String
-  city               String
-  logoUrl            String?
-  coverImageUrl      String?
-  brochureUrl        String?
-  officialApplyUrl   String
-  isPartner          Boolean                @default(false)
-  commissionRate     Float                  @default(0.0) // Flat referral fee (INR) or percentage
-  placementScore     Float                  // Scale 0-10
-  collegeLifeScore   Float                  // Scale 0-10
-  curriculumScore    Float                  // Scale 0-10
-  metadata           String?                // Dynamic JSON string for custom attributes & ratings
-  createdAt          DateTime               @default(now())
-  
-  branches           CollegeBranch[]
-  adminProfiles      CollegeAdminProfile[]
-  recommendations    Recommendation[]
-  leads              Lead[]
+  id                String                @id @default(uuid())
+  name              String
+  slug              String                @unique
+  state             String
+  city              String
+  logoUrl           String?
+  coverImageUrl     String?
+  brochureUrl       String?
+  officialApplyUrl  String
+  isPartner         Boolean               @default(false)
+  commissionRate    Float                 @default(0.0)
+  placementScore    Float
+  collegeLifeScore  Float
+  curriculumScore   Float
+  metadata          String?
+  createdAt         DateTime              @default(now())
+  website           String?
+  isNewGen          Boolean               @default(false)
+  admissionPathways AdmissionPathway[]
+  adminProfiles     CollegeAdminProfile[]
+  branches          CollegeBranch[]
+  leads             Lead[]
+  recommendations   Recommendation[]
+  scholarships      Scholarship[]
 
   @@map("colleges")
 }
 
-// Mappings of College Admins to their respective Colleges
 model CollegeAdminProfile {
   userId    String
   collegeId String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, collegeId])
   @@map("college_admin_profiles")
 }
 
-// Branch Specific Details for each College
 model CollegeBranch {
-  id                     String   @id @default(uuid())
+  id                     String  @id @default(uuid())
   collegeId              String
   branchName             String
-  branchCode             String   // e.g. CSE, ECE, ME
+  branchCode             String
   tuitionFeeAnnual       Float
   hostelFeeAnnual        Float
   seatCapacity           Int
@@ -80,16 +69,15 @@ model CollegeBranch {
   highestSalary          Float?
   minJeePercentileCutoff Float?
   minClass12Cutoff       Float?
-  branchStrengthScore    Float    // Scale 0-10
-  metadata               String?  // Dynamic JSON string for branch-specific custom attributes
-  
-  college                College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  branchStrengthScore    Float
+  metadata               String?
+  placementPercentage    Float?
+  college                College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
 
   @@unique([collegeId, branchCode])
   @@map("college_branches")
 }
 
-// Student profile captured during wizard run
 model Student {
   id                 String            @id @default(uuid())
   name               String
@@ -101,16 +89,16 @@ model Student {
   isBudgetConstraint Boolean           @default(true)
   restrictLocation   Boolean           @default(false)
   createdAt          DateTime          @default(now())
-  
+  careerGoal         CareerGoal?       @default(NOT_SURE)
+  examType           String?
+  leads              Lead[]
+  recommendations    Recommendation[]
   locations          StudentLocation[]
   priorities         StudentPriority[]
-  recommendations    Recommendation[]
-  leads              Lead[]
 
   @@map("students")
 }
 
-// Student's location preferences (e.g. Bangalore, Pune)
 model StudentLocation {
   studentId String
   state     String
@@ -121,72 +109,111 @@ model StudentLocation {
   @@map("student_locations")
 }
 
-// Student's ranked preferences (1-5)
 model StudentPriority {
   studentId String
-  criteria  String   // "PLACEMENTS", "COLLEGE_LIFE", "BRANCH_STRENGTH", "CURRICULUM", "ROI"
+  criteria  String
   rankOrder Int
-  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@id([studentId, criteria])
   @@unique([studentId, rankOrder])
   @@map("student_priorities")
 }
 
-// Log of recommendations generated for history & explanation cache
 model Recommendation {
-  id           String   @id @default(uuid())
-  studentId    String
-  collegeId    String
-  branchCode   String
-  matchScore   Float
-  rankPosition Int
-  reasons      String   // JSON string containing array of explainability tags
-  createdAt    DateTime @default(now())
-  
-  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  college      College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  id                   String   @id @default(uuid())
+  studentId            String
+  collegeId            String
+  branchCode           String
+  matchScore           Float
+  qualityScore         Float    @default(0)
+  admissionProbability Float    @default(50)
+  rankPosition         Int
+  reasons              String
+  createdAt            DateTime @default(now())
+  college              College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  student              Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@map("recommendations")
 }
 
-// Referred Lead conversion pipeline
 model Lead {
   id                    String                 @id @default(uuid())
   studentId             String
   collegeId             String
   branchCode            String
-  status                String                 @default("REFERRED") // "REFERRED", "APPLIED", "SHORTLISTED", "ENROLLED", "REJECTED", "LAPSED"
+  status                String                 @default("REFERRED")
   trackingToken         String                 @unique
   referredAt            DateTime               @default(now())
   statusUpdatedAt       DateTime               @updatedAt
-  
-  student               Student                @relation(fields: [studentId], references: [id], onDelete: Restrict)
-  college               College                @relation(fields: [collegeId], references: [id], onDelete: Restrict)
   commissionTransaction CommissionTransaction?
+  college               College                @relation(fields: [collegeId], references: [id])
+  student               Student                @relation(fields: [studentId], references: [id])
 
   @@map("leads")
 }
 
-// Commissions and Billing tracking
 model CommissionTransaction {
   id          String    @id @default(uuid())
   leadId      String    @unique
   amountDue   Float
-  status      String    @default("PENDING") // "PENDING", "INVOICED", "PAID", "CANCELLED"
+  status      String    @default("PENDING")
   invoiceDate DateTime?
   paymentDate DateTime?
   createdAt   DateTime  @default(now())
-  
-  lead        Lead      @relation(fields: [leadId], references: [id], onDelete: Restrict)
+  lead        Lead      @relation(fields: [leadId], references: [id])
 
   @@map("commission_transactions")
 }
 
-// System configuration registry (stores dynamic weights, penalties, scales in JSON format)
 model SystemConfig {
   key   String @id
-  value String // JSON configuration string
-  
+  value String
+
   @@map("system_configs")
+}
+
+model Scholarship {
+  id          String   @id @default(uuid())
+  collegeId   String
+  name        String
+  description String?
+  amountType  String   @default("FIXED")
+  amount      Float
+  criteria    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  college     College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@map("scholarships")
+}
+
+model AdmissionPathway {
+  id                      String   @id @default(uuid())
+  collegeId               String
+  branchCode              String
+  admissionExam           String
+  equivalentJeePercentile Float?
+  admissionMode           String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  college                 College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@unique([collegeId, branchCode, admissionExam])
+  @@map("admission_pathways")
+}
+
+enum UserRole {
+  STUDENT
+  ADMIN
+  COLLEGE_ADMIN
+  SUPERADMIN
+}
+
+enum CareerGoal {
+  PLACEMENT
+  STARTUP
+  HIGHER_STUDIES
+  NOT_SURE
 }
