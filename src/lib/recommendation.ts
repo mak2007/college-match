@@ -1,4 +1,5 @@
 // Configurable & Explainable Recommendation Engine Logic for CollegeMatch
+import { normalizeBranchCode, SUPPORTED_BRANCH_CODES } from "@/lib/branches";
 
 export type CareerGoalType =
   | "PLACEMENT"
@@ -417,6 +418,12 @@ export function generateRecommendations(
   config: ScoringConfig,
   mode: RecommendationMode = "best_fit"
 ): MatchResult[] {
+  if (candidates.length === 0) return [];
+
+  // V1: Only evaluate supported branches (CSE only). IT/ECE deferred to V2/V3.
+  candidates = candidates.filter((c) =>
+    SUPPORTED_BRANCH_CODES.includes(normalizeBranchCode(c.branchCode))
+  );
   if (candidates.length === 0) return [];
 
   // Pre-calculate ROI ranges for normalization (log-scaled to compress extremes)

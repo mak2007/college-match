@@ -8,10 +8,13 @@ export interface BranchOption {
 }
 
 // ─── SUPPORTED BRANCHES (user-facing) ──────────────────────────────
+// V1: CSE only. IT/ECE deferred to V2/V3. Keep family mappings active for normalization.
 export const BRANCH_OPTIONS: BranchOption[] = [
   { code: "CSE", label: "Computer Science & Engineering (CSE)", shortLabel: "Computer Science" },
-  { code: "IT", label: "Information Technology (IT)", shortLabel: "Information Tech" },
-  { code: "ECE", label: "Electronics & Communication (ECE)", shortLabel: "Electronics & Comm" },
+  // V2: uncomment when ready to re-enable
+  // { code: "IT", label: "Information Technology (IT)", shortLabel: "Information Tech" },
+  // V3: uncomment when ready to re-enable
+  // { code: "ECE", label: "Electronics & Communication (ECE)", shortLabel: "Electronics & Comm" },
 ];
 
 export const SUPPORTED_BRANCH_CODES = BRANCH_OPTIONS.map((b) => b.code);

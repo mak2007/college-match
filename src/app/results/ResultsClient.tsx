@@ -380,22 +380,24 @@ export default function ResultsClient({
               )}
             </div>
 
-            {/* BRANCHES */}
-            <div className={styles.sidebarSection}>
-              <h3 className={styles.sidebarSectionTitle}>Branches</h3>
-              <div className={styles.checkboxGroup}>
-                {BRANCH_OPTIONS.map((b) => (
-                  <label key={b.code} className={styles.checkLabel}>
-                    <input type="checkbox"
-                      checked={quizAnswers.preferredBranches.some(
-                        (pb) => normalizeBranchCode(pb) === normalizeBranchCode(b.code)
-                      )}
-                      onChange={() => toggleBranch(b.code)} />
-                    <span>{b.label}</span>
-                  </label>
-                ))}
+            {/* BRANCHES — hidden in V1 (CSE only) */}
+            {BRANCH_OPTIONS.length > 1 && (
+              <div className={styles.sidebarSection}>
+                <h3 className={styles.sidebarSectionTitle}>Branches</h3>
+                <div className={styles.checkboxGroup}>
+                  {BRANCH_OPTIONS.map((b) => (
+                    <label key={b.code} className={styles.checkLabel}>
+                      <input type="checkbox"
+                        checked={quizAnswers.preferredBranches.some(
+                          (pb) => normalizeBranchCode(pb) === normalizeBranchCode(b.code)
+                        )}
+                        onChange={() => toggleBranch(b.code)} />
+                      <span>{b.label}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* PRIORITIES */}
             <div className={styles.sidebarSection}>
