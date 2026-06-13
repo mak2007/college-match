@@ -10,7 +10,7 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("Starting database cleanup and seeding with requested 5 colleges...");
+  console.log("Starting database cleanup and seeding with requested 3 colleges...");
 
   // 1. Clean up existing database tables
   console.log("Cleaning up old data...");
@@ -108,43 +108,37 @@ async function main() {
 
   // Create college admin accounts
   await prisma.user.create({
-    data: { email: "admissions@vit.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
+    data: { email: "admissions@woxsen.edu.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
   await prisma.user.create({
-    data: { email: "admissions@upes.ac.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
+    data: { email: "admissions@snu.edu.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
   await prisma.user.create({
-    data: { email: "admissions@mitjaipur.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
-  });
-  await prisma.user.create({
-    data: { email: "admissions@chitkara.edu.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
-  });
-  await prisma.user.create({
-    data: { email: "admissions@kjsce.somaiya.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
+    data: { email: "admissions@mitwpu.edu.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
 
-  // 4. Define 5 Colleges Data
+  // 4. Define 3 Colleges Data
   const collegesData = [
     {
-      name: "Vishwakarma Institute of Technology (VIT Pune)",
-      slug: "vit-pune",
-      state: "Maharashtra",
-      city: "Pune",
+      name: "Woxsen University (Hyderabad)",
+      slug: "woxsen-hyderabad",
+      state: "Telangana",
+      city: "Hyderabad",
       logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
       coverImageUrl: "https://images.unsplash.com/photo-1562774053-701939374585?w=800&h=400&fit=crop",
-      brochureUrl: "https://www.vit.edu/brochure.pdf",
-      officialApplyUrl: "https://www.vit.edu/admissions",
-      website: "https://www.vit.edu",
+      brochureUrl: "https://woxsen.edu.in/brochure.pdf",
+      officialApplyUrl: "https://woxsen.edu.in/admissions",
+      website: "https://woxsen.edu.in",
       isPartner: false,
-      isNewGen: false,
+      isNewGen: true,
       commissionRate: 0.0,
-      placementScore: 8.5,
-      collegeLifeScore: 8.2,
-      curriculumScore: 8.3,
-      adminEmail: "admissions@vit.edu",
+      placementScore: 8.2,
+      collegeLifeScore: 8.3,
+      curriculumScore: 8.4,
+      adminEmail: "admissions@woxsen.edu.in",
       metadata: JSON.stringify({
-        infra_rating: 82,
-        startup_ecosystem: 7.5,
+        infra_rating: 83,
+        startup_ecosystem: 7.8,
         research_output: 7.2,
         exposure_score: 8.4,
       }),
@@ -152,181 +146,99 @@ async function main() {
         {
           branchName: "Computer Science & Engineering",
           branchCode: "CSE",
-          tuitionFeeAnnual: 212000,
-          hostelFeeAnnual: 125000,
-          seatCapacity: 240,
-          avgSalary: 950000, // Non-null default to support ROI
-          medianSalary: 950000,
-          highestSalary: 4500000,
-          minJeePercentileCutoff: 96.0,
-          minClass12Cutoff: 50.0,
+          tuitionFeeAnnual: 406250,
+          hostelFeeAnnual: 510000,
+          seatCapacity: 120,
+          avgSalary: 860000,
+          medianSalary: 750000,
+          highestSalary: 2400000,
+          minJeePercentileCutoff: 85.0,
+          minClass12Cutoff: 55.0,
           branchStrengthScore: 8.6,
-          placementPercentage: 95.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsStateExam: true, jeeOverlapRange: "94-98" }),
+          placementPercentage: 90.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsStateExam: true, acceptsOwnExam: true, jeeOverlapRange: "80-92" }),
         }
       ]
     },
     {
-      name: "UPES Dehradun",
-      slug: "upes-dehradun",
-      state: "Uttarakhand",
-      city: "Dehradun",
+      name: "Shiv Nadar University (Greater Noida)",
+      slug: "snu-greater-noida",
+      state: "Uttar Pradesh",
+      city: "Greater Noida",
       logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
       coverImageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=400&fit=crop",
-      brochureUrl: "https://www.upes.ac.in/brochure.pdf",
-      officialApplyUrl: "https://www.upes.ac.in/schools/school-of-computer-science/btech-computer-science-engineering",
-      website: "https://www.upes.ac.in",
+      brochureUrl: "https://www.snu.edu.in/brochure.pdf",
+      officialApplyUrl: "https://www.snu.edu.in/programs/btech-computer-science-and-engineering",
+      website: "https://www.snu.edu.in",
       isPartner: false,
       isNewGen: true,
       commissionRate: 0.0,
-      placementScore: 8.6,
-      collegeLifeScore: 8.1,
-      curriculumScore: 8.4,
-      adminEmail: "admissions@upes.ac.in",
-      metadata: JSON.stringify({
-        infra_rating: 83,
-        startup_ecosystem: 8.0,
-        research_output: 7.6,
-        exposure_score: 8.7,
-      }),
-      branches: [
-        {
-          branchName: "Computer Science & Engineering",
-          branchCode: "CSE",
-          tuitionFeeAnnual: 425000,
-          hostelFeeAnnual: 180000,
-          seatCapacity: 600,
-          avgSalary: 841000,
-          medianSalary: 750000,
-          highestSalary: 5009000,
-          minJeePercentileCutoff: 90.0,
-          minClass12Cutoff: 55.0,
-          branchStrengthScore: 8.7,
-          placementPercentage: 90.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, acceptsBoardsOnly: true, jeeOverlapRange: "85-95" }),
-        }
-      ]
-    },
-    {
-      name: "Manipal University Jaipur (MIT Jaipur)",
-      slug: "mit-jaipur",
-      state: "Rajasthan",
-      city: "Jaipur",
-      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop",
-      brochureUrl: "https://jaipur.manipal.edu/brochure.pdf",
-      officialApplyUrl: "https://jaipur.manipal.edu/foe/programs/program-list/btech-computer-science-engineering.html",
-      website: "https://jaipur.manipal.edu",
-      isPartner: false,
-      isNewGen: true,
-      commissionRate: 0.0,
-      placementScore: 8.2,
-      collegeLifeScore: 8.4,
-      curriculumScore: 8.2,
-      adminEmail: "admissions@mitjaipur.edu",
-      metadata: JSON.stringify({
-        infra_rating: 81,
-        startup_ecosystem: 7.4,
-        research_output: 7.2,
-        exposure_score: 8.3,
-      }),
-      branches: [
-        {
-          branchName: "Computer Science & Engineering",
-          branchCode: "CSE",
-          tuitionFeeAnnual: 350000, // Estimated based on other MIT fees if blank
-          hostelFeeAnnual: 170000,
-          seatCapacity: 300,
-          avgSalary: 750000, // Reasonable fallback default
-          medianSalary: 700000,
-          highestSalary: 2200000,
-          minJeePercentileCutoff: 80.0, // Reasonable fallback cutoff
-          minClass12Cutoff: 50.0,
-          branchStrengthScore: 8.3,
-          placementPercentage: 80.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true }),
-        }
-      ]
-    },
-    {
-      name: "Chitkara University (Punjab Campus)",
-      slug: "chitkara-punjab",
-      state: "Punjab",
-      city: "Rajpura",
-      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1527891751199-7225231a68dd?w=800&h=400&fit=crop",
-      brochureUrl: "https://www.chitkara.edu.in/brochure.pdf",
-      officialApplyUrl: "https://www.chitkara.edu.in/engineering/b-tech-computer-science-engineering",
-      website: "https://www.chitkara.edu.in",
-      isPartner: false,
-      isNewGen: false,
-      commissionRate: 0.0,
-      placementScore: 8.3,
-      collegeLifeScore: 8.1,
-      curriculumScore: 8.1,
-      adminEmail: "admissions@chitkara.edu.in",
-      metadata: JSON.stringify({
-        infra_rating: 80,
-        startup_ecosystem: 7.4,
-        research_output: 7.1,
-        exposure_score: 8.2,
-      }),
-      branches: [
-        {
-          branchName: "Computer Science & Engineering",
-          branchCode: "CSE",
-          tuitionFeeAnnual: 240000,
-          hostelFeeAnnual: 150000,
-          seatCapacity: 400,
-          avgSalary: 650000, // Reasonable fallback
-          medianSalary: 600000,
-          highestSalary: 1800000,
-          minJeePercentileCutoff: 75.0,
-          minClass12Cutoff: 50.0,
-          branchStrengthScore: 8.4,
-          placementPercentage: 80.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsBoardsOnly: true }),
-        }
-      ]
-    },
-    {
-      name: "K J Somaiya College of Engineering",
-      slug: "kj-somaiya",
-      state: "Maharashtra",
-      city: "Mumbai",
-      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop",
-      brochureUrl: "https://kjsce.somaiya.edu/brochure.pdf",
-      officialApplyUrl: "https://kjsce.somaiya.edu/en/programme/btech-computer-engineering",
-      website: "https://kjsce.somaiya.edu",
-      isPartner: false,
-      isNewGen: false,
-      commissionRate: 0.0,
-      placementScore: 8.8,
-      collegeLifeScore: 8.3,
-      curriculumScore: 8.5,
-      adminEmail: "admissions@kjsce.somaiya.edu",
+      placementScore: 9.0,
+      collegeLifeScore: 8.5,
+      curriculumScore: 8.8,
+      adminEmail: "admissions@snu.edu.in",
       metadata: JSON.stringify({
         infra_rating: 84,
-        startup_ecosystem: 7.8,
-        research_output: 7.4,
-        exposure_score: 8.7,
+        startup_ecosystem: 8.0,
+        research_output: 8.0,
+        exposure_score: 8.9,
       }),
       branches: [
         {
           branchName: "Computer Science & Engineering",
           branchCode: "CSE",
-          tuitionFeeAnnual: 600000,
-          hostelFeeAnnual: 180000,
-          seatCapacity: 120,
-          avgSalary: 945000,
+          tuitionFeeAnnual: 400000, // Estimated standard SNU BTech CSE fee
+          hostelFeeAnnual: 150000, // Estimated SNU BTech CSE hostel fee
+          seatCapacity: 180,
+          avgSalary: 1082000,
+          medianSalary: 845000,
+          highestSalary: 5079000,
+          minJeePercentileCutoff: 92.0,
+          minClass12Cutoff: 60.0, // Baseline typical cutoff
+          branchStrengthScore: 8.9,
+          placementPercentage: 88.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, jeeOverlapRange: "90-96" }),
+        }
+      ]
+    },
+    {
+      name: "MIT World Peace University (MIT-WPU Pune)",
+      slug: "mit-wpu-pune",
+      state: "Maharashtra",
+      city: "Pune",
+      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
+      coverImageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop",
+      brochureUrl: "https://mitwpu.edu.in/brochure.pdf",
+      officialApplyUrl: "https://mitwpu.edu.in/programmes/btech-computer-science-engineering",
+      website: "https://mitwpu.edu.in",
+      isPartner: false,
+      isNewGen: false,
+      commissionRate: 0.0,
+      placementScore: 8.4,
+      collegeLifeScore: 8.4,
+      curriculumScore: 8.3,
+      adminEmail: "admissions@mitwpu.edu.in",
+      metadata: JSON.stringify({
+        infra_rating: 82,
+        startup_ecosystem: 7.6,
+        research_output: 7.3,
+        exposure_score: 8.5,
+      }),
+      branches: [
+        {
+          branchName: "Computer Science & Engineering",
+          branchCode: "CSE",
+          tuitionFeeAnnual: 275000,
+          hostelFeeAnnual: 227000,
+          seatCapacity: 360,
+          avgSalary: 900000,
           medianSalary: 750000,
-          highestSalary: 5800000,
-          minJeePercentileCutoff: 95.0,
+          highestSalary: 5136000,
+          minJeePercentileCutoff: 92.0,
           minClass12Cutoff: 50.0,
-          branchStrengthScore: 8.7,
-          placementPercentage: 93.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsStateExam: true, jeeOverlapRange: "92-97" }),
+          branchStrengthScore: 8.6,
+          placementPercentage: 90.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsStateExam: true, jeeOverlapRange: "90-95" }),
         }
       ]
     }
@@ -368,7 +280,7 @@ async function main() {
     }
   }
 
-  console.log("Database seeding with custom 5 colleges completed successfully!");
+  console.log("Database seeding with custom 3 colleges completed successfully!");
 }
 
 main()
