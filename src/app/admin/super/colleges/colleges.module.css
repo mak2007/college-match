@@ -1,90 +1,83 @@
 .wrapper {
-  background-color: var(--background-dark);
+  background-color: var(--light-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  font-family: var(--font-body);
 }
 
 .header {
-  border-bottom: 1px solid var(--border-default);
-  background: rgba(17, 24, 39, 0.8);
-  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--light-border);
+  background: var(--light-surface);
+  backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
 .logo {
-  font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 800;
-  background: var(--gradient-primary);
+  background: var(--brand-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .adminTag {
-  font-size: 0.7rem;
-  background: var(--gradient-primary);
+  font-size: 0.75rem;
+  background-color: var(--primary-color);
   color: white;
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-sm);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
   margin-left: 0.5rem;
   font-weight: 700;
   vertical-align: middle;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
 }
 
 .navLink {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-md);
-  background-color: var(--surface-dark);
-  border: 1px solid var(--border-subtle);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
   transition: all 0.2s ease;
 }
 
 .navLink:hover {
-  color: var(--text-primary);
-  background-color: var(--surface-light);
-  border-color: var(--border-default);
+  color: var(--light-text);
+  background-color: var(--light-bg);
 }
 
 .logoutBtn {
-  color: var(--red-400);
+  color: var(--color-danger);
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-md);
-  background-color: rgba(248, 113, 113, 0.08);
-  border: 1px solid rgba(248, 113, 113, 0.2);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  background-color: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   transition: all 0.2s ease;
 }
 
 .logoutBtn:hover {
-  background-color: var(--red-500);
+  background-color: var(--color-danger);
   color: white;
-  border-color: var(--red-500);
 }
 
 .title {
-  font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   margin-bottom: 0.25rem;
-  color: var(--text-primary);
+  color: var(--light-text);
 }
 
 .subtitle {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   font-size: 1rem;
 }
 
@@ -93,8 +86,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--background-dark);
-  color: var(--text-secondary);
+  background-color: var(--light-bg);
+  color: var(--light-text-secondary);
   font-size: 1.1rem;
 }
 
@@ -105,71 +98,52 @@
 }
 
 .sectionTitle {
-  font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.01em;
-  border-left: 3px solid var(--blue-500);
+  border-left: 3px solid var(--primary-color);
   padding-left: 0.75rem;
   margin-bottom: 1.5rem;
-  color: var(--text-primary);
+  color: var(--light-text);
 }
 
 .collegesList {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
   max-height: 600px;
   overflow-y: auto;
   padding-right: 0.5rem;
 }
 
-.collegesList::-webkit-scrollbar {
-  width: 6px;
-}
-
-.collegesList::-webkit-scrollbar-track {
-  background: var(--surface-dark);
-  border-radius: var(--radius-full);
-}
-
-.collegesList::-webkit-scrollbar-thumb {
-  background: var(--border-default);
-  border-radius: var(--radius-full);
-}
-
 .collegeItem {
-  background-color: var(--surface-dark);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
+  border-radius: 8px;
   padding: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: var(--text-primary);
+  color: var(--light-text);
 }
 
 .collegeItem:hover {
-  background-color: var(--surface-light);
-  border-color: var(--blue-500);
-  box-shadow: var(--shadow-md);
+  background-color: var(--brand-blue-light);
+  border-color: var(--secondary-color);
 }
 
 .collegeItemActive {
-  background-color: rgba(59, 130, 246, 0.1);
-  border-color: var(--blue-500);
-  box-shadow: 0 0 0 1px var(--blue-500);
+  background-color: rgba(15, 45, 82, 0.08);
+  border-color: var(--primary-color);
 }
 
 .partnerBadge {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-sm);
-  background-color: rgba(59, 130, 246, 0.1);
-  color: var(--blue-400);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  background-color: rgba(15, 45, 82, 0.1);
+  color: var(--primary-color);
+  border: 1px solid rgba(15, 45, 82, 0.2);
 }
 
 .attributesRow {
@@ -177,22 +151,22 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   font-size: 0.8rem;
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
 }
 
 .customAttrTag {
-  background-color: var(--surface-light);
-  border: 1px solid var(--border-subtle);
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.725rem;
-  color: var(--cyan-400);
+  background-color: var(--light-bg);
+  border: 1px solid var(--light-border);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: var(--primary-color);
 }
 
 .subCardTitle {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--light-text);
   margin-bottom: 0.75rem;
 }
 
@@ -203,30 +177,25 @@
 }
 
 .successAlert {
-  background-color: rgba(52, 211, 153, 0.1);
-  border: 1px solid rgba(52, 211, 153, 0.3);
-  color: var(--green-400);
-  padding: 1rem 1.25rem;
-  border-radius: var(--radius-lg);
+  background-color: rgba(196, 164, 132, 0.1);
+  border: 1px solid var(--color-success);
+  color: var(--secondary-hover);
+  padding: 1rem;
+  border-radius: 8px;
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
   animation: fadeIn 0.3s ease;
 }
 
 .errorAlert {
-  background-color: rgba(248, 113, 113, 0.1);
-  border: 1px solid rgba(248, 113, 113, 0.3);
-  color: var(--red-400);
-  padding: 1rem 1.25rem;
-  border-radius: var(--radius-lg);
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
+  padding: 1rem;
+  border-radius: 8px;
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
   animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 900px) {

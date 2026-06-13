@@ -1,15 +1,15 @@
 .wrapper {
-  background-color: var(--background-dark);
+  background-color: var(--light-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  color: var(--text-primary);
+  color: var(--light-text);
 }
 
 .header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: var(--surface-dark);
-  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--light-border);
+  background: var(--light-surface);
+  backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -18,79 +18,72 @@
 .logo {
   font-size: 1.25rem;
   font-weight: 800;
-  font-family: var(--font-display);
-  color: #ffffff;
+  color: var(--primary-color);
 }
 
 .adminTag {
-  font-size: 0.7rem;
-  background: linear-gradient(135deg, var(--blue-500), var(--cyan-500));
+  font-size: 0.75rem;
+  background-color: var(--secondary-color);
   color: white;
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-full);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
   margin-left: 0.5rem;
   font-weight: 700;
   vertical-align: middle;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 
 .adminEmail {
-  font-size: 0.85rem;
-  color: var(--text-tertiary);
+  font-size: 0.9rem;
+  color: var(--light-text-secondary);
   font-weight: 500;
 }
 
 .navLink {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-sm);
-  background-color: var(--surface-light);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
+  transition: all 0.2s ease;
 }
 
 .navLink:hover {
-  color: #ffffff;
-  background-color: rgba(59, 130, 246, 0.12);
-  border-color: rgba(59, 130, 246, 0.25);
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.08);
+  color: var(--primary-color);
+  background-color: var(--brand-blue-light);
 }
 
 .logoutBtn {
-  color: var(--cyan-400);
+  color: var(--secondary-color);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-sm);
-  background-color: rgba(6, 182, 212, 0.08);
-  border: 1px solid rgba(6, 182, 212, 0.2);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  background-color: rgba(196, 164, 132, 0.08);
+  border: 1px solid rgba(196, 164, 132, 0.2);
+  transition: all 0.2s ease;
 }
 
 .logoutBtn:hover {
-  background-color: var(--cyan-500);
-  color: var(--background-dark);
-  border-color: var(--cyan-500);
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+  background-color: var(--secondary-color);
+  color: white;
 }
 
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
+  gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
 .statLabel {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  color: var(--text-tertiary);
-  letter-spacing: 0.06em;
+  color: var(--light-text-secondary);
+  letter-spacing: 0.05em;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
@@ -98,8 +91,7 @@
 .statVal {
   font-size: 2rem;
   font-weight: 800;
-  font-family: var(--font-display);
-  color: #ffffff;
+  color: var(--light-text);
 }
 
 .contentGrid {
@@ -109,14 +101,13 @@
 }
 
 .sectionTitle {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  font-family: var(--font-display);
   margin-bottom: 1.5rem;
   letter-spacing: -0.01em;
-  border-left: 3px solid var(--blue-500);
+  border-left: 3px solid var(--primary-color);
   padding-left: 0.75rem;
-  color: #ffffff;
+  color: var(--primary-color);
 }
 
 .tableWrapper {
@@ -127,82 +118,70 @@
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .table th {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-tertiary);
+  padding: 1rem;
+  border-bottom: 1px solid var(--light-border);
+  color: var(--primary-color);
   font-weight: 600;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: rgba(255, 255, 255, 0.02);
+  letter-spacing: 0.03em;
 }
 
 .table td {
-  padding: 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  color: var(--text-primary);
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid var(--light-border);
+  color: var(--light-text);
 }
 
 .table tr:last-child td {
   border-bottom: none;
 }
 
-.table tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
-}
-
 .leadsList {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .leadItem {
-  background-color: var(--surface-dark);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-  padding: 1.25rem;
-  transition: all 0.2s ease;
-}
-
-.leadItem:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: var(--shadow-md);
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
+  border-radius: 8px;
+  padding: 1rem;
 }
 
 .statusBadge {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 0.25rem 0.6rem;
-  border-radius: var(--radius-full);
-  letter-spacing: 0.02em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
 }
 
 .badgeReferred {
-  background-color: rgba(148, 163, 184, 0.12);
-  color: var(--neutral-300);
-  border: 1px solid rgba(148, 163, 184, 0.15);
+  background-color: rgba(156, 163, 175, 0.1);
+  color: #4b5563;
+  border: 1px solid rgba(156, 163, 175, 0.2);
 }
 
 .badgeApplied {
-  background-color: rgba(59, 130, 246, 0.12);
-  color: var(--blue-400);
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
   border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 .badgeEnrolled {
-  background-color: rgba(34, 197, 94, 0.12);
-  color: var(--green-400);
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .badgeRejected {
-  background-color: rgba(239, 68, 68, 0.12);
-  color: var(--red-400);
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 

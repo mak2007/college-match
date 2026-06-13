@@ -1,28 +1,20 @@
 .wrapper {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: #faf9f5;
+  color: #0c2e1b;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  font-family: var(--font-body);
+  font-family: 'Outfit', sans-serif;
 }
 
 /* Hero Section */
 .hero {
-  background: var(--gradient-hero);
-  color: #ffffff;
+  background-color: #0c2e1b;
+  color: #faf9f5;
   padding: 6rem 1.5rem;
   text-align: center;
   position: relative;
   overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(59, 130, 246, 0.15), transparent);
-  pointer-events: none;
 }
 
 .heroContent {
@@ -36,18 +28,16 @@
 }
 
 .heroHeadline {
-  font-family: var(--font-display);
   font-size: 3.5rem;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.03em;
   margin-bottom: 1.5rem;
-  color: #ffffff;
 }
 
 .heroSubheadline {
   font-size: 1.25rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #a7f3d0;
   line-height: 1.5;
   max-width: 650px;
   margin-bottom: 2.5rem;
@@ -55,10 +45,10 @@
 }
 
 .ctaBtn {
-  background: var(--gradient-primary);
-  color: var(--text-primary);
+  background-color: #faf9f5;
+  color: #0c2e1b;
   padding: 1rem 2.25rem;
-  border-radius: var(--radius-full);
+  border-radius: 9999px;
   font-size: 1.05rem;
   font-weight: 700;
   text-decoration: none;
@@ -66,12 +56,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .ctaBtn:hover {
+  background-color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 /* Why Partner Section */
@@ -88,11 +79,10 @@
 }
 
 .sectionTitle {
-  font-family: var(--font-display);
   font-size: 2.25rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
+  color: #0c2e1b;
 }
 
 .whyGrid {
@@ -102,9 +92,9 @@
 }
 
 .whyCard {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-xl);
+  background-color: #ffffff;
+  border: 1px solid #e5e3dc;
+  border-radius: 20px;
   padding: 2.5rem;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
@@ -114,8 +104,8 @@
 
 .whyCard:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--blue-200, #bfdbfe);
+  box-shadow: 0 12px 30px rgba(12, 46, 27, 0.04);
+  border-color: #c5c3bc;
 }
 
 .cardIcon {
@@ -124,21 +114,20 @@
 }
 
 .cardTitle {
-  font-family: var(--font-display);
   font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-weight: 800;
+  color: #0c2e1b;
 }
 
 .cardText {
   font-size: 0.95rem;
-  color: var(--text-secondary);
+  color: #556052;
   line-height: 1.6;
 }
 
 /* How It Works Section */
 .howSection {
-  background-color: var(--bg-secondary);
+  background-color: #f4f3ed;
   padding: 5.5rem 1.5rem;
   width: 100%;
 }
@@ -165,38 +154,36 @@
 .stepNumber {
   width: 56px;
   height: 56px;
-  border-radius: var(--radius-full);
-  background: var(--gradient-primary);
-  color: var(--text-primary);
+  border-radius: 50%;
+  background-color: #0d5c3a;
+  color: #faf9f5;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 1.5rem;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 12px rgba(13, 92, 58, 0.15);
 }
 
 .stepTitle {
-  font-family: var(--font-display);
   font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-weight: 800;
+  color: #0c2e1b;
   margin-bottom: 0.75rem;
 }
 
 .stepText {
   font-size: 0.95rem;
-  color: var(--text-secondary);
+  color: #556052;
   line-height: 1.6;
   max-width: 300px;
 }
 
 /* Stats Section */
 .statsSection {
-  background: var(--gradient-hero);
-  color: #ffffff;
+  background-color: #0c2e1b;
+  color: #faf9f5;
   padding: 5rem 1.5rem;
   width: 100%;
 }
@@ -216,10 +203,9 @@
 }
 
 .statNumber {
-  font-family: var(--font-display);
   font-size: 4rem;
-  font-weight: 700;
-  color: var(--cyan-400);
+  font-weight: 900;
+  color: #34d399; /* Emerald/Green color */
   line-height: 1;
   margin-bottom: 0.5rem;
   letter-spacing: -0.04em;
@@ -227,7 +213,7 @@
 
 .statLabel {
   font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #a7f3d0;
   font-weight: 600;
 }
 
@@ -244,34 +230,32 @@
 }
 
 .ctaTitle {
-  font-family: var(--font-display);
   font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-weight: 800;
+  color: #0c2e1b;
   letter-spacing: -0.02em;
 }
 
 .ctaBlockBtn {
-  background: var(--gradient-primary);
-  color: var(--text-primary);
+  background-color: #0c2e1b;
+  color: #faf9f5;
   padding: 1rem 2.5rem;
-  border-radius: var(--radius-full);
+  border-radius: 9999px;
   font-size: 1.05rem;
   font-weight: 700;
   text-decoration: none;
   transition: all 0.2s ease;
   display: inline-block;
   margin-top: 1rem;
-  box-shadow: var(--shadow-md);
 }
 
 .ctaBlockBtn:hover {
+  background-color: #1b4d32;
   transform: translateY(-1px);
-  box-shadow: var(--shadow-lg);
 }
 
 .adminLink {
-  color: var(--text-secondary);
+  color: #556052;
   font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
@@ -279,14 +263,14 @@
 }
 
 .adminLink:hover {
-  color: var(--text-primary);
+  color: #0c2e1b;
   text-decoration: underline;
 }
 
 /* Footer Header (from homepage wrapper layout) */
 .footer {
-  border-top: 1px solid var(--border-default);
-  background-color: var(--bg-primary);
+  border-top: 1px solid #e5e3dc;
+  background-color: #faf9f5;
   padding: 2.5rem 1.5rem;
   width: 100%;
   margin-top: auto;
@@ -303,12 +287,12 @@
 }
 
 .copyText {
-  color: var(--text-tertiary);
+  color: #8b9588;
   font-size: 0.9rem;
 }
 
 .footerNote {
-  color: var(--text-tertiary);
+  color: #8b9588;
   font-size: 0.9rem;
   font-style: italic;
 }

@@ -2,12 +2,9 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-subtle);
-  font-family: var(--font-body);
-  transition: all 0.2s ease;
+  background-color: #FFFAF0;
+  border-bottom: 1px solid #e5e3dc;
+  font-family: 'Outfit', sans-serif;
 }
 
 .navContainer {
@@ -24,25 +21,20 @@
 .logoLink {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   text-decoration: none;
   font-weight: 800;
-  font-size: 1.4rem;
-  color: var(--text-primary);
+  font-size: 1.5rem;
+  color: #0F2D52;
   letter-spacing: -0.04em;
   flex-shrink: 0;
-  font-family: var(--font-display);
-}
-
-.logoLink:hover {
-  opacity: 0.8;
 }
 
 /* Center Nav */
 .centerNav {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 2rem;
 }
 
 /* Dropdown wrapper */
@@ -51,30 +43,27 @@
 }
 
 .dropdownTrigger {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  font-weight: 500;
+  color: #4a4a4a;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   background: none;
   border: none;
-  padding: 0.5rem 0.85rem;
-  border-radius: var(--radius-md);
+  padding: 0.5rem 0;
   font-family: inherit;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .dropdownTrigger:hover {
-  color: var(--text-primary);
-  background: var(--neutral-100);
+  color: #0F2D52;
 }
 
 .chevron {
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   transition: transform 0.2s ease;
-  opacity: 0.5;
 }
 
 .chevronOpen {
@@ -84,18 +73,19 @@
 /* Dropdown Panel */
 .dropdownPanel {
   position: absolute;
-  top: calc(100% + 0.75rem);
+  top: calc(100% + 0.5rem);
   left: 50%;
-  transform: translateX(-50%) translateY(-8px);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  box-shadow: var(--shadow-xl);
-  border-radius: var(--radius-lg);
-  padding: 0.5rem;
-  min-width: 260px;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  border: 1px solid #e5e3dc;
+  box-shadow: 0 12px 40px rgba(15, 45, 82, 0.1);
+  border-radius: 14px;
+  padding: 0.65rem;
+  min-width: 240px;
   z-index: 200;
   opacity: 0;
   pointer-events: none;
+  transform: translateX(-50%) translateY(-8px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -109,98 +99,92 @@
   display: flex;
   flex-direction: column;
   padding: 0.75rem 1rem;
-  color: var(--text-primary);
+  color: #1A1A1A;
   text-decoration: none;
-  border-radius: var(--radius-md);
+  border-radius: 10px;
   transition: all 0.15s ease;
 }
 
 .dropdownLink:hover {
-  background: var(--blue-50);
+  background-color: #f4eee2;
 }
 
 .dropdownLinkTitle {
-  font-weight: 600;
-  font-size: 0.88rem;
+  font-weight: 700;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .dropdownLinkDesc {
-  color: var(--text-tertiary);
+  color: #8c8c8c;
   font-size: 0.75rem;
   margin-top: 0.2rem;
   font-weight: 400;
 }
 
 .dropdownLinkActive .dropdownLinkTitle {
-  color: var(--blue-600);
+  color: #0F2D52;
 }
 
-/* Static nav link */
+/* Static nav link (For Colleges) */
 .navLink {
-  color: var(--text-secondary);
+  color: #4a4a4a;
   text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  padding: 0.5rem 0.85rem;
-  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+  padding: 0.5rem 0;
 }
 
 .navLink:hover {
-  color: var(--text-primary);
-  background: var(--neutral-100);
+  color: #0F2D52;
 }
 
 .navLinkActive {
-  color: var(--blue-600);
+  color: #0F2D52;
 }
 
 /* Right actions */
 .rightActions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1.25rem;
   flex-shrink: 0;
 }
 
 .loginLink {
-  color: var(--text-secondary);
+  color: #4a4a4a;
   text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 600;
   transition: color 0.2s ease;
-  padding: 0.5rem 0.85rem;
-  border-radius: var(--radius-md);
 }
 
 .loginLink:hover {
-  color: var(--text-primary);
-  background: var(--neutral-100);
+  color: #0F2D52;
 }
 
 .signUpBtn {
-  background: var(--gradient-primary);
-  color: white;
+  background-color: #0F2D52;
+  color: #FFFAF0;
   border: none;
-  padding: 0.55rem 1.25rem;
-  border-radius: var(--radius-full);
-  font-size: 0.85rem;
+  padding: 0.6rem 1.3rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
   font-weight: 600;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.25);
 }
 
 .signUpBtn:hover {
+  background-color: #0A203A;
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
 }
 
 /* Mobile hamburger */
@@ -210,7 +194,7 @@
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  color: var(--text-primary);
+  color: #0F2D52;
 }
 
 .hamburgerIcon {
@@ -225,7 +209,7 @@
   display: block;
   width: 100%;
   height: 2px;
-  background-color: currentColor;
+  background-color: #0F2D52;
   border-radius: 2px;
   transition: all 0.25s ease;
 }
@@ -238,7 +222,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--bg-primary);
+  background-color: #FFFAF0;
   z-index: 199;
   padding: 1.5rem;
   overflow-y: auto;
@@ -257,28 +241,27 @@
 }
 
 .mobileSectionTitle {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: var(--text-tertiary);
+  color: #8c8c8c;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 0.75rem;
-  padding: 0 0.5rem;
 }
 
 .mobileLink {
   display: block;
-  padding: 0.85rem 0.75rem;
-  color: var(--text-primary);
+  padding: 0.85rem 0;
+  color: #1A1A1A;
   text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-  border-radius: var(--radius-md);
-  transition: all 0.2s ease;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-bottom: 1px solid #e5e3dc;
+  transition: color 0.2s ease;
 }
 
 .mobileLink:hover {
-  background: var(--neutral-100);
+  color: #0F2D52;
 }
 
 .mobileCta {

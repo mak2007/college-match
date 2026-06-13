@@ -5,10 +5,10 @@ export function Skeleton({ className = "", style }: { className?: string; style?
     <div
       className={`skeleton ${className}`}
       style={{
-        background: "linear-gradient(90deg, var(--border-subtle) 25%, var(--border-default) 50%, var(--border-subtle) 75%)",
+        background: "linear-gradient(90deg, var(--light-bg) 25%, var(--light-border) 50%, var(--light-bg) 75%)",
         backgroundSize: "200% 100%",
         animation: "shimmer 1.5s infinite",
-        borderRadius: "var(--radius-sm, 6px)",
+        borderRadius: "8px",
         ...style,
       }}
     />

@@ -1,9 +1,8 @@
 .pageWrapper {
   padding: 2rem;
   animation: fadeIn 0.4s ease;
-  background-color: var(--background-dark);
+  background-color: var(--light-bg);
   min-height: 100vh;
-  font-family: var(--font-body);
 }
 
 .pageHeader {
@@ -14,16 +13,15 @@
 }
 
 .pageTitle {
-  font-family: var(--font-display);
   font-size: 1.85rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
+  color: var(--light-text);
   margin: 0 0 0.35rem;
 }
 
 .pageSubtitle {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   font-size: 0.925rem;
   margin: 0;
 }
@@ -32,28 +30,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--surface-dark);
-  border: 1px solid var(--border-subtle);
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
   padding: 1rem 1.5rem;
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(15, 45, 82, 0.05);
 }
 
 .totalCount {
-  font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 800;
-  color: var(--blue-400);
+  color: var(--primary-color);
   line-height: 1;
 }
 
 .totalLabel {
-  font-size: 0.7rem;
-  color: var(--text-tertiary);
-  margin-top: 0.3rem;
+  font-size: 0.75rem;
+  color: var(--light-text-secondary);
+  margin-top: 0.25rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: 600;
+  letter-spacing: 0.05em;
 }
 
 /* Pipeline Summary Cards */
@@ -65,29 +61,29 @@
 }
 
 .pipelineCard {
-  background: var(--surface-dark);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  border-radius: 14px;
   padding: 1rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
-  color: var(--text-primary);
-  box-shadow: var(--shadow-sm);
+  color: var(--light-text);
+  box-shadow: 0 2px 4px rgba(15, 45, 82, 0.02);
 }
 
 .pipelineCard:hover {
-  background: var(--surface-light);
-  border-color: var(--blue-500);
+  background: var(--light-surface);
+  border-color: var(--primary-color);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 12px rgba(15, 45, 82, 0.05);
 }
 
 .pipelineCardActive {
-  background: var(--surface-light);
-  border-color: var(--blue-500);
-  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+  background: var(--light-surface);
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 15px rgba(15, 45, 82, 0.08);
   font-weight: 700;
 }
 
@@ -97,20 +93,19 @@
 }
 
 .pipelineCount {
-  font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 800;
   line-height: 1;
   margin-bottom: 0.25rem;
-  color: var(--blue-400);
+  color: var(--primary-color);
 }
 
 .pipelineLabel {
   font-size: 0.7rem;
-  color: var(--text-tertiary);
-  font-weight: 600;
+  color: var(--light-text-secondary);
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
 /* Filter Bar */
@@ -122,33 +117,29 @@
 
 .searchInput {
   flex: 1;
-  padding: 0.75rem 1.25rem;
-  border-radius: var(--radius-lg);
-  background: var(--surface-dark);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  font-size: 0.9rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
+  font-size: 0.925rem;
   font-family: inherit;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
 .searchInput:focus {
-  border-color: var(--blue-500);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-}
-
-.searchInput::placeholder {
-  color: var(--text-tertiary);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(15, 45, 82, 0.1);
 }
 
 .filterSelect {
-  padding: 0.75rem 1.25rem;
-  border-radius: var(--radius-lg);
-  background: var(--surface-dark);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  font-size: 0.85rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
+  font-size: 0.875rem;
   font-family: inherit;
   outline: none;
   cursor: pointer;
@@ -157,8 +148,8 @@
 }
 
 .filterSelect:focus {
-  border-color: var(--blue-500);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(15, 45, 82, 0.1);
 }
 
 /* Table */
@@ -172,11 +163,11 @@
   display: grid;
   grid-template-columns: 2fr 2fr 1fr 0.8fr 1fr 1fr;
   padding: 0.75rem 1.25rem;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: var(--text-tertiary);
+  color: var(--light-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
 .tableRow {
@@ -184,17 +175,17 @@
   grid-template-columns: 2fr 2fr 1fr 0.8fr 1fr 1fr;
   align-items: center;
   padding: 1rem 1.25rem;
-  border-radius: var(--radius-xl);
-  background: var(--surface-dark);
-  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
   transition: all 0.2s ease;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 4px rgba(15, 45, 82, 0.02);
 }
 
 .tableRow:hover {
-  background: var(--surface-light);
-  border-color: var(--blue-500);
-  box-shadow: var(--shadow-md);
+  background: var(--light-surface);
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(15, 45, 82, 0.06);
 }
 
 .cellStudent {
@@ -204,13 +195,13 @@
 .studentName {
   font-weight: 700;
   font-size: 0.9rem;
-  color: var(--text-primary);
+  color: var(--light-text);
   margin-bottom: 0.15rem;
 }
 
 .studentMeta {
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
+  font-size: 0.775rem;
+  color: var(--light-text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -223,29 +214,29 @@
 .collegeName {
   font-weight: 600;
   font-size: 0.875rem;
-  color: var(--text-primary);
+  color: var(--light-text);
   margin-bottom: 0.15rem;
 }
 
 .collegeMeta {
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
+  font-size: 0.775rem;
+  color: var(--light-text-secondary);
 }
 
 .statusBadge {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.3rem 0.65rem;
-  border-radius: var(--radius-full);
-  font-size: 0.7rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 99px;
+  font-size: 0.725rem;
   font-weight: 600;
   border: 1px solid;
 }
 
 .cellDate {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
+  font-size: 0.825rem;
+  color: var(--light-text-secondary);
 }
 
 .cellCommission {
@@ -257,27 +248,27 @@
 .commissionAmount {
   font-weight: 700;
   font-size: 0.9rem;
-  color: var(--green-400);
+  color: #15803d;
 }
 
 .commissionStatus {
-  font-size: 0.65rem;
-  color: var(--text-tertiary);
+  font-size: 0.7rem;
+  color: var(--light-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
 .noCommission {
-  color: var(--text-tertiary);
+  color: var(--light-text-muted);
   font-size: 0.875rem;
 }
 
 .statusSelect {
   padding: 0.45rem 0.75rem;
-  border-radius: var(--radius-md);
-  background: var(--surface-dark);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-primary);
+  border-radius: 8px;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
   font-size: 0.775rem;
   font-family: inherit;
   cursor: pointer;
@@ -288,7 +279,7 @@
 }
 
 .statusSelect:focus {
-  border-color: var(--blue-500);
+  border-color: var(--primary-color);
 }
 
 .statusSelect:disabled {
@@ -303,12 +294,12 @@
   align-items: center;
   margin-top: 1.5rem;
   padding: 1rem 0;
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid var(--light-border);
 }
 
 .pageInfo {
   font-size: 0.825rem;
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
 }
 
 .pageButtons {
@@ -318,10 +309,10 @@
 
 .pageBtn {
   padding: 0.5rem 0.85rem;
-  border-radius: var(--radius-md);
-  background: var(--surface-dark);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
+  border-radius: 8px;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text-secondary);
   font-size: 0.8rem;
   font-family: inherit;
   cursor: pointer;
@@ -329,9 +320,9 @@
 }
 
 .pageBtn:hover:not(:disabled) {
-  background: var(--surface-light);
-  color: var(--text-primary);
-  border-color: var(--blue-500);
+  background: var(--light-bg);
+  color: var(--light-text);
+  border-color: var(--primary-color);
 }
 
 .pageBtn:disabled {
@@ -340,13 +331,9 @@
 }
 
 .pageBtnActive {
-  background: var(--blue-500);
-  border-color: var(--blue-600);
+  background: var(--primary-color);
+  border-color: var(--primary-hover);
   color: white;
-}
-
-.pageBtnActive:hover {
-  background: var(--blue-600);
 }
 
 /* Loading & Empty States */
@@ -356,14 +343,14 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
 }
 
 .spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid var(--border-default);
-  border-top-color: var(--blue-400);
+  border: 3px solid var(--light-border);
+  border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 1rem;
@@ -376,10 +363,10 @@
 .emptyState {
   text-align: center;
   padding: 4rem 2rem;
-  background: var(--surface-dark);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-md);
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(15, 45, 82, 0.03);
 }
 
 .emptyIcon {
@@ -388,15 +375,14 @@
 }
 
 .emptyState h3 {
-  font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--light-text);
   margin: 0 0 0.5rem;
 }
 
 .emptyState p {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   font-size: 0.925rem;
   margin: 0;
 }
@@ -407,27 +393,27 @@
   bottom: 2rem;
   right: 2rem;
   padding: 1rem 1.5rem;
-  border-radius: var(--radius-lg);
+  border-radius: 12px;
   font-size: 0.875rem;
   font-weight: 500;
   z-index: 1000;
   animation: slideInUp 0.3s ease;
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
   border: 1px solid;
   max-width: 360px;
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 10px 30px rgba(15, 45, 82, 0.1);
 }
 
 .toastSuccess {
-  background: rgba(52, 211, 153, 0.15);
-  color: var(--green-400);
-  border-color: rgba(52, 211, 153, 0.3);
+  background: rgba(21, 128, 61, 0.95);
+  color: white;
+  border-color: #15803d;
 }
 
 .toastError {
-  background: rgba(248, 113, 113, 0.15);
-  color: var(--red-400);
-  border-color: rgba(248, 113, 113, 0.3);
+  background: rgba(185, 28, 28, 0.95);
+  color: white;
+  border-color: #b91c1c;
 }
 
 @keyframes slideInUp {

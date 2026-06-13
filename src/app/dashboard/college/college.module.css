@@ -1,45 +1,41 @@
 .wrapper {
   min-height: 100vh;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-body), sans-serif;
+  background: var(--light-bg);
+  color: var(--light-text);
+  font-family: var(--font-outfit), sans-serif;
 }
 
 .header {
-  background: var(--bg-surface);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-subtle);
+  background: var(--light-surface);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--light-border);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
 .logo {
-  font-family: var(--font-display), sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-color);
   text-decoration: none;
   letter-spacing: -0.025em;
 }
 
 .collegeTag {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(34, 211, 238, 0.08) 100%);
-  color: var(--blue-600);
+  background: rgba(15, 45, 82, 0.08);
+  color: var(--primary-color);
   font-size: 0.725rem;
   font-weight: 700;
   padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 6px;
+  border: 1px solid rgba(15, 45, 82, 0.15);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .collegeNameHeader {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   font-size: 0.9rem;
   font-weight: 600;
   max-width: 250px;
@@ -51,9 +47,9 @@
 .exitBtn {
   background: rgba(239, 68, 68, 0.06);
   border: 1px solid rgba(239, 68, 68, 0.15);
-  color: var(--red-500);
+  color: #dc2626;
   padding: 0.4rem 0.8rem;
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   font-size: 0.825rem;
   font-weight: 600;
   cursor: pointer;
@@ -62,8 +58,7 @@
 
 .exitBtn:hover {
   background: rgba(239, 68, 68, 0.12);
-  border-color: var(--red-400);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.25);
 }
 
 .nav {
@@ -72,7 +67,7 @@
 }
 
 .navLink {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   text-decoration: none;
   font-size: 0.925rem;
   font-weight: 500;
@@ -80,7 +75,7 @@
 }
 
 .navLink:hover {
-  color: var(--blue-600);
+  color: var(--primary-color);
 }
 
 /* --- Gate Page --- */
@@ -90,7 +85,6 @@
   justify-content: center;
   padding: 4rem 1.5rem;
   min-height: calc(100vh - 70px);
-  background: var(--bg-secondary);
 }
 
 .gateCard {
@@ -98,10 +92,10 @@
   width: 100%;
   padding: 3rem 2.5rem;
   text-align: center;
-  border-radius: var(--radius-xl);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-xl);
+  border-radius: 24px;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  box-shadow: 0 25px 50px -12px rgba(15, 45, 82, 0.06);
   animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -112,16 +106,15 @@
 }
 
 .gateTitle {
-  font-family: var(--font-display), sans-serif;
   font-size: 2rem;
   font-weight: 800;
   letter-spacing: -0.025em;
   margin-bottom: 0.75rem;
-  color: var(--text-primary);
+  color: var(--primary-color);
 }
 
 .gateSubtitle {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   font-size: 0.975rem;
   line-height: 1.6;
   margin-bottom: 2rem;
@@ -136,10 +129,10 @@
 .gateSelect {
   width: 100%;
   padding: 0.9rem 1.2rem;
-  border-radius: var(--radius-lg);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  color: var(--text-primary);
+  border-radius: 12px;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
   font-size: 1rem;
   outline: none;
   cursor: pointer;
@@ -148,16 +141,16 @@
 }
 
 .gateSelect:focus {
-  border-color: var(--blue-500);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(15, 45, 82, 0.1);
 }
 
 .errorAlert {
-  background: rgba(239, 68, 68, 0.06);
-  border: 1px solid rgba(239, 68, 68, 0.18);
-  color: var(--red-500);
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
   padding: 0.8rem;
-  border-radius: var(--radius-md);
+  border-radius: 10px;
   margin-bottom: 1.5rem;
   font-size: 0.875rem;
 }
@@ -168,38 +161,36 @@
   align-items: center;
   gap: 2rem;
   padding: 2.5rem;
-  background: var(--gradient-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(15, 45, 82, 0.04) 0%, rgba(196, 164, 132, 0.06) 100%);
+  border: 1px solid var(--light-border);
+  border-radius: 24px;
   margin-bottom: 2rem;
 }
 
 .welcomeAvatar {
   width: 68px;
   height: 68px;
-  border-radius: var(--radius-full);
-  background: var(--gradient-primary);
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.75rem;
   font-weight: 800;
   color: #fff;
-  box-shadow: var(--shadow-lg);
-  flex-shrink: 0;
+  box-shadow: 0 10px 20px rgba(15, 45, 82, 0.15);
 }
 
 .welcomeTitle {
-  font-family: var(--font-display), sans-serif;
   font-size: 1.85rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   margin-bottom: 0.25rem;
-  color: var(--text-primary);
+  color: var(--primary-color);
 }
 
 .welcomeSub {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   font-size: 0.95rem;
 }
 
@@ -217,35 +208,18 @@
 
 .kpiCard {
   padding: 1.75rem;
-  border-radius: var(--radius-xl);
+  border-radius: 20px;
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-  transition: all 0.25s ease;
-  box-shadow: var(--shadow-sm);
-}
-
-.kpiCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--gradient-primary);
-  opacity: 0;
-  transition: opacity 0.25s ease;
+  border: 1px solid var(--light-border);
+  background: var(--light-surface);
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(15, 45, 82, 0.04);
 }
 
 .kpiCard:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--blue-200, rgba(59, 130, 246, 0.15));
-}
-
-.kpiCard:hover::before {
-  opacity: 1;
+  border-color: var(--secondary-color);
 }
 
 .kpiIcon {
@@ -254,71 +228,59 @@
 }
 
 .kpiValue {
-  font-family: var(--font-display), sans-serif;
   font-size: 2.25rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
+  color: var(--primary-color);
   line-height: 1;
   margin-bottom: 0.5rem;
 }
 
 .kpiLabel {
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   font-weight: 500;
   margin-bottom: 0.25rem;
 }
 
 .kpiSub {
   font-size: 0.775rem;
-  color: var(--text-tertiary);
+  color: var(--light-text-muted);
 }
 
 /* --- Tab Selection Navigation --- */
 .tabBar {
   display: flex;
-  gap: 0.5rem;
-  border-bottom: 1px solid var(--border-subtle);
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--light-border);
   margin-bottom: 2rem;
-  padding-bottom: 0;
+  padding-bottom: 0.5rem;
   overflow-x: auto;
 }
 
 .tabBtn {
   background: none;
   border: none;
-  color: var(--text-tertiary);
+  color: var(--light-text-secondary);
   padding: 0.75rem 1.25rem;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  border-radius: 8px;
   transition: all 0.2s ease;
   white-space: nowrap;
   font-family: inherit;
-  position: relative;
 }
 
 .tabBtn:hover {
-  color: var(--blue-600);
-  background: rgba(59, 130, 246, 0.04);
+  color: var(--primary-color);
+  background: rgba(15, 45, 82, 0.04);
 }
 
 .tabBtnActive {
-  color: var(--blue-600);
-  background: rgba(59, 130, 246, 0.06);
-}
-
-.tabBtnActive::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--blue-600);
-  border-radius: 2px 2px 0 0;
+  color: var(--primary-color);
+  background: rgba(15, 45, 82, 0.06);
+  box-shadow: inset 0 -2px 0 var(--primary-color);
 }
 
 .tabContent {
@@ -336,49 +298,39 @@
 .searchInput {
   flex: 1;
   padding: 0.8rem 1.2rem;
-  border-radius: var(--radius-md);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  color: var(--text-primary);
+  border-radius: 10px;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
   font-size: 0.925rem;
   outline: none;
   transition: all 0.2s ease;
   font-family: inherit;
 }
 
-.searchInput::placeholder {
-  color: var(--text-tertiary);
-}
-
 .searchInput:focus {
-  border-color: var(--blue-500);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(15, 45, 82, 0.08);
 }
 
 .filterSelect {
   padding: 0.8rem 1.2rem;
-  border-radius: var(--radius-md);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  color: var(--text-primary);
+  border-radius: 10px;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
   font-size: 0.925rem;
   outline: none;
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.2s ease;
-}
-
-.filterSelect:focus {
-  border-color: var(--blue-500);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .statusToast {
-  background: rgba(34, 197, 94, 0.08);
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  color: var(--green-500);
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
   padding: 0.5rem 1rem;
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 500;
   animation: fadeIn 0.2s ease;
@@ -393,20 +345,20 @@
 
 .leadCard {
   padding: 1.5rem;
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
+  border-radius: 20px;
+  border: 1px solid var(--light-border);
+  background: var(--light-surface);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition: all 0.25s ease;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 4px rgba(15, 45, 82, 0.03);
 }
 
 .leadCard:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--blue-200, rgba(59, 130, 246, 0.15));
+  border-color: var(--secondary-color);
+  box-shadow: 0 10px 30px rgba(15, 45, 82, 0.06);
 }
 
 .leadHeader {
@@ -417,11 +369,10 @@
 }
 
 .leadStudentName {
-  font-family: var(--font-display), sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
   margin: 0 0 0.4rem 0;
-  color: var(--text-primary);
+  color: var(--primary-color);
 }
 
 .statusBadge {
@@ -429,7 +380,7 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.25rem 0.6rem;
-  border-radius: var(--radius-full);
+  border-radius: 99px;
   font-size: 0.725rem;
   font-weight: 600;
   border: 1px solid;
@@ -438,24 +389,24 @@
 .referredDateLabel {
   display: block;
   font-size: 0.7rem;
-  color: var(--text-tertiary);
+  color: var(--light-text-muted);
   text-transform: uppercase;
 }
 
 .referredDate {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--light-text);
 }
 
 .leadInfoSection {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
+  background: rgba(15, 45, 82, 0.02);
+  border: 1px solid var(--light-border);
   padding: 0.75rem;
-  border-radius: var(--radius-lg);
+  border-radius: 12px;
   margin-bottom: 1.25rem;
 }
 
@@ -466,31 +417,31 @@
 .leadDetailCol span {
   display: block;
   font-size: 0.7rem;
-  color: var(--text-tertiary);
+  color: var(--light-text-muted);
   margin-bottom: 0.25rem;
 }
 
 .leadDetailCol strong {
   font-size: 0.9rem;
-  color: var(--text-primary);
+  color: var(--light-text);
 }
 
 .leadBranchPill {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(34, 211, 238, 0.08) 100%);
+  background: rgba(15, 45, 82, 0.06);
   padding: 0.1rem 0.4rem;
-  border-radius: var(--radius-sm);
+  border-radius: 4px;
   font-size: 0.8rem !important;
-  color: var(--blue-600) !important;
+  color: var(--primary-color) !important;
 }
 
 .leadContactBlock {
   font-size: 0.8rem;
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
   margin-bottom: 1.25rem;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--light-border);
   padding-bottom: 0.75rem;
 }
 
@@ -502,7 +453,7 @@
 
 .tokenContainer {
   font-size: 0.75rem;
-  color: var(--text-tertiary);
+  color: var(--light-text-muted);
 }
 
 .tokenContainer span {
@@ -510,29 +461,23 @@
 }
 
 .tokenContainer code {
-  color: var(--text-secondary);
-  background: var(--bg-secondary);
-  padding: 0.1rem 0.35rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.7rem;
+  color: var(--light-text-secondary);
 }
 
 .statusChangeSelect {
   padding: 0.45rem 0.75rem;
-  border-radius: var(--radius-sm);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  color: var(--text-primary);
+  border-radius: 8px;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  color: var(--light-text);
   font-size: 0.8rem;
   outline: none;
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.2s ease;
 }
 
 .statusChangeSelect:focus {
-  border-color: var(--blue-500);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+  border-color: var(--primary-color);
 }
 
 /* --- Branch Configurations Tab --- */
@@ -544,45 +489,39 @@
 
 .branchCard {
   padding: 1.75rem;
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.25s ease;
-}
-
-.branchCard:hover {
-  box-shadow: var(--shadow-md);
+  border-radius: 20px;
+  border: 1px solid var(--light-border);
+  background: var(--light-surface);
+  box-shadow: 0 2px 4px rgba(15, 45, 82, 0.03);
 }
 
 .branchHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--light-border);
   padding-bottom: 1rem;
   margin-bottom: 1.5rem;
 }
 
 .branchCodeBig {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(34, 211, 238, 0.08) 100%);
-  border: 1px solid rgba(59, 130, 246, 0.12);
-  color: var(--blue-600);
+  background: rgba(15, 45, 82, 0.06);
+  border: 1px solid rgba(15, 45, 82, 0.12);
+  color: var(--primary-color);
   font-size: 0.8rem;
   font-weight: 700;
   padding: 0.25rem 0.6rem;
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   margin-bottom: 0.5rem;
   display: inline-block;
   letter-spacing: 0.05em;
 }
 
 .branchNameTitle {
-  font-family: var(--font-display), sans-serif;
   font-size: 1.25rem;
   font-weight: 800;
   margin: 0;
-  color: var(--text-primary);
+  color: var(--light-text);
 }
 
 .branchStrengthWrap {
@@ -592,14 +531,13 @@
 .branchStrengthWrap span {
   display: block;
   font-size: 0.725rem;
-  color: var(--text-tertiary);
+  color: var(--light-text-muted);
   text-transform: uppercase;
 }
 
 .branchStrengthWrap strong {
-  font-family: var(--font-display), sans-serif;
   font-size: 1.35rem;
-  color: var(--blue-600);
+  color: var(--primary-color);
 }
 
 .branchInfoGrid {
@@ -609,29 +547,23 @@
 }
 
 .branchInfoCard {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
+  background: rgba(15, 45, 82, 0.02);
+  border: 1px solid var(--light-border);
   padding: 1rem;
-  border-radius: var(--radius-lg);
+  border-radius: 12px;
   text-align: center;
-  transition: all 0.2s ease;
-}
-
-.branchInfoCard:hover {
-  background: var(--bg-surface);
-  box-shadow: var(--shadow-xs);
 }
 
 .branchInfoCard span {
   display: block;
   font-size: 0.75rem;
-  color: var(--text-tertiary);
+  color: var(--light-text-muted);
   margin-bottom: 0.4rem;
 }
 
 .branchInfoCard strong {
   font-size: 0.95rem;
-  color: var(--text-primary);
+  color: var(--light-text);
 }
 
 /* --- College Profile Tab --- */
@@ -643,19 +575,18 @@
 
 .profileInfoCard {
   padding: 2rem;
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-  box-shadow: var(--shadow-sm);
+  border-radius: 20px;
+  border: 1px solid var(--light-border);
+  background: var(--light-surface);
+  box-shadow: 0 2px 4px rgba(15, 45, 82, 0.03);
 }
 
 .profileInfoCard h3 {
-  font-family: var(--font-display), sans-serif;
   font-size: 1.15rem;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--light-border);
   padding-bottom: 0.75rem;
-  color: var(--text-primary);
+  color: var(--primary-color);
 }
 
 .ratingsList {
@@ -667,7 +598,7 @@
 .ratingRow span {
   display: block;
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
   margin-bottom: 0.4rem;
 }
 
@@ -680,31 +611,15 @@
 .ratingBar {
   flex: 1;
   height: 8px;
-  background: var(--bg-secondary);
-  border-radius: var(--radius-full);
-  overflow: hidden;
-  position: relative;
-}
-
-.ratingBar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: var(--progress, 0%);
-  background: var(--gradient-primary);
-  border-radius: var(--radius-full);
+  background: var(--primary-color);
+  border-radius: 4px;
 }
 
 .ratingBarContainer span {
-  font-family: var(--font-display), sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--light-text);
   margin: 0;
-  min-width: 2rem;
-  text-align: right;
 }
 
 .configList {
@@ -721,27 +636,26 @@
 }
 
 .configRow span {
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
 }
 
 .configRow strong {
-  color: var(--text-primary);
+  color: var(--light-text);
 }
 
 .profileLink {
-  color: var(--blue-600);
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 600;
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: color 0.2s ease;
 }
 
 .profileLink:hover {
   text-decoration: underline;
-  color: var(--blue-500);
+  color: var(--secondary-color);
 }
 
 .attributesGrid {
@@ -751,30 +665,23 @@
 }
 
 .attributeItem {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
+  background: rgba(15, 45, 82, 0.02);
+  border: 1px solid var(--light-border);
   padding: 0.75rem;
-  border-radius: var(--radius-md);
+  border-radius: 10px;
   text-align: center;
-  transition: all 0.2s ease;
-}
-
-.attributeItem:hover {
-  background: var(--bg-surface);
-  box-shadow: var(--shadow-xs);
 }
 
 .attributeItem span {
   display: block;
   font-size: 0.725rem;
-  color: var(--text-tertiary);
+  color: var(--light-text-muted);
   margin-bottom: 0.25rem;
 }
 
 .attributeItem strong {
   font-size: 1rem;
-  color: var(--blue-600);
-  font-weight: 700;
+  color: var(--primary-color);
 }
 
 @keyframes fadeIn {
@@ -800,8 +707,7 @@
     margin-left: 0;
     width: 100%;
   }
-  .welcomeActions a,
-  .welcomeActions button {
+  .welcomeActions a, .welcomeActions button {
     width: 100%;
   }
   .filterBar {
@@ -809,9 +715,6 @@
     align-items: stretch;
   }
   .leadsGrid {
-    grid-template-columns: 1fr;
-  }
-  .kpiRow {
     grid-template-columns: 1fr;
   }
 }
