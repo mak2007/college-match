@@ -10,7 +10,7 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("Starting database cleanup and seeding with requested 4 colleges...");
+  console.log("Starting database cleanup and seeding with requested 5 colleges...");
 
   // 1. Clean up existing database tables
   console.log("Cleaning up old data...");
@@ -108,197 +108,225 @@ async function main() {
 
   // Create college admin accounts
   await prisma.user.create({
-    data: {
-      email: "admissions@opju.ac.in",
-      passwordHash: collegePasswordHash,
-      role: "COLLEGE_ADMIN",
-    },
+    data: { email: "admissions@vit.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
   await prisma.user.create({
-    data: {
-      email: "admissions@quantum.edu",
-      passwordHash: collegePasswordHash,
-      role: "COLLEGE_ADMIN",
-    },
+    data: { email: "admissions@upes.ac.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
   await prisma.user.create({
-    data: {
-      email: "admissions@dsce.edu",
-      passwordHash: collegePasswordHash,
-      role: "COLLEGE_ADMIN",
-    },
+    data: { email: "admissions@mitjaipur.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
   await prisma.user.create({
-    data: {
-      email: "admissions@bennett.edu.in",
-      passwordHash: collegePasswordHash,
-      role: "COLLEGE_ADMIN",
-    },
+    data: { email: "admissions@chitkara.edu.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
+  });
+  await prisma.user.create({
+    data: { email: "admissions@kjsce.somaiya.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
 
-  // 4. Define 4 Colleges Data
+  // 4. Define 5 Colleges Data
   const collegesData = [
     {
-      name: "OP Jindal University (Raigarh)",
-      slug: "op-jindal-university-raigarh",
-      state: "Chhattisgarh",
-      city: "Raigarh",
+      name: "Vishwakarma Institute of Technology (VIT Pune)",
+      slug: "vit-pune",
+      state: "Maharashtra",
+      city: "Pune",
       logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
       coverImageUrl: "https://images.unsplash.com/photo-1562774053-701939374585?w=800&h=400&fit=crop",
-      brochureUrl: "https://www.opju.ac.in/brochure.pdf",
-      officialApplyUrl: "https://www.opju.ac.in/programmes/btech-cse",
-      website: "https://www.opju.ac.in",
-      isPartner: false,
-      isNewGen: false,
-      commissionRate: 0.0,
-      placementScore: 7.8,
-      collegeLifeScore: 7.6,
-      curriculumScore: 7.8,
-      adminEmail: "admissions@opju.ac.in",
-      metadata: JSON.stringify({
-        infra_rating: 77,
-        startup_ecosystem: 7.0,
-        research_output: 6.8,
-        exposure_score: 7.8,
-      }),
-      branches: [
-        {
-          branchName: "Computer Science & Engineering",
-          branchCode: "CSE",
-          tuitionFeeAnnual: 187500,
-          hostelFeeAnnual: 70000, // Reasonable default for hostel if unspecified
-          seatCapacity: 120,
-          avgSalary: 500000,
-          medianSalary: 450000,
-          highestSalary: 700000,
-          minJeePercentileCutoff: 60.0,
-          minClass12Cutoff: 50.0,
-          branchStrengthScore: 7.8,
-          placementPercentage: 80.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true }),
-        }
-      ]
-    },
-    {
-      name: "Quantum University (Roorkee)",
-      slug: "quantum-university-roorkee",
-      state: "Uttarakhand",
-      city: "Roorkee",
-      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=400&fit=crop",
-      brochureUrl: "https://quantumuniversity.edu.in/brochure.pdf",
-      officialApplyUrl: "https://quantumuniversity.edu.in/admissions/btech",
-      website: "https://quantumuniversity.edu.in",
-      isPartner: false,
-      isNewGen: false,
-      commissionRate: 0.0,
-      placementScore: 7.5,
-      collegeLifeScore: 7.8,
-      curriculumScore: 7.6,
-      adminEmail: "admissions@quantum.edu",
-      metadata: JSON.stringify({
-        infra_rating: 74,
-        startup_ecosystem: 7.0,
-        research_output: 6.6,
-        exposure_score: 7.5,
-      }),
-      branches: [
-        {
-          branchName: "Computer Science & Engineering",
-          branchCode: "CSE",
-          tuitionFeeAnnual: 135000,
-          hostelFeeAnnual: 75000,
-          seatCapacity: 180,
-          avgSalary: 480000,
-          medianSalary: 420000,
-          highestSalary: 1200000,
-          minJeePercentileCutoff: 55.0,
-          minClass12Cutoff: 50.0,
-          branchStrengthScore: 7.5,
-          placementPercentage: 75.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true }),
-        }
-      ]
-    },
-    {
-      name: "Dayananda Sagar College of Engineering (DSCE)",
-      slug: "dsce-bangalore",
-      state: "Karnataka",
-      city: "Bengaluru",
-      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop",
-      brochureUrl: "https://www.dsce.edu.in/brochure.pdf",
-      officialApplyUrl: "https://www.dsce.edu.in/admissions",
-      website: "https://www.dsce.edu.in",
+      brochureUrl: "https://www.vit.edu/brochure.pdf",
+      officialApplyUrl: "https://www.vit.edu/admissions",
+      website: "https://www.vit.edu",
       isPartner: false,
       isNewGen: false,
       commissionRate: 0.0,
       placementScore: 8.5,
       collegeLifeScore: 8.2,
       curriculumScore: 8.3,
-      adminEmail: "admissions@dsce.edu",
+      adminEmail: "admissions@vit.edu",
       metadata: JSON.stringify({
         infra_rating: 82,
-        startup_ecosystem: 7.6,
-        research_output: 7.3,
-        exposure_score: 8.5,
+        startup_ecosystem: 7.5,
+        research_output: 7.2,
+        exposure_score: 8.4,
       }),
       branches: [
         {
           branchName: "Computer Science & Engineering",
           branchCode: "CSE",
-          tuitionFeeAnnual: 110000,
-          hostelFeeAnnual: 120000,
+          tuitionFeeAnnual: 212000,
+          hostelFeeAnnual: 125000,
           seatCapacity: 240,
-          avgSalary: 750000,
-          medianSalary: 600000,
-          highestSalary: 5600000,
-          minJeePercentileCutoff: 97.0,
-          minClass12Cutoff: 45.0,
+          avgSalary: 950000, // Non-null default to support ROI
+          medianSalary: 950000,
+          highestSalary: 4500000,
+          minJeePercentileCutoff: 96.0,
+          minClass12Cutoff: 50.0,
           branchStrengthScore: 8.6,
-          placementPercentage: 85.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsStateExam: true }),
+          placementPercentage: 95.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsStateExam: true, jeeOverlapRange: "94-98" }),
         }
       ]
     },
     {
-      name: "Bennett University (Greater Noida)",
-      slug: "bennett-greater-noida",
-      state: "Uttar Pradesh",
-      city: "Greater Noida",
+      name: "UPES Dehradun",
+      slug: "upes-dehradun",
+      state: "Uttarakhand",
+      city: "Dehradun",
       logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1527891751199-7225231a68dd?w=800&h=400&fit=crop",
-      brochureUrl: "https://www.bennett.edu.in/brochure.pdf",
-      officialApplyUrl: "https://www.bennett.edu.in/programmes/btech-cse",
-      website: "https://www.bennett.edu.in",
+      coverImageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=400&fit=crop",
+      brochureUrl: "https://www.upes.ac.in/brochure.pdf",
+      officialApplyUrl: "https://www.upes.ac.in/schools/school-of-computer-science/btech-computer-science-engineering",
+      website: "https://www.upes.ac.in",
       isPartner: false,
       isNewGen: true,
       commissionRate: 0.0,
-      placementScore: 9.0,
-      collegeLifeScore: 8.4,
-      curriculumScore: 8.8,
-      adminEmail: "admissions@bennett.edu.in",
+      placementScore: 8.6,
+      collegeLifeScore: 8.1,
+      curriculumScore: 8.4,
+      adminEmail: "admissions@upes.ac.in",
       metadata: JSON.stringify({
-        infra_rating: 85,
-        startup_ecosystem: 8.2,
-        research_output: 7.8,
-        exposure_score: 9.0,
+        infra_rating: 83,
+        startup_ecosystem: 8.0,
+        research_output: 7.6,
+        exposure_score: 8.7,
       }),
       branches: [
         {
           branchName: "Computer Science & Engineering",
           branchCode: "CSE",
-          tuitionFeeAnnual: 403750,
-          hostelFeeAnnual: 170000,
+          tuitionFeeAnnual: 425000,
+          hostelFeeAnnual: 180000,
           seatCapacity: 600,
-          avgSalary: 942000,
-          medianSalary: 800000,
-          highestSalary: 13700000,
-          minJeePercentileCutoff: 62.0,
+          avgSalary: 841000,
+          medianSalary: 750000,
+          highestSalary: 5009000,
+          minJeePercentileCutoff: 90.0,
           minClass12Cutoff: 55.0,
-          branchStrengthScore: 9.0,
-          placementPercentage: 92.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, jeeOverlapRange: "60-88" }),
+          branchStrengthScore: 8.7,
+          placementPercentage: 90.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, acceptsBoardsOnly: true, jeeOverlapRange: "85-95" }),
+        }
+      ]
+    },
+    {
+      name: "Manipal University Jaipur (MIT Jaipur)",
+      slug: "mit-jaipur",
+      state: "Rajasthan",
+      city: "Jaipur",
+      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
+      coverImageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop",
+      brochureUrl: "https://jaipur.manipal.edu/brochure.pdf",
+      officialApplyUrl: "https://jaipur.manipal.edu/foe/programs/program-list/btech-computer-science-engineering.html",
+      website: "https://jaipur.manipal.edu",
+      isPartner: false,
+      isNewGen: true,
+      commissionRate: 0.0,
+      placementScore: 8.2,
+      collegeLifeScore: 8.4,
+      curriculumScore: 8.2,
+      adminEmail: "admissions@mitjaipur.edu",
+      metadata: JSON.stringify({
+        infra_rating: 81,
+        startup_ecosystem: 7.4,
+        research_output: 7.2,
+        exposure_score: 8.3,
+      }),
+      branches: [
+        {
+          branchName: "Computer Science & Engineering",
+          branchCode: "CSE",
+          tuitionFeeAnnual: 350000, // Estimated based on other MIT fees if blank
+          hostelFeeAnnual: 170000,
+          seatCapacity: 300,
+          avgSalary: 750000, // Reasonable fallback default
+          medianSalary: 700000,
+          highestSalary: 2200000,
+          minJeePercentileCutoff: 80.0, // Reasonable fallback cutoff
+          minClass12Cutoff: 50.0,
+          branchStrengthScore: 8.3,
+          placementPercentage: 80.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true }),
+        }
+      ]
+    },
+    {
+      name: "Chitkara University (Punjab Campus)",
+      slug: "chitkara-punjab",
+      state: "Punjab",
+      city: "Rajpura",
+      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
+      coverImageUrl: "https://images.unsplash.com/photo-1527891751199-7225231a68dd?w=800&h=400&fit=crop",
+      brochureUrl: "https://www.chitkara.edu.in/brochure.pdf",
+      officialApplyUrl: "https://www.chitkara.edu.in/engineering/b-tech-computer-science-engineering",
+      website: "https://www.chitkara.edu.in",
+      isPartner: false,
+      isNewGen: false,
+      commissionRate: 0.0,
+      placementScore: 8.3,
+      collegeLifeScore: 8.1,
+      curriculumScore: 8.1,
+      adminEmail: "admissions@chitkara.edu.in",
+      metadata: JSON.stringify({
+        infra_rating: 80,
+        startup_ecosystem: 7.4,
+        research_output: 7.1,
+        exposure_score: 8.2,
+      }),
+      branches: [
+        {
+          branchName: "Computer Science & Engineering",
+          branchCode: "CSE",
+          tuitionFeeAnnual: 240000,
+          hostelFeeAnnual: 150000,
+          seatCapacity: 400,
+          avgSalary: 650000, // Reasonable fallback
+          medianSalary: 600000,
+          highestSalary: 1800000,
+          minJeePercentileCutoff: 75.0,
+          minClass12Cutoff: 50.0,
+          branchStrengthScore: 8.4,
+          placementPercentage: 80.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsBoardsOnly: true }),
+        }
+      ]
+    },
+    {
+      name: "K J Somaiya College of Engineering",
+      slug: "kj-somaiya",
+      state: "Maharashtra",
+      city: "Mumbai",
+      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
+      coverImageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop",
+      brochureUrl: "https://kjsce.somaiya.edu/brochure.pdf",
+      officialApplyUrl: "https://kjsce.somaiya.edu/en/programme/btech-computer-engineering",
+      website: "https://kjsce.somaiya.edu",
+      isPartner: false,
+      isNewGen: false,
+      commissionRate: 0.0,
+      placementScore: 8.8,
+      collegeLifeScore: 8.3,
+      curriculumScore: 8.5,
+      adminEmail: "admissions@kjsce.somaiya.edu",
+      metadata: JSON.stringify({
+        infra_rating: 84,
+        startup_ecosystem: 7.8,
+        research_output: 7.4,
+        exposure_score: 8.7,
+      }),
+      branches: [
+        {
+          branchName: "Computer Science & Engineering",
+          branchCode: "CSE",
+          tuitionFeeAnnual: 600000,
+          hostelFeeAnnual: 180000,
+          seatCapacity: 120,
+          avgSalary: 945000,
+          medianSalary: 750000,
+          highestSalary: 5800000,
+          minJeePercentileCutoff: 95.0,
+          minClass12Cutoff: 50.0,
+          branchStrengthScore: 8.7,
+          placementPercentage: 93.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsStateExam: true, jeeOverlapRange: "92-97" }),
         }
       ]
     }
@@ -340,7 +368,7 @@ async function main() {
     }
   }
 
-  console.log("Database seeding with custom 4 colleges completed successfully!");
+  console.log("Database seeding with custom 5 colleges completed successfully!");
 }
 
 main()
