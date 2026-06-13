@@ -1,7 +1,10 @@
 .pageWrapper {
   padding: 2rem;
   animation: fadeIn 0.4s ease;
-  color: var(--light-text);
+  color: var(--text-primary);
+  background: var(--background-dark);
+  min-height: 100vh;
+  font-family: var(--font-body);
 }
 
 .pageHeader {
@@ -9,15 +12,20 @@
 }
 
 .pageTitle {
+  font-family: var(--font-display);
   font-size: 1.85rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--primary-color);
+  color: var(--text-primary);
   margin: 0 0 0.35rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .pageSubtitle {
-  color: var(--light-text-secondary);
+  color: var(--text-secondary);
   font-size: 0.925rem;
   margin: 0;
 }
@@ -32,21 +40,22 @@
 
 .kpiCard {
   padding: 1.5rem;
-  border-radius: 18px;
-  border: 1px solid var(--light-border);
-  background: var(--light-surface);
-  transition: transform 0.2s ease;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-dark);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-md);
 }
 
 .kpiCard:hover {
   transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
-.kpiRevenue { border-left: 3px solid #10b981; }
-.kpiPending { border-left: 3px solid #f59e0b; }
-.kpiTotal { border-left: 3px solid #0F2D52; }
-.kpiCancelled { border-left: 3px solid #ef4444; }
+.kpiRevenue { border-left: 3px solid var(--green-400); }
+.kpiPending { border-left: 3px solid var(--orange-400); }
+.kpiTotal { border-left: 3px solid var(--blue-500); }
+.kpiCancelled { border-left: 3px solid var(--red-400); }
 
 .kpiIconWrap {
   font-size: 1.5rem;
@@ -54,24 +63,25 @@
 }
 
 .kpiValue {
+  font-family: var(--font-display);
   font-size: 1.85rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--light-text);
+  color: var(--text-primary);
   line-height: 1;
   margin-bottom: 0.4rem;
 }
 
 .kpiLabel {
   font-size: 0.825rem;
-  color: var(--light-text-secondary);
+  color: var(--text-secondary);
   font-weight: 500;
   margin-bottom: 0.15rem;
 }
 
 .kpiSub {
-  font-size: 0.725rem;
-  color: var(--light-text-muted);
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
 }
 
 /* Insights Row */
@@ -84,23 +94,24 @@
 
 .insightCard {
   padding: 1.5rem;
-  border-radius: 18px;
-  border: 1px solid var(--light-border);
-  background: var(--light-surface);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-dark);
+  box-shadow: var(--shadow-md);
 }
 
 .insightTitle {
+  font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--blue-400);
   margin: 0 0 1.25rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--light-border);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .insightEmpty {
-  color: var(--light-text-secondary);
+  color: var(--text-tertiary);
   font-size: 0.875rem;
   text-align: center;
   padding: 2rem 0;
@@ -118,7 +129,7 @@
   align-items: center;
   gap: 0.85rem;
   padding: 0.6rem 0;
-  border-bottom: 1px solid var(--light-border);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .rankItem:last-child {
@@ -126,9 +137,10 @@
 }
 
 .rankNum {
+  font-family: var(--font-display);
   font-weight: 800;
   font-size: 0.825rem;
-  color: var(--primary-color);
+  color: var(--blue-400);
   min-width: 28px;
 }
 
@@ -140,21 +152,22 @@
 .rankName {
   font-weight: 600;
   font-size: 0.875rem;
-  color: var(--light-text);
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .rankMeta {
-  font-size: 0.725rem;
-  color: var(--light-text-secondary);
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
 }
 
 .rankAmount {
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.9rem;
-  color: #10b981;
+  color: var(--green-400);
 }
 
 .recentList {
@@ -168,7 +181,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid var(--light-border);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .recentItem:last-child {
@@ -178,12 +191,12 @@
 .recentStudent {
   font-weight: 600;
   font-size: 0.85rem;
-  color: var(--light-text);
+  color: var(--text-primary);
 }
 
 .recentCollege {
-  font-size: 0.725rem;
-  color: var(--light-text-secondary);
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
 }
 
 .recentRight {
@@ -192,13 +205,14 @@
 
 .recentAmount {
   display: block;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.875rem;
-  color: var(--light-text);
+  color: var(--text-primary);
 }
 
 .recentStatus {
-  font-size: 0.7rem;
+  font-size: 0.675rem;
   font-weight: 500;
 }
 
@@ -213,9 +227,10 @@
 }
 
 .sectionTitle {
+  font-family: var(--font-display);
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -227,10 +242,10 @@
 
 .statusTab {
   padding: 0.45rem 0.85rem;
-  border-radius: 8px;
-  background: var(--light-surface);
-  border: 1px solid var(--light-border);
-  color: var(--light-text-secondary);
+  border-radius: var(--radius-md);
+  background: var(--surface-dark);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
   font-size: 0.775rem;
   font-family: inherit;
   cursor: pointer;
@@ -238,14 +253,15 @@
 }
 
 .statusTab:hover {
-  background: var(--brand-blue-light);
-  color: var(--primary-color);
+  background: var(--surface-light);
+  color: var(--blue-400);
+  border-color: var(--blue-500);
 }
 
 .statusTabActive {
-  background: var(--primary-color);
-  border-color: var(--primary-hover);
-  color: #ffffff;
+  background: var(--blue-500);
+  border-color: var(--blue-600);
+  color: white;
 }
 
 /* Table */
@@ -259,11 +275,11 @@
   display: grid;
   grid-template-columns: 2.5fr 0.8fr 1fr 1fr 1fr 1fr;
   padding: 0.75rem 1.25rem;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--text-tertiary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .tableRow {
@@ -271,15 +287,17 @@
   grid-template-columns: 2.5fr 0.8fr 1fr 1fr 1fr 1fr;
   align-items: center;
   padding: 1rem 1.25rem;
-  border-radius: 14px;
-  background: var(--light-surface);
-  border: 1px solid var(--light-border);
+  border-radius: var(--radius-xl);
+  background: var(--surface-dark);
+  border: 1px solid var(--border-subtle);
   transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .tableRow:hover {
-  background: var(--brand-blue-light);
-  border-color: var(--primary-color);
+  background: var(--surface-light);
+  border-color: var(--blue-500);
+  box-shadow: var(--shadow-md);
 }
 
 .cellInfo {
@@ -289,13 +307,13 @@
 .cellStudent {
   font-weight: 700;
   font-size: 0.875rem;
-  color: var(--light-text);
+  color: var(--text-primary);
   margin-bottom: 0.1rem;
 }
 
 .cellCollege {
-  font-size: 0.775rem;
-  color: var(--light-text-secondary);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -307,20 +325,21 @@
 }
 
 .branchPill {
-  background: var(--brand-blue-light);
-  color: var(--primary-color);
-  font-size: 0.725rem;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--blue-400);
+  font-size: 0.7rem;
   font-weight: 700;
   padding: 0.2rem 0.5rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   letter-spacing: 0.03em;
-  border: 1px solid var(--light-border);
+  border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 .cellAmount {
+  font-family: var(--font-display);
   font-weight: 800;
   font-size: 1rem;
-  color: #10b981;
+  color: var(--green-400);
 }
 
 .statusBadge {
@@ -328,30 +347,30 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.3rem 0.6rem;
-  border-radius: 99px;
-  font-size: 0.7rem;
+  border-radius: var(--radius-full);
+  font-size: 0.675rem;
   font-weight: 600;
   border: 1px solid;
 }
 
 .cellDate {
   font-size: 0.8rem;
-  color: var(--light-text);
+  color: var(--text-primary);
 }
 
 .subDate {
-  font-size: 0.675rem;
-  color: var(--light-text-secondary);
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
   margin-top: 0.15rem;
 }
 
 .statusSelect {
   padding: 0.45rem 0.7rem;
-  border-radius: 8px;
-  background: var(--light-surface);
-  border: 1px solid var(--light-border);
-  color: var(--light-text);
-  font-size: 0.75rem;
+  border-radius: var(--radius-md);
+  background: var(--surface-dark);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 0.725rem;
   font-family: inherit;
   cursor: pointer;
   outline: none;
@@ -371,12 +390,12 @@
   align-items: center;
   margin-top: 1.5rem;
   padding: 1rem 0;
-  border-top: 1px solid var(--light-border);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .pageInfo {
   font-size: 0.825rem;
-  color: var(--light-text-secondary);
+  color: var(--text-secondary);
 }
 
 .pageButtons {
@@ -386,10 +405,10 @@
 
 .pageBtn {
   padding: 0.5rem 0.85rem;
-  border-radius: 8px;
-  background: var(--light-surface);
-  border: 1px solid var(--light-border);
-  color: var(--light-text-secondary);
+  border-radius: var(--radius-md);
+  background: var(--surface-dark);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
   font-size: 0.8rem;
   font-family: inherit;
   cursor: pointer;
@@ -397,8 +416,9 @@
 }
 
 .pageBtn:hover:not(:disabled) {
-  background: var(--brand-blue-light);
-  color: var(--primary-color);
+  background: var(--surface-light);
+  color: var(--blue-400);
+  border-color: var(--blue-500);
 }
 
 .pageBtn:disabled {
@@ -413,14 +433,14 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  color: var(--light-text-secondary);
+  color: var(--text-secondary);
 }
 
 .spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid var(--light-border);
-  border-top-color: var(--primary-color);
+  border: 3px solid var(--border-default);
+  border-top-color: var(--blue-400);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 1rem;
@@ -433,9 +453,10 @@
 .emptyState {
   text-align: center;
   padding: 4rem 2rem;
-  background: var(--light-surface);
-  border: 1px solid var(--light-border);
-  border-radius: 20px;
+  background: var(--surface-dark);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
 }
 
 .emptyIcon {
@@ -444,14 +465,15 @@
 }
 
 .emptyState h3 {
+  font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--blue-400);
   margin: 0 0 0.5rem;
 }
 
 .emptyState p {
-  color: var(--light-text-secondary);
+  color: var(--text-secondary);
   font-size: 0.925rem;
   margin: 0;
 }
@@ -462,27 +484,27 @@
   bottom: 2rem;
   right: 2rem;
   padding: 1rem 1.5rem;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   font-size: 0.875rem;
   font-weight: 500;
   z-index: 1000;
   animation: slideInUp 0.3s ease;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
   border: 1px solid;
   max-width: 360px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-xl);
 }
 
 .toastSuccess {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--green-400);
+  border-color: rgba(52, 211, 153, 0.3);
 }
 
 .toastError {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(248, 113, 113, 0.15);
+  color: var(--red-400);
+  border-color: rgba(248, 113, 113, 0.3);
 }
 
 @keyframes slideInUp {

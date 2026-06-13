@@ -1,83 +1,90 @@
 .wrapper {
-  background-color: var(--light-bg);
+  background-color: var(--background-dark);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: var(--font-body);
 }
 
 .header {
-  border-bottom: 1px solid var(--light-border);
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-default);
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
 .logo {
+  font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 800;
-  background: var(--brand-gradient);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .adminTag {
-  font-size: 0.75rem;
-  background-color: var(--primary-color);
+  font-size: 0.7rem;
+  background: var(--gradient-primary);
   color: white;
-  padding: 0.15rem 0.4rem;
-  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
   margin-left: 0.5rem;
   font-weight: 700;
   vertical-align: middle;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .navLink {
-  color: var(--light-text-secondary);
+  color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  background-color: var(--light-surface);
-  border: 1px solid var(--light-border);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-dark);
+  border: 1px solid var(--border-subtle);
   transition: all 0.2s ease;
 }
 
 .navLink:hover {
-  color: var(--light-text);
-  background-color: rgba(15, 45, 82, 0.05);
+  color: var(--text-primary);
+  background-color: var(--surface-light);
+  border-color: var(--border-default);
 }
 
 .logoutBtn {
-  color: var(--accent-color);
+  color: var(--red-400);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  background-color: rgba(196, 164, 132, 0.08);
-  border: 1px solid rgba(196, 164, 132, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  background-color: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.2);
   transition: all 0.2s ease;
 }
 
 .logoutBtn:hover {
-  background-color: var(--accent-color);
+  background-color: var(--red-500);
   color: white;
+  border-color: var(--red-500);
 }
 
 .title {
+  font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   margin-bottom: 0.25rem;
-  color: var(--light-text);
+  color: var(--text-primary);
 }
 
 .subtitle {
-  color: var(--light-text-secondary);
+  color: var(--text-secondary);
   font-size: 1rem;
 }
 
@@ -86,8 +93,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--light-bg);
-  color: var(--light-text-secondary);
+  background-color: var(--background-dark);
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
@@ -98,19 +105,20 @@
 }
 
 .cardTitle {
+  font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.01em;
-  border-left: 3px solid var(--primary-color);
+  border-left: 3px solid var(--blue-500);
   padding-left: 0.75rem;
   margin-bottom: 1.5rem;
-  color: var(--light-text);
+  color: var(--text-primary);
 }
 
 .subCardTitle {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--light-text);
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
@@ -124,14 +132,14 @@
 .radioWrapper input[type="radio"] {
   width: 1.15rem;
   height: 1.15rem;
-  accent-color: var(--primary-color);
+  accent-color: var(--blue-500);
   margin-top: 0.15rem;
   cursor: pointer;
 }
 
 .radioWrapper span {
   font-size: 0.9rem;
-  color: var(--light-text-secondary);
+  color: var(--text-secondary);
   line-height: 1.4;
   user-select: none;
 }
@@ -146,37 +154,42 @@
 .checkboxWrapper input[type="checkbox"] {
   width: 1.15rem;
   height: 1.15rem;
-  accent-color: var(--primary-color);
+  accent-color: var(--blue-500);
   cursor: pointer;
 }
 
 .checkboxWrapper label {
   font-size: 0.9rem;
-  color: var(--light-text-secondary);
+  color: var(--text-secondary);
   cursor: pointer;
   user-select: none;
 }
 
 .successAlert {
-  background-color: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  color: #15803d;
-  padding: 1rem;
-  border-radius: 8px;
+  background-color: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  color: var(--green-400);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
   animation: fadeIn 0.3s ease;
 }
 
 .errorAlert {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
-  padding: 1rem;
-  border-radius: 8px;
+  background-color: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: var(--red-400);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
   animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 900px) {
@@ -195,30 +208,32 @@
 
 .metricCard {
   padding: 1.25rem 1.5rem;
-  border-radius: 14px;
-  background: var(--light-surface);
-  border: 1px solid var(--light-border);
-  box-shadow: 0 4px 6px -1px rgba(15, 45, 82, 0.05);
-  transition: transform 0.2s ease;
+  border-radius: var(--radius-xl);
+  background: var(--surface-dark);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .metricCard:hover {
   transform: translateY(-2px);
-  border-color: var(--secondary-color);
+  border-color: var(--blue-500);
+  box-shadow: var(--shadow-lg);
 }
 
 .metricLabel {
   font-size: 0.775rem;
-  color: var(--light-text-secondary);
+  color: var(--text-tertiary);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
 }
 
 .metricVal {
+  font-family: var(--font-display);
   font-size: 1.85rem;
   font-weight: 800;
-  color: var(--light-text);
+  color: var(--text-primary);
   line-height: 1.2;
 }

@@ -1,6 +1,7 @@
 .wrapper {
   min-height: 100vh;
-  background: var(--bg-main, #f5f3ee);
+  background: var(--background-dark);
+  font-family: var(--font-body);
 }
 
 .loading {
@@ -9,26 +10,28 @@
   align-items: center;
   height: 60vh;
   font-size: 1.1rem;
-  color: var(--text-muted, #8b9588);
+  color: var(--text-tertiary);
 }
 
 .title {
+  font-family: var(--font-display);
   font-size: 1.8rem;
   font-weight: 800;
-  color: #0F2D52;
+  color: var(--text-primary);
   margin: 0.5rem 0 0.25rem;
 }
 
 .subtitle {
   font-size: 0.95rem;
-  color: var(--text-secondary, #6b7280);
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .sectionTitle {
+  font-family: var(--font-display);
   font-size: 1.1rem;
   font-weight: 700;
-  color: #0F2D52;
+  color: var(--text-primary);
   margin: 0 0 1rem;
 }
 
@@ -40,9 +43,9 @@
 
 .formGrid label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.825rem;
   font-weight: 600;
-  color: var(--text-secondary, #4a4a4a);
+  color: var(--text-secondary);
   margin-bottom: 0.35rem;
 }
 
@@ -50,12 +53,13 @@
 .formGrid select,
 .formGrid textarea {
   width: 100%;
-  padding: 0.55rem 0.75rem;
-  border: 1px solid #e0ddd5;
-  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
-  background: white;
-  transition: border-color 0.2s;
+  background: var(--surface-dark);
+  color: var(--text-primary);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .formGrid textarea {
@@ -67,26 +71,31 @@
 .formGrid select:focus,
 .formGrid textarea:focus {
   outline: none;
-  border-color: var(--brand-blue, #2563eb);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: var(--blue-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.formGrid input::placeholder,
+.formGrid textarea::placeholder {
+  color: var(--text-tertiary);
 }
 
 .successAlert {
-  background: #ecfdf5;
-  color: #065f46;
+  background: rgba(52, 211, 153, 0.1);
+  color: var(--green-400);
   padding: 0.75rem 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-bottom: 1rem;
   font-size: 0.9rem;
-  border: 1px solid #a7f3d0;
+  border: 1px solid rgba(52, 211, 153, 0.3);
 }
 
 .errorAlert {
-  background: #fef2f2;
-  color: #991b1b;
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--red-400);
   padding: 0.75rem 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-bottom: 1rem;
   font-size: 0.9rem;
-  border: 1px solid #fecaca;
+  border: 1px solid rgba(248, 113, 113, 0.3);
 }

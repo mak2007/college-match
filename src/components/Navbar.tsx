@@ -5,26 +5,23 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./navbar.module.css";
 
-const AsteriskIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    width="20"
-    height="20"
-    stroke="currentColor"
-    strokeWidth="3.5"
-    strokeLinecap="round"
-    fill="none"
-    style={{ color: "#C4A484" }}
-  >
-    <line x1="12" y1="4" x2="12" y2="20" />
-    <line x1="4" y1="12" x2="20" y2="12" />
-    <line x1="6.34" y1="6.34" x2="17.66" y2="17.66" />
-    <line x1="17.66" y1="6.34" x2="6.34" y2="17.66" />
+const LogoIcon = () => (
+  <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
+    <defs>
+      <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#3b82f6" />
+        <stop offset="0.5" stopColor="#06b6d4" />
+        <stop offset="1" stopColor="#84cc16" />
+      </linearGradient>
+    </defs>
+    <rect width="32" height="32" rx="8" fill="url(#logoGrad)" />
+    <path d="M10 22V12l6-4 6 4v10" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M13 22v-6h6v6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
 const STUDENT_LINKS = [
-  { href: "/discover", icon: "🔍", title: "Discover Colleges", desc: "Search & filter by placements, ROI, fees" },
+  { href: "/discover", icon: "🔍", title: "Discover Colleges", desc: "Search & filter by placements, ROI" },
   { href: "/predict", icon: "🎯", title: "College Predictor", desc: "Get personalized match scores" },
   { href: "/rankings", icon: "📊", title: "College Rankings", desc: "Compare by ROI, placements, curriculum" },
 ];
@@ -35,7 +32,6 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -46,7 +42,6 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
     setDropdownOpen(false);
@@ -60,20 +55,17 @@ export default function Navbar() {
     <>
       <header className={styles.navbar}>
         <div className={styles.navContainer}>
-          {/* Left: Logo */}
           <Link href="/" className={styles.logoLink}>
-            <AsteriskIcon />
+            <LogoIcon />
             <span>kollegio</span>
           </Link>
 
-          {/* Center: Navigation */}
           <nav className={styles.centerNav}>
-            {/* For Students dropdown */}
             <div className={styles.dropdownWrapper} ref={dropdownRef}>
               <button
                 className={styles.dropdownTrigger}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                style={isStudentRoute ? { color: "#0F2D52" } : undefined}
+                style={isStudentRoute ? { color: "var(--blue-600)" } : undefined}
               >
                 For Students
                 <span className={`${styles.chevron} ${dropdownOpen ? styles.chevronOpen : ""}`}>
@@ -102,7 +94,6 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* For Colleges */}
             <Link
               href="/for-colleges"
               className={`${styles.navLink} ${
@@ -113,17 +104,15 @@ export default function Navbar() {
             </Link>
           </nav>
 
-          {/* Right: Actions */}
           <div className={styles.rightActions}>
             <Link href="/login" className={styles.loginLink}>
               Login
             </Link>
             <Link href="/login?mode=signup" className={styles.signUpBtn}>
-              Sign Up <span style={{ fontSize: "0.85rem" }}>→</span>
+              Sign Up <span style={{ fontSize: "0.8rem" }}>→</span>
             </Link>
           </div>
 
-          {/* Mobile hamburger */}
           <button
             className={styles.mobileToggle}
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -138,7 +127,6 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Drawer */}
       <div className={`${styles.mobileDrawer} ${mobileOpen ? styles.mobileDrawerOpen : ""}`}>
         <div className={styles.mobileSection}>
           <div className={styles.mobileSectionTitle}>For Students</div>

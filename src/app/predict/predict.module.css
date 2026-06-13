@@ -1,15 +1,15 @@
 .wrapper {
-  background-color: #FFFAF0;
-  color: #1A1A1A;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-body);
 }
 
 .header {
-  border-bottom: 1px solid #e5e3dc;
-  background-color: #FFFAF0;
+  border-bottom: 1px solid var(--border-default);
+  background-color: var(--bg-surface);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -33,8 +33,9 @@
   text-decoration: none;
   font-weight: 800;
   font-size: 1.6rem;
-  color: #0F2D52;
+  color: var(--blue-700);
   letter-spacing: -0.04em;
+  font-family: var(--font-display);
 }
 
 .nav {
@@ -44,15 +45,16 @@
 }
 
 .navLink {
-  color: #4a4a4a;
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 600;
   transition: color 0.2s ease;
 }
 
-.navLink:hover, .navLinkActive {
-  color: #0F2D52;
+.navLink:hover,
+.navLinkActive {
+  color: var(--blue-700);
 }
 
 .navLinkActive {
@@ -66,11 +68,11 @@
 }
 
 .ctaBtn {
-  background-color: #0F2D52;
-  color: #FFFAF0;
+  background: var(--gradient-primary);
+  color: var(--text-primary);
   border: none;
   padding: 0.65rem 1.35rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
@@ -82,8 +84,9 @@
 }
 
 .ctaBtn:hover {
-  background-color: #0A203A;
+  opacity: 0.9;
   transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 /* Split Layout for Quiz */
@@ -95,25 +98,26 @@
 }
 
 .illustrationSide {
-  background-color: #f4eee2;
+  background: var(--gradient-primary);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 3rem;
-  border-right: 1px solid #e5e3dc;
+  border-right: 1px solid var(--border-default);
 }
 
 .illusTitle {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #0F2D52;
+  color: var(--blue-700);
   text-align: center;
   margin-top: 2rem;
+  font-family: var(--font-display);
 }
 
 .illusDesc {
-  color: #4a4a4a;
+  color: var(--text-secondary);
   text-align: center;
   font-size: 0.95rem;
   margin-top: 0.5rem;
@@ -121,7 +125,7 @@
 }
 
 .quizSide {
-  background-color: #ffffff;
+  background-color: var(--bg-surface);
   padding: 4rem 6rem;
   display: flex;
   flex-direction: column;
@@ -146,7 +150,7 @@
   left: 2rem;
   right: 2rem;
   height: 2px;
-  background-color: #e5e3dc;
+  background-color: var(--border-default);
   z-index: 1;
 }
 
@@ -162,10 +166,10 @@
 .stepCircle {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
-  background-color: #ffffff;
-  border: 2px solid #e5e3dc;
-  color: #8c8c8c;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-surface);
+  border: 2px solid var(--border-default);
+  color: var(--text-tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -175,28 +179,28 @@
 }
 
 .stepCircleActive {
-  border-color: #0F2D52;
-  background-color: #0F2D52;
-  color: #FFFAF0;
-  box-shadow: 0 0 0 4px rgba(15, 45, 82, 0.15);
+  border-color: var(--blue-600);
+  background: var(--gradient-primary);
+  color: var(--blue-700);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
 
 .stepCircleComplete {
-  border-color: #0F2D52;
-  background-color: #0F2D52;
-  color: #ffffff;
+  border-color: var(--blue-600);
+  background: var(--gradient-primary);
+  color: var(--blue-700);
 }
 
 .stepLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #8c8c8c;
+  color: var(--text-tertiary);
   margin-top: 0.5rem;
   text-align: center;
 }
 
 .stepLabelActive {
-  color: #1A1A1A;
+  color: var(--text-primary);
   font-weight: 700;
 }
 
@@ -228,14 +232,15 @@
 .questionTitle {
   font-size: 2rem;
   font-weight: 800;
-  color: #0F2D52;
+  color: var(--blue-700);
   margin-bottom: 0.5rem;
   letter-spacing: -0.02em;
+  font-family: var(--font-display);
 }
 
 .questionSubtitle {
   font-size: 1.05rem;
-  color: #4a4a4a;
+  color: var(--text-secondary);
   margin-bottom: 2.5rem;
 }
 
@@ -248,8 +253,8 @@
 }
 
 .optionCard {
-  border: 1.5px solid #e5e3dc;
-  border-radius: 12px;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -257,17 +262,19 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  background-color: #ffffff;
+  background-color: var(--bg-surface);
 }
 
 .optionCard:hover {
-  border-color: #C4A484;
-  background-color: #FFFAF0;
+  border-color: var(--purple-400);
+  background-color: var(--bg-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .optionCardActive {
-  border-color: #0F2D52;
-  background-color: #f4eee2;
+  border-color: var(--blue-500);
+  background-color: var(--bg-secondary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .optionCard input {
@@ -276,18 +283,18 @@
   right: 1.5rem;
   width: 18px;
   height: 18px;
-  accent-color: #0F2D52;
+  accent-color: var(--blue-500);
 }
 
 .optionCardProminent {
   grid-column: span 2;
-  border: 2px solid #0F2D52;
-  background-color: #f4eee2;
+  border: 2px solid var(--blue-500);
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
   padding: 1.75rem;
 }
 
 .optionCardProminent:hover {
-  background-color: #ebdcb9;
+  background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
 }
 
 .optionIcon {
@@ -298,12 +305,12 @@
 .optionTitle {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #0F2D52;
+  color: var(--blue-700);
 }
 
 .optionDesc {
   font-size: 0.85rem;
-  color: #8c8c8c;
+  color: var(--text-tertiary);
   line-height: 1.4;
 }
 
@@ -311,17 +318,19 @@
 .inputField {
   width: 100%;
   padding: 1rem 1.25rem;
-  border: 1.5px solid #e5e3dc;
-  border-radius: 10px;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
   font-size: 1rem;
-  color: #1A1A1A;
+  color: var(--text-primary);
   margin-bottom: 1.5rem;
   outline: none;
-  background-color: #ffffff;
+  background-color: var(--bg-surface);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .inputField:focus {
-  border-color: #0F2D52;
+  border-color: var(--blue-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .sliderContainer {
@@ -334,14 +343,15 @@
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
+  color: var(--text-primary);
 }
 
 .sliderInput {
   width: 100%;
   height: 6px;
-  border-radius: 9999px;
-  accent-color: #0F2D52;
-  background-color: #e5e3dc;
+  border-radius: var(--radius-full);
+  accent-color: var(--blue-500);
+  background-color: var(--border-default);
   outline: none;
 }
 
@@ -351,14 +361,14 @@
   gap: 0.75rem;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #0F2D52;
+  color: var(--blue-700);
   cursor: pointer;
 }
 
 .checkboxLabel input {
   width: 18px;
   height: 18px;
-  accent-color: #0F2D52;
+  accent-color: var(--blue-500);
 }
 
 /* Buttons */
@@ -370,11 +380,11 @@
 }
 
 .nextBtn {
-  background-color: #0F2D52;
-  color: #ffffff;
+  background: var(--gradient-primary);
+  color: var(--blue-700);
   border: none;
   padding: 1rem 2.5rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
@@ -385,20 +395,23 @@
 }
 
 .nextBtn:hover {
-  background-color: #0A203A;
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .nextBtn:disabled {
-  background-color: #cbd5e1;
+  background: var(--neutral-300);
+  color: var(--neutral-500);
   cursor: not-allowed;
 }
 
 .prevBtn {
-  background-color: #ffffff;
-  color: #1A1A1A;
-  border: 1px solid #e5e3dc;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
   padding: 1rem 2.5rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
@@ -409,8 +422,8 @@
 }
 
 .prevBtn:hover {
-  background-color: #f4eee2;
-  border-color: #C4A484;
+  background-color: var(--bg-secondary);
+  border-color: var(--purple-400);
 }
 
 /* Predictor Results Styling */
@@ -428,23 +441,29 @@
 .resultsHeader h2 {
   font-size: 2.25rem;
   font-weight: 800;
-  color: #0F2D52;
+  color: var(--blue-700);
   letter-spacing: -0.02em;
+  font-family: var(--font-display);
 }
 
 .resultsHeader p {
-  color: #4a4a4a;
+  color: var(--text-secondary);
   font-size: 1.1rem;
   margin-top: 0.5rem;
 }
 
 .resultCard {
-  background-color: #ffffff;
-  border: 1px solid #e5e3dc;
-  border-radius: 20px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
   padding: 2.5rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 25px rgba(15, 45, 82, 0.02);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease;
+}
+
+.resultCard:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .resultCardTop {
@@ -457,29 +476,40 @@
 .scoreCircle {
   width: 75px;
   height: 75px;
-  border-radius: 50%;
-  background-color: #f4eee2;
-  color: #0F2D52;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+  color: var(--blue-700);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.4rem;
   font-weight: 800;
-  border: 2px solid #0F2D52;
+  border: 2px solid var(--blue-500);
 }
 
 .competitivenessBadge {
   padding: 0.35rem 0.75rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.badgeSafe { background-color: #f4eee2; color: #0F2D52; }
-.badgeTarget { background-color: #e5edf5; color: #0F2D52; }
-.badgeDream { background-color: #f3e8ff; color: #7c3aed; }
+.badgeSafe {
+  background-color: var(--bg-secondary);
+  color: var(--blue-700);
+}
+
+.badgeTarget {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--blue-600);
+}
+
+.badgeDream {
+  background-color: rgba(168, 85, 247, 0.1);
+  color: var(--purple-600);
+}
 
 .explainSection {
   margin-bottom: 1.75rem;
@@ -488,7 +518,7 @@
 .explainTitle {
   font-size: 1rem;
   font-weight: 700;
-  color: #0F2D52;
+  color: var(--blue-700);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -504,14 +534,14 @@
   padding-left: 1.5rem;
   margin-bottom: 0.5rem;
   font-size: 0.95rem;
-  color: #4a4a4a;
+  color: var(--text-secondary);
 }
 
 .bulletList li::before {
   content: "•";
   position: absolute;
   left: 0.25rem;
-  color: #C4A484;
+  color: var(--purple-400);
   font-weight: bold;
 }
 
@@ -519,21 +549,21 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
-  border-top: 1px solid #e5e3dc;
+  border-top: 1px solid var(--border-default);
   padding-top: 1.75rem;
 }
 
 .strengthBlock {
-  background-color: #f4eee2;
-  border: 1px dashed #C4A484;
-  border-radius: 12px;
+  background-color: var(--bg-secondary);
+  border: 1px dashed var(--green-400);
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
 }
 
 .tradeoffBlock {
-  background-color: #fffafb;
-  border: 1px dashed #fecdd3;
-  border-radius: 12px;
+  background-color: var(--bg-primary);
+  border: 1px dashed var(--red-400);
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
 }
 
@@ -546,8 +576,13 @@
   gap: 0.4rem;
 }
 
-.blockTitleGreen { color: #0F2D52; }
-.blockTitleRed { color: #991b1b; }
+.blockTitleGreen {
+  color: var(--green-500);
+}
+
+.blockTitleRed {
+  color: var(--red-500);
+}
 
 @media (max-width: 768px) {
   .quizLayout {
@@ -584,22 +619,22 @@
 .rankingCard {
   display: flex;
   align-items: center;
-  border: 1.5px solid #e5e3dc;
-  border-radius: 12px;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
-  background-color: #ffffff;
+  background-color: var(--bg-surface);
   cursor: grab;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-  box-shadow: 0 2px 8px rgba(15, 45, 82, 0.01);
+  box-shadow: var(--shadow-xs);
   user-select: none;
 }
 
 .rankingCard:hover {
-  border-color: #0F2D52;
-  background-color: #FFFAF0;
+  border-color: var(--blue-400);
+  background-color: var(--bg-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(15, 45, 82, 0.04);
+  box-shadow: var(--shadow-md);
 }
 
 .rankingCard:active {
@@ -609,16 +644,16 @@
 .dragging {
   opacity: 0.5;
   border-style: dashed;
-  border-color: #0F2D52;
-  background-color: #f4eee2;
+  border-color: var(--blue-500);
+  background-color: var(--bg-secondary);
 }
 
 .rankBadge {
-  background-color: #0F2D52;
-  color: #ffffff;
+  background: var(--gradient-primary);
+  color: var(--blue-700);
   width: 40px;
   height: 40px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -628,7 +663,7 @@
   line-height: 1;
   margin-right: 1.25rem;
   flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(15, 45, 82, 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 .rankSuffix {
@@ -640,17 +675,18 @@
 }
 
 .rankingDragHandle {
-  color: #c5c3bc;
+  color: var(--text-tertiary);
   font-size: 1.2rem;
   margin-right: 1rem;
   cursor: grab;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.2s ease;
 }
 
 .rankingCard:hover .rankingDragHandle {
-  color: #8c8c8c;
+  color: var(--text-secondary);
 }
 
 .rankingContent {
@@ -673,13 +709,13 @@
 .rankingItemTitle {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #0F2D52;
+  color: var(--blue-700);
   margin: 0;
 }
 
 .rankingItemDesc {
   font-size: 0.85rem;
-  color: #8c8c8c;
+  color: var(--text-tertiary);
   margin: 0;
   line-height: 1.4;
 }
@@ -692,10 +728,10 @@
 }
 
 .rankArrowBtn {
-  background-color: #f4eee2;
-  color: #4a4a4a;
-  border: 1px solid #e5e3dc;
-  border-radius: 6px;
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
   width: 28px;
   height: 28px;
   display: flex;
@@ -707,9 +743,9 @@
 }
 
 .rankArrowBtn:hover:not(:disabled) {
-  background-color: #0F2D52;
-  color: #ffffff;
-  border-color: #0F2D52;
+  background: var(--gradient-primary);
+  color: var(--blue-700);
+  border-color: var(--blue-400);
 }
 
 .rankArrowBtn:disabled {
@@ -742,14 +778,14 @@
 }
 
 .lockedCard {
-  background: #ffffff;
-  border: 1px solid #e5e3dc;
-  border-radius: 24px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
   padding: 3.5rem 3rem;
   max-width: 560px;
   width: 100%;
   text-align: center;
-  box-shadow: 0 20px 60px rgba(15, 45, 82, 0.08);
+  box-shadow: var(--shadow-lg);
   animation: fadeSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -760,21 +796,27 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .lockedTitle {
   font-size: 2rem;
   font-weight: 800;
-  color: #0F2D52;
+  color: var(--blue-700);
   margin-bottom: 0.75rem;
   letter-spacing: -0.02em;
+  font-family: var(--font-display);
 }
 
 .lockedSubtitle {
   font-size: 1.05rem;
-  color: #4a4a4a;
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 2rem;
   max-width: 420px;
@@ -791,9 +833,9 @@
 }
 
 .blurredCard {
-  background: #f4eee2;
-  border: 1px solid #e5e3dc;
-  border-radius: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
   padding: 1rem 1.25rem;
   filter: blur(3px);
   opacity: 0.7;
@@ -810,7 +852,7 @@
 .blurredRank {
   font-weight: 800;
   font-size: 1.1rem;
-  color: #0F2D52;
+  color: var(--blue-700);
   min-width: 40px;
 }
 
@@ -819,18 +861,18 @@
   text-align: left;
   margin-left: 1rem;
   font-size: 1rem;
-  color: #8c8c8c;
+  color: var(--text-tertiary);
   letter-spacing: 0.15em;
 }
 
 .blurredScore {
   font-weight: 800;
   font-size: 1rem;
-  color: #0F2D52;
-  background: #ffffff;
+  color: var(--blue-700);
+  background: var(--bg-surface);
   padding: 0.3rem 0.75rem;
-  border-radius: 20px;
-  border: 1px solid #e5e3dc;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-default);
 }
 
 /* Auth action buttons */
@@ -850,22 +892,22 @@
   width: 100%;
   max-width: 360px;
   padding: 1rem 2rem;
-  background: #0F2D52;
-  color: #FFFAF0;
+  background: var(--gradient-primary);
+  color: var(--blue-700);
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   font-size: 1.05rem;
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 16px rgba(15, 45, 82, 0.25);
+  box-shadow: var(--shadow-md);
 }
 
 .lockedSignupBtn:hover {
-  background: #0A203A;
+  opacity: 0.9;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(15, 45, 82, 0.35);
+  box-shadow: var(--shadow-lg);
 }
 
 .lockedLoginBtn {
@@ -877,9 +919,9 @@
   max-width: 360px;
   padding: 0.875rem 2rem;
   background: transparent;
-  color: #0F2D52;
-  border: 1.5px solid #e5e3dc;
-  border-radius: 12px;
+  color: var(--blue-700);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-lg);
   font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
@@ -888,20 +930,20 @@
 }
 
 .lockedLoginBtn:hover {
-  background: #f4eee2;
-  border-color: #C4A484;
+  background: var(--bg-secondary);
+  border-color: var(--purple-400);
 }
 
 .lockedFootnote {
   font-size: 0.85rem;
-  color: #8c8c8c;
+  color: var(--text-tertiary);
   font-style: italic;
 }
 
 @media (max-width: 768px) {
   .lockedCard {
     padding: 2.5rem 1.5rem;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
   }
   .lockedTitle {
     font-size: 1.5rem;
@@ -918,7 +960,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 45, 82, 0.45);
+  background: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(10px);
   display: flex;
   justify-content: center;
@@ -942,17 +984,21 @@
 }
 
 .locationOptionCard {
-  background: #ffffff;
-  border: 1px solid #e5e3dc;
-  border-radius: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
+.locationOptionCard:hover {
+  box-shadow: var(--shadow-sm);
+}
+
 .locationOptionCardActive {
-  border-color: #0F2D52;
-  box-shadow: 0 4px 20px rgba(15, 45, 82, 0.05);
+  border-color: var(--blue-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .locationOptionHeader {
@@ -961,27 +1007,27 @@
   gap: 0.75rem;
   font-weight: 700;
   font-size: 1.1rem;
-  color: #0F2D52;
+  color: var(--blue-700);
 }
 
 .locationOptionHeader input[type="radio"] {
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #0F2D52;
+  accent-color: var(--blue-500);
 }
 
 .locationOptionTitle {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #0F2D52;
+  color: var(--blue-700);
 }
 
 .locationOptionDesc {
   margin-top: 0.5rem;
   margin-left: 2rem;
   font-size: 0.95rem;
-  color: #4a4a4a;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 
@@ -997,18 +1043,20 @@
   width: 100%;
   max-width: 300px;
   padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #e5e3dc;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
   font-family: inherit;
   font-size: 0.95rem;
-  color: #0F2D52;
-  background-color: #ffffff;
+  color: var(--blue-700);
+  background-color: var(--bg-surface);
   outline: none;
   cursor: pointer;
+  transition: border-color 0.2s ease;
 }
 
 .stateSelect:focus {
-  border-color: #C4A484;
+  border-color: var(--purple-400);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
 }
 
 .stateTagsContainer {
@@ -1021,11 +1069,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background-color: #f4eee2;
-  border: 1px solid #e5e3dc;
-  color: #0F2D52;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  color: var(--blue-700);
   padding: 0.35rem 0.75rem;
-  border-radius: 20px;
+  border-radius: var(--radius-full);
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -1033,22 +1081,23 @@
 .removeTagBtn {
   background: none;
   border: none;
-  color: #8c8c8c;
+  color: var(--text-tertiary);
   cursor: pointer;
   font-size: 1.1rem;
   padding: 0;
   line-height: 1;
   display: flex;
   align-items: center;
+  transition: color 0.2s ease;
 }
 
 .removeTagBtn:hover {
-  color: #ef4444;
+  color: var(--red-400);
 }
 
 .dropdownHint {
   font-size: 0.85rem;
-  color: #8c8c8c;
+  color: var(--text-tertiary);
   margin: 0;
 }
 

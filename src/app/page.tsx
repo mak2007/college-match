@@ -7,36 +7,39 @@ export default function Home() {
     <div className={styles.wrapper}>
       <Navbar />
 
-      {/* Hero Section */}
       <main style={{ flex: 1 }}>
+        {/* Hero Section */}
         <section className={styles.hero}>
-          {/* Floating background lights */}
           <div className={styles.floatingCircles}>
             <div className={`${styles.circle} ${styles.circle1}`} />
             <div className={`${styles.circle} ${styles.circle2}`} />
             <div className={`${styles.circle} ${styles.circle3}`} />
           </div>
-          
+
           <div className={styles.heroContent}>
-            <div className={styles.badge}>Data-backed college selection engine</div>
+            <div className={styles.badge}>
+              <span style={{ fontSize: "0.7rem" }}>✦</span>
+              AI-Powered College Discovery
+            </div>
             <h1 className={styles.title}>
-              Your one-stop solution for all things college apps
+              Find your <span className={styles.titleHighlight}>perfect college</span>
+              <br />match in minutes
             </h1>
             <p className={styles.subtitle}>
-              Get matched. Score scholarships. Ace essays. Get admission offers.
+              Data-driven recommendations based on placements, ROI, campus life, and your personal priorities. Not just rankings.
             </p>
-            <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", justifyContent: "center" }}>
+            <div className={styles.heroActions}>
               <Link href="/predict" className={styles.ctaBtn}>
-                Get My Matches <span style={{ fontSize: "1.1rem" }}>→</span>
+                Get My Matches <span>→</span>
               </Link>
-              <Link href="/discover" className={styles.ctaBtn} style={{ backgroundColor: "transparent", color: "#ffffff", border: "2px solid #ffffff" }}>
+              <Link href="/discover" className={styles.ctaBtnOutline}>
                 Explore Colleges
               </Link>
             </div>
           </div>
         </section>
 
-        {/* Tilted Peeking Cards Section */}
+        {/* Feature Cards */}
         <section className={styles.peekingCardsContainer}>
           <Link href="/discover" className={styles.peekingCard}>
             <div className={styles.cardIconWrapper}>🔍</div>
@@ -45,28 +48,28 @@ export default function Home() {
               <p className={styles.cardText}>Filter by Placements & ROI</p>
             </div>
           </Link>
-          
+
           <Link href="/predict" className={styles.peekingCard}>
             <div className={styles.cardIconWrapper}>🏆</div>
             <div className={styles.cardMeta}>
-              <h4 className={styles.cardTitle}>Predictor Quiz</h4>
+              <h4 className={styles.cardTitle}>College Predictor</h4>
               <p className={styles.cardText}>Admissions Competitiveness</p>
             </div>
           </Link>
-          
+
           <Link href="/rankings" className={styles.peekingCard}>
             <div className={styles.cardIconWrapper}>📊</div>
             <div className={styles.cardMeta}>
-              <h4 className={styles.cardTitle}>Colleges Rankings</h4>
+              <h4 className={styles.cardTitle}>College Rankings</h4>
               <p className={styles.cardText}>ROI Flagship Analysis</p>
             </div>
           </Link>
-          
+
           <Link href="/compare" className={styles.peekingCard}>
-            <div className={styles.cardIconWrapper}>📄</div>
+            <div className={styles.cardIconWrapper}>⚡</div>
             <div className={styles.cardMeta}>
               <h4 className={styles.cardTitle}>Compare Colleges</h4>
-              <p className={styles.cardText}>Compare Side-by-Side</p>
+              <p className={styles.cardText}>Side-by-Side Comparison</p>
             </div>
           </Link>
         </section>
@@ -74,6 +77,9 @@ export default function Home() {
         {/* Features Grid */}
         <section className={styles.featuresSection}>
           <h2 className={styles.sectionTitle}>Why fit matters more than rank</h2>
+          <p className={styles.sectionSubtitle}>
+            Every student is different. Your college recommendation should be too.
+          </p>
           <div className={styles.featuresGrid}>
             <div className={styles.featureCard}>
               <div className={styles.featureIcon}>💼</div>
@@ -82,7 +88,7 @@ export default function Home() {
                 Look beyond highest packages. Filter by branch-specific averages, median packages, and actual placement rates.
               </p>
             </div>
-            
+
             <div className={styles.featureCard}>
               <div className={styles.featureIcon}>🎓</div>
               <h3 className={styles.featureTitle}>Branch Specific Strength</h3>
@@ -111,7 +117,7 @@ export default function Home() {
               <div className={styles.featureIcon}>📝</div>
               <h3 className={styles.featureTitle}>Competitive Fit</h3>
               <p className={styles.featureText}>
-                We calculate admission probability (Safe, Target, Reach) based on historical cutoffs of JEE percentiles and 12th marks.
+                We calculate admission probability (Safe, Target, Reach) based on JEE percentiles. Class 12 is eligibility only.
               </p>
             </div>
 
@@ -124,13 +130,35 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Social Proof */}
+        <section className={styles.socialProof}>
+          <div className={styles.statsGrid}>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>37+</div>
+              <div className={styles.statLabel}>Colleges Listed</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>100+</div>
+              <div className={styles.statLabel}>Branch Programs</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>50K+</div>
+              <div className={styles.statLabel}>Data Points</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>100%</div>
+              <div className={styles.statLabel}>Personalized</div>
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* Footer */}
       <footer className={styles.footer}>
         <div className={styles.footerContainer}>
           <p className={styles.copyText}>© 2026 kollegio. All rights reserved.</p>
-          <p className={styles.footerNote}>Made for solo B.Tech founders validating private admissions</p>
+          <p className={styles.footerNote}>Built for students who want data, not just vibes</p>
         </div>
       </footer>
     </div>

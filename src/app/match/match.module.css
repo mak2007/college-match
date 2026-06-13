@@ -1,13 +1,13 @@
 .wrapper {
   min-height: 100vh;
-  background-color: #faf9f5;
-  color: #0c2e1b;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
 }
 
 .header {
-  border-bottom: 1px solid #e6e4dc;
+  border-bottom: 1px solid var(--border-default);
   background-color: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   position: sticky;
@@ -16,9 +16,10 @@
 }
 
 .logo {
+  font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: #0c2e1b;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
@@ -28,14 +29,14 @@
 }
 
 .navLink {
-  color: #4a5d4e;
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.2s ease;
 }
 
 .navLink:hover {
-  color: #0c2e1b;
+  color: var(--text-primary);
 }
 
 .titleSection {
@@ -44,14 +45,15 @@
 }
 
 .titleSection h1 {
+  font-family: var(--font-display);
   font-size: 2.25rem;
   font-weight: 800;
-  color: #0c2e1b;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .titleSection p {
-  color: #4a5d4e;
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
@@ -72,10 +74,10 @@
   max-height: calc(100vh - 120px);
   overflow-y: auto;
   padding: 1.75rem;
-  background-color: #ffffff;
-  border: 1px solid #e6e4dc;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 /* Custom Scrollbar for Sidebar */
@@ -86,28 +88,29 @@
   background: transparent;
 }
 .sidebar::-webkit-scrollbar-thumb {
-  background: #e6e4dc;
-  border-radius: 2px;
+  background: var(--border-default);
+  border-radius: var(--radius-full);
 }
 
 .panelTitle {
+  font-family: var(--font-display);
   font-size: 1.2rem;
   font-weight: 700;
-  border-bottom: 1px solid #e6e4dc;
+  border-bottom: 1px solid var(--border-default);
   padding-bottom: 0.75rem;
   margin-bottom: 0.5rem;
-  color: #0c2e1b;
+  color: var(--text-primary);
 }
 
 .filterSection {
-  border-bottom: 1px solid #e6e4dc;
+  border-bottom: 1px solid var(--border-subtle);
   padding-bottom: 1.25rem;
 }
 
 .sectionLabel {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #8c9e90;
+  color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.75rem;
@@ -127,20 +130,20 @@
 }
 
 .sliderLabelRow span {
-  color: #4a5d4e;
+  color: var(--text-secondary);
 }
 
 .sliderLabelRow strong {
-  color: #059669;
+  color: var(--blue-600);
   font-weight: 600;
 }
 
 .rangeSlider {
   width: 100%;
-  accent-color: #10b981;
-  background-color: #e6e4dc;
+  accent-color: var(--blue-500);
+  background-color: var(--border-default);
   height: 6px;
-  border-radius: 3px;
+  border-radius: var(--radius-full);
   outline: none;
 }
 
@@ -149,11 +152,11 @@
   align-items: center;
   gap: 0.35rem;
   font-size: 0.85rem;
-  color: #4a5d4e;
+  color: var(--text-secondary);
 }
 
 .toggleConstraint input {
-  accent-color: #10b981;
+  accent-color: var(--blue-500);
 }
 
 /* Branch Options checkgrid */
@@ -164,28 +167,28 @@
 }
 
 .branchBtn {
-  background-color: #ffffff;
-  border: 1px solid #e6e4dc;
-  color: #4a5d4e;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
   padding: 0.5rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: 600;
   transition: all 0.2s ease;
-  font-family: var(--font-family);
+  font-family: var(--font-body);
 }
 
 .branchBtn:hover {
-  border-color: #c5d6c9;
-  color: #0c2e1b;
+  border-color: var(--blue-200);
+  color: var(--text-primary);
 }
 
 .branchBtnActive {
-  background: linear-gradient(135deg, #0c2e1b 0%, #10b981 100%);
+  background: linear-gradient(135deg, var(--blue-600) 0%, var(--cyan-400) 100%);
   border-color: transparent;
   color: white;
-  box-shadow: 0 2px 8px rgba(12, 46, 27, 0.15);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 
 /* Locations Inputs styles */
@@ -193,16 +196,17 @@
   flex: 1;
   min-width: 0;
   padding: 0.5rem;
-  background-color: #ffffff;
-  border: 1px solid #e6e4dc;
-  color: #0c2e1b;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
   font-size: 0.85rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   outline: none;
 }
 
 .selectField:focus {
-  border-color: #10b981;
+  border-color: var(--blue-400);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
 }
 
 .locationsRow {
@@ -216,11 +220,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  background-color: rgba(52, 211, 153, 0.1);
-  border: 1px solid rgba(52, 211, 153, 0.25);
-  color: #059669;
+  background-color: rgba(96, 165, 250, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  color: var(--blue-600);
   padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 0.8rem;
   font-weight: 500;
 }
@@ -228,7 +232,7 @@
 .locationTag button {
   background: none;
   border: none;
-  color: #059669;
+  color: var(--blue-600);
   cursor: pointer;
   font-size: 1rem;
   line-height: 1;
@@ -240,18 +244,18 @@
   align-items: flex-start;
   gap: 0.5rem;
   font-size: 0.8rem;
-  color: #4a5d4e;
+  color: var(--text-secondary);
   line-height: 1.3;
 }
 
 .locationToggle input {
   margin-top: 0.15rem;
-  accent-color: #10b981;
+  accent-color: var(--blue-500);
 }
 
 .infoText {
   font-size: 0.8rem;
-  color: #8c9e90;
+  color: var(--text-tertiary);
   margin-bottom: 0.5rem;
 }
 
@@ -265,21 +269,21 @@
 .priorityItem {
   display: flex;
   align-items: center;
-  background-color: #ffffff;
-  border: 1px solid #e6e4dc;
-  border-radius: 6px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
 }
 
 .priorityRank {
   font-weight: 700;
-  color: #059669;
+  color: var(--blue-600);
   margin-right: 0.75rem;
-  background-color: rgba(52, 211, 153, 0.15);
+  background-color: rgba(96, 165, 250, 0.12);
   width: 20px;
   height: 20px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -288,7 +292,7 @@
 
 .priorityLabel {
   flex: 1;
-  color: #0c2e1b;
+  color: var(--text-primary);
 }
 
 .priorityArrows {
@@ -299,16 +303,16 @@
 .priorityArrows button {
   background: none;
   border: none;
-  color: #8c9e90;
+  color: var(--text-tertiary);
   cursor: pointer;
   font-size: 0.65rem;
   padding: 0.25rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .priorityArrows button:hover:not(:disabled) {
-  color: #0c2e1b;
-  background-color: #faf9f5;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
 }
 
 .priorityArrows button:disabled {
@@ -330,23 +334,24 @@
 }
 
 .resultsHeading h2 {
+  font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: #0c2e1b;
+  color: var(--text-primary);
 }
 
 .loadingSpinner {
   font-size: 0.9rem;
-  color: #059669;
+  color: var(--blue-500);
   animation: pulse 1.5s infinite;
 }
 
 .errorAlert {
-  background-color: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.15);
-  color: #dc2626;
+  background-color: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+  color: var(--red-500);
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
 }
 
@@ -357,14 +362,19 @@
 }
 
 .collegeCard {
-  background-color: #ffffff;
-  border: 1px solid #e6e4dc;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.collegeCard:hover {
+  box-shadow: var(--shadow-lg);
 }
 
 .cardHeader {
@@ -381,29 +391,30 @@
 }
 
 .rankNum {
-  background: linear-gradient(135deg, #0c2e1b 0%, #10b981 100%);
+  background: linear-gradient(135deg, var(--blue-500) 0%, var(--cyan-400) 100%);
   color: white;
   font-weight: 700;
   font-size: 1.1rem;
   width: 42px;
   height: 42px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(12, 46, 27, 0.2);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
 }
 
 .collegeName {
+  font-family: var(--font-display);
   font-size: 1.35rem;
   font-weight: 700;
-  color: #0c2e1b;
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
 .collegeLoc {
   font-size: 0.85rem;
-  color: #4a5d4e;
+  color: var(--text-secondary);
 }
 
 .scoreContainer {
@@ -415,43 +426,44 @@
 
 .scoreTitle {
   font-size: 0.75rem;
-  color: #8c9e90;
+  color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.2rem;
 }
 
 .scoreVal {
+  font-family: var(--font-display);
   font-size: 1.75rem;
   font-weight: 800;
-  color: #10b981;
+  color: var(--blue-500);
 }
 
 .courseTagRow {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background-color: #f7f5ef;
-  border: 1px solid #e6e4dc;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
   padding: 0.5rem 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   width: fit-content;
 }
 
 .branchCode {
   font-size: 0.8rem;
   font-weight: 700;
-  background-color: rgba(52, 211, 153, 0.15);
-  color: #059669;
+  background-color: rgba(96, 165, 250, 0.12);
+  color: var(--blue-600);
   padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  border: 1px solid rgba(52, 211, 153, 0.25);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(96, 165, 250, 0.2);
 }
 
 .branchName {
   font-size: 0.95rem;
   font-weight: 500;
-  color: #0c2e1b;
+  color: var(--text-primary);
 }
 
 /* Parameters grid layout inside Card */
@@ -459,8 +471,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  border-top: 1px dashed #e6e4dc;
-  border-bottom: 1px dashed #e6e4dc;
+  border-top: 1px dashed var(--border-default);
+  border-bottom: 1px dashed var(--border-default);
   padding: 1.25rem 0;
 }
 
@@ -468,14 +480,15 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  border-right: 1px dashed #e6e4dc;
+  border-right: 1px dashed var(--border-default);
   padding-right: 1.5rem;
 }
 
 .paramSection h5 {
+  font-family: var(--font-display);
   font-size: 0.85rem;
   text-transform: uppercase;
-  color: #8c9e90;
+  color: var(--text-tertiary);
   letter-spacing: 0.05em;
   margin-bottom: 0.25rem;
 }
@@ -487,62 +500,62 @@
 }
 
 .paramRow span {
-  color: #4a5d4e;
+  color: var(--text-secondary);
 }
 
 .paramRow strong {
-  color: #0c2e1b;
+  color: var(--text-primary);
 }
 
 .totalCostRow {
   display: flex;
   justify-content: space-between;
   font-size: 0.9rem;
-  border-top: 1px solid #e6e4dc;
+  border-top: 1px solid var(--border-default);
   padding-top: 0.4rem;
   margin-top: 0.25rem;
 }
 
 .totalCostRow span {
   font-weight: 600;
-  color: #4a5d4e;
+  color: var(--text-secondary);
 }
 
 .totalCostRow strong {
-  color: #10b981;
+  color: var(--blue-500);
 }
 
 .competitivenessBadge {
   display: inline-block;
   width: fit-content;
   padding: 0.35rem 0.75rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.85rem;
   font-weight: 600;
   text-align: center;
 }
 
 .badgeSafe {
-  background-color: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  color: #059669;
+  background-color: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: var(--green-500);
 }
 
 .badgeTarget {
-  background-color: rgba(30, 64, 175, 0.08);
-  border: 1px solid rgba(30, 64, 175, 0.15);
-  color: #1e40af;
+  background-color: rgba(96, 165, 250, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  color: var(--blue-500);
 }
 
 .badgeDream {
   background-color: rgba(168, 85, 247, 0.1);
   border: 1px solid rgba(168, 85, 247, 0.2);
-  color: #7c3aed;
+  color: var(--purple-500);
 }
 
 .eligibilityText {
   font-size: 0.8rem;
-  color: #8c9e90;
+  color: var(--text-tertiary);
   line-height: 1.4;
 }
 
@@ -562,11 +575,11 @@
 
 .reasonTag {
   font-size: 0.8rem;
-  color: #4a5d4e;
-  background-color: #f5f3ec;
+  color: var(--text-secondary);
+  background-color: var(--bg-secondary);
   padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  border: 1px solid #e6e4dc;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
 }
 
 .actionBlock {
@@ -599,7 +612,7 @@
   }
   .paramSection {
     border-right: none;
-    border-bottom: 1px dashed #e6e4dc;
+    border-bottom: 1px dashed var(--border-default);
     padding-right: 0;
     padding-bottom: 1rem;
   }
