@@ -46,10 +46,10 @@ export default function Wizard() {
   // Step 6: Priorities state
   const [priorities, setPriorities] = useState<PriorityItem[]>([
     { id: "placements", label: "Placements & Salaries" },
-    { id: "roi", label: "Value for Money (ROI)" },
-    { id: "branch_strength", label: "Branch Specialization Strength" },
-    { id: "college_life", label: "College Life & Infrastructure" },
-    { id: "curriculum", label: "Modern Curriculum & Faculty" },
+    { id: "curriculum", label: "Modern Course Standards" },
+    { id: "campus_life", label: "Campus Life & crowd" },
+    { id: "research", label: "Research and Opportunities" },
+    { id: "extracurriculars", label: "Extracurricular activities and sports" },
   ]);
 
   const TOTAL_STEPS = 6;
@@ -200,7 +200,7 @@ export default function Wizard() {
       careerGoal,
       preferredBranches,
       priorities: priorities.map((p, index) => ({
-        criteria: p.id,
+        criteria: p.id.toUpperCase(),
         rankOrder: index + 1,
       })),
     };

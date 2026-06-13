@@ -101,14 +101,6 @@ export default function Predictor() {
   const handleQuizComplete = () => {
     setLoading(true);
 
-    const CRITERIA_MAPPING: Record<string, string> = {
-      placements: "placements",
-      extracurriculars: "roi",
-      campus_life: "college_life",
-      research: "branch_strength",
-      curriculum: "curriculum"
-    };
-
     const quizData = {
       jeePercentile,
       class12Percentage,
@@ -121,7 +113,7 @@ export default function Predictor() {
       preferredBranches,
       careerGoal,
       priorities: ranking.map((item, index) => ({
-        criteria: CRITERIA_MAPPING[item],
+        criteria: item.toUpperCase(),
         rankOrder: index + 1
       })),
     };

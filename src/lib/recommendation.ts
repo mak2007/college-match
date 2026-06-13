@@ -267,6 +267,14 @@ function normalizeWeights(weights: Record<string, number>): Record<string, numbe
   return normalized;
 }
 
+const ENGINE_CRITERIA_MAP: Record<string, string> = {
+  PLACEMENTS: "PLACEMENTS",
+  CURRICULUM: "CURRICULUM",
+  CAMPUS_LIFE: "COLLEGE_LIFE",
+  RESEARCH: "BRANCH_STRENGTH",
+  EXTRACURRICULARS: "COLLEGE_LIFE",
+};
+
 // 2. Calculate Weights dynamically based on strategy configuration
 export function getWeights(
   priorities: { criteria: string; rankOrder: number }[],
@@ -287,8 +295,14 @@ export function getWeights(
   } else if (config.weightStrategy === "ROC") {
     const sorted = [...priorities].sort((a, b) => a.rankOrder - b.rankOrder);
     const ROC_WEIGHTS = [0.4567, 0.2567, 0.1567, 0.0900, 0.0400];
+    const CORE_CRITERIA = ["PLACEMENTS", "ROI", "BRANCH_STRENGTH", "COLLEGE_LIFE", "CURRICULUM"];
+    CORE_CRITERIA.forEach((key) => { weights[key] = 0.01; }); // small baseline
     sorted.forEach((p, idx) => {
-      weights[p.criteria.toUpperCase()] = ROC_WEIGHTS[idx] || 0.04;
+      const criteria = p.criteria.toUpperCase();
+      const mappedKey = ENGINE_CRITERIA_MAP[criteria] || criteria;
+      if (weights[mappedKey] !== undefined) {
+        weights[mappedKey] += ROC_WEIGHTS[idx] || 0.04;
+      }
     });
   } else {
     // CAREER_GOAL_PRIORITY (default)
@@ -308,11 +322,12 @@ export function getWeights(
 
       sorted.forEach((p) => {
         const criteria = p.criteria.toUpperCase();
-        if (weights[criteria] !== undefined) {
+        const mappedKey = ENGINE_CRITERIA_MAP[criteria] || criteria;
+        if (weights[mappedKey] !== undefined) {
           const rankFrom1 = p.rankOrder - 1;
           const adjustment = -rankFrom1 * boostPerRank;
           const clampedAdj = Math.max(-maxAdj, Math.min(maxAdj, adjustment));
-          weights[criteria] = weights[criteria] * (1 + clampedAdj);
+          weights[mappedKey] = weights[mappedKey] * (1 + clampedAdj);
         }
       });
 
@@ -760,8 +775,14 @@ export function generateRecommendations(
     // Priority based reason
     if (topPriority === "PLACEMENTS" && c.placementScore >= 8.5) {
       keyReasons.push("Matches your #1 priority: Outstanding placements");
-    } else if (topPriority === "ROI" && sRoi >= 80) {
-      keyReasons.push("Matches your #1 priority: High ROI value");
+    } else if (topPriority === "CAMPUS_LIFE" && c.collegeLifeScore >= 8.5) {
+      keyReasons.push("Matches your #1 priority: Excellent campus environment");
+    } else if (topPriority === "EXTRACURRICULARS" && c.collegeLifeScore >= 8.5) {
+      keyReasons.push("Matches your #1 priority: Excellent campus environment");
+    } else if (topPriority === "RESEARCH" && Number(collegeMeta.research_output) >= 7) {
+      keyReasons.push("Matches your #1 priority: Strong research focus");
+    } else if (topPriority === "CURRICULUM" && c.curriculumScore >= 8.5) {
+      keyReasons.push("Matches your #1 priority: Modern curriculum standards");
     }
 
     if (c.isPartner) {

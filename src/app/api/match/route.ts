@@ -113,15 +113,15 @@ export async function POST(request: Request) {
     let prioritiesInput = body.priorities || [];
     if (prioritiesInput.length === 0) {
       prioritiesInput = [
-        { criteria: "placements", rankOrder: 1 },
-        { criteria: "roi", rankOrder: 2 },
-        { criteria: "branch_strength", rankOrder: 3 },
-        { criteria: "college_life", rankOrder: 4 },
-        { criteria: "curriculum", rankOrder: 5 },
+        { criteria: "PLACEMENTS", rankOrder: 1 },
+        { criteria: "CURRICULUM", rankOrder: 2 },
+        { criteria: "CAMPUS_LIFE", rankOrder: 3 },
+        { criteria: "RESEARCH", rankOrder: 4 },
+        { criteria: "EXTRACURRICULARS", rankOrder: 5 },
       ];
     } else {
       prioritiesInput = prioritiesInput.map((p: any, idx: number) => ({
-        criteria: (p.criteria || p.id || "").toLowerCase(),
+        criteria: (p.criteria || p.id || "").toUpperCase(),
         rankOrder: p.rankOrder !== undefined ? p.rankOrder : p.rank_order !== undefined ? p.rank_order : idx + 1,
       }));
     }
@@ -175,14 +175,14 @@ export async function GET(request: Request) {
     const prioritiesStr = searchParams.get("priorities");
     let prioritiesInput = [];
     if (prioritiesStr) {
-      prioritiesInput = prioritiesStr.split(",").map((p, idx) => ({ criteria: p.trim().toLowerCase(), rankOrder: idx + 1 }));
+      prioritiesInput = prioritiesStr.split(",").map((p, idx) => ({ criteria: p.trim().toUpperCase(), rankOrder: idx + 1 }));
     } else {
       prioritiesInput = [
-        { criteria: "placements", rankOrder: 1 },
-        { criteria: "roi", rankOrder: 2 },
-        { criteria: "branch_strength", rankOrder: 3 },
-        { criteria: "college_life", rankOrder: 4 },
-        { criteria: "curriculum", rankOrder: 5 },
+        { criteria: "PLACEMENTS", rankOrder: 1 },
+        { criteria: "CURRICULUM", rankOrder: 2 },
+        { criteria: "CAMPUS_LIFE", rankOrder: 3 },
+        { criteria: "RESEARCH", rankOrder: 4 },
+        { criteria: "EXTRACURRICULARS", rankOrder: 5 },
       ];
     }
 

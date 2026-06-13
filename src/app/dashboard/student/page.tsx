@@ -69,15 +69,15 @@ interface DashboardData {
 
 const CRITERIA_LABELS: Record<string, string> = {
   placements: "💼 Placements & Salaries",
-  roi: "💰 Value for Money (ROI)",
-  branch_strength: "🎓 Branch Strength",
-  college_life: "🌴 College Life",
-  curriculum: "📖 Curriculum & Faculty",
+  curriculum: "📖 Modern Course Standards",
+  campus_life: "🌴 Campus Life & Crowd",
+  research: "🔬 Research & Opportunities",
+  extracurriculars: "⚽ Extracurricular Activities",
   PLACEMENTS: "💼 Placements & Salaries",
-  ROI: "💰 Value for Money (ROI)",
-  BRANCH_STRENGTH: "🎓 Branch Strength",
-  COLLEGE_LIFE: "🌴 College Life",
-  CURRICULUM: "📖 Curriculum & Faculty",
+  CURRICULUM: "📖 Modern Course Standards",
+  CAMPUS_LIFE: "🌴 Campus Life & Crowd",
+  RESEARCH: "🔬 Research & Opportunities",
+  EXTRACURRICULARS: "⚽ Extracurricular Activities and Sports",
 };
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: string }> = {

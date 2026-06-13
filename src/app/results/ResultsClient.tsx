@@ -101,11 +101,19 @@ const CAREER_GOALS = [
 
 const PRIORITY_CRITERIA = [
   "PLACEMENTS",
-  "ROI",
-  "BRANCH_STRENGTH",
-  "COLLEGE_LIFE",
   "CURRICULUM",
+  "CAMPUS_LIFE",
+  "RESEARCH",
+  "EXTRACURRICULARS",
 ];
+
+const PRIORITY_LABELS: Record<string, string> = {
+  PLACEMENTS: "Placements & Salaries",
+  CURRICULUM: "Modern Course Standards",
+  CAMPUS_LIFE: "Campus Life & Crowd",
+  RESEARCH: "Research and Opportunities",
+  EXTRACURRICULARS: "Extracurricular Activities and Sports",
+};
 
 const INDIAN_STATES = [
   "Andhra Pradesh", "Assam", "Bihar", "Chhattisgarh", "Delhi", "Gujarat",
@@ -382,7 +390,7 @@ export default function ResultsClient({
                 {quizAnswers.priorities.map((p, idx) => (
                   <div key={p.criteria} className={styles.priorityItem}>
                     <span className={styles.priorityRank}>{idx + 1}</span>
-                    <span className={styles.priorityName}>{p.criteria.replace(/_/g, " ")}</span>
+                    <span className={styles.priorityName}>{PRIORITY_LABELS[p.criteria.toUpperCase()] || p.criteria}</span>
                     <div className={styles.priorityArrows}>
                       <button onClick={() => movePriority(idx, -1)} disabled={idx === 0} className={styles.arrowBtn}>&#9650;</button>
                       <button onClick={() => movePriority(idx, 1)} disabled={idx === quizAnswers.priorities.length - 1} className={styles.arrowBtn}>&#9660;</button>
