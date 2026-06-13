@@ -196,7 +196,7 @@ export async function POST(request: Request) {
     const recommendations = generateRecommendations(engineProfile, candidates, config);
     const top15 = recommendations.slice(0, 15);
 
-    // 5. Store new recommendations
+    // 5. Store new recommendations (persist core fields for history)
     await prisma.recommendation.deleteMany({ where: { studentId } });
     if (top15.length > 0) {
       await prisma.recommendation.createMany({
@@ -213,18 +213,8 @@ export async function POST(request: Request) {
       });
     }
 
-    // 6. Return fresh recommendations with college data
-    const freshRecs = await prisma.recommendation.findMany({
-      where: { studentId },
-      orderBy: { rankPosition: "asc" },
-      include: {
-        college: {
-          include: { branches: true },
-        },
-      },
-    });
-
-    return NextResponse.json({ recommendations: freshRecs });
+    // 6. Return full engine results with admissionCompetitiveness
+    return NextResponse.json({ recommendations: top15 });
   } catch (error: any) {
     console.error("Regenerate API Error:", error);
     return NextResponse.json({ error: "Internal Server Error", details: error.message }, { status: 500 });

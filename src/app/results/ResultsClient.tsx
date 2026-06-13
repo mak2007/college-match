@@ -13,6 +13,11 @@ interface Recommendation {
   rankPosition: number;
   branchCode: string;
   reasons: string;
+  admissionCompetitiveness?: {
+    category: "Dream" | "Target" | "Safe";
+    badgeText: string;
+    jeeGap: number | null;
+  };
   college: {
     id: string;
     name: string;
@@ -86,58 +91,7 @@ const INDIAN_STATES = [
   "Tamil Nadu", "Telangana", "Uttarakhand", "Uttar Pradesh", "West Bengal",
 ];
 
-function getAdmissionCategory(
-  jeePercentile: number | null,
-  class12Percentage: number | null,
-  minJeeCutoff: number | null,
-  minClass12Cutoff: number | null
-): "Dream" | "Target" | "Safe" {
-  const jeeGap =
-    jeePercentile && minJeeCutoff ? jeePercentile - minJeeCutoff : null;
-  const c12Gap =
-    class12Percentage && minClass12Cutoff
-      ? class12Percentage - minClass12Cutoff
-      : null;
-  const gap =
-    jeeGap !== null && c12Gap !== null
-      ? Math.max(jeeGap, c12Gap)
-      : jeeGap !== null
-        ? jeeGap
-        : c12Gap;
-  if (gap === null) return "Target";
-  if (gap >= 5) return "Safe";
-  if (gap < 0) return "Dream";
-  return "Target";
-}
 
-function getAdmissionProbability(
-  jeePercentile: number | null,
-  class12Percentage: number | null,
-  minJeeCutoff: number | null,
-  minClass12Cutoff: number | null
-): number {
-  const jeeGap =
-    jeePercentile && minJeeCutoff ? jeePercentile - minJeeCutoff : null;
-  const c12Gap =
-    class12Percentage && minClass12Cutoff
-      ? class12Percentage - minClass12Cutoff
-      : null;
-  const gap =
-    jeeGap !== null && c12Gap !== null
-      ? Math.max(jeeGap, c12Gap)
-      : jeeGap !== null
-        ? jeeGap
-        : c12Gap;
-  if (gap === null) return 50;
-  if (gap >= 10) return 95;
-  if (gap >= 7) return 85;
-  if (gap >= 5) return 75;
-  if (gap >= 3) return 60;
-  if (gap >= 1) return 45;
-  if (gap >= 0) return 35;
-  if (gap >= -2) return 20;
-  return 10;
-}
 
 export default function ResultsClient({
   student,
@@ -232,17 +186,10 @@ export default function ResultsClient({
   const enriched = useMemo(() => {
     return recommendations.map((rec) => {
       const branch = rec.college.branches.find((b) => b.branchCode === rec.branchCode);
-      const category = getAdmissionCategory(
-        quizAnswers.jeePercentile, quizAnswers.class12Percentage,
-        branch?.minJeePercentileCutoff ?? null, branch?.minClass12Cutoff ?? null
-      );
-      const admissionProb = getAdmissionProbability(
-        quizAnswers.jeePercentile, quizAnswers.class12Percentage,
-        branch?.minJeePercentileCutoff ?? null, branch?.minClass12Cutoff ?? null
-      );
-      return { ...rec, category, admissionProb };
+      const category = rec.admissionProbability >= 70 ? "Safe" : rec.admissionProbability >= 35 ? "Target" : "Dream";
+      return { ...rec, category, admissionProb: rec.admissionProbability };
     });
-  }, [recommendations, quizAnswers.jeePercentile, quizAnswers.class12Percentage]);
+  }, [recommendations]);
 
   const filtered = useMemo(() => {
     let result = enriched;
@@ -267,7 +214,7 @@ export default function ResultsClient({
 
   const bucketCounts = useMemo(() => {
     const counts = { Dream: 0, Target: 0, Safe: 0 };
-    enriched.forEach((r) => { counts[r.category]++; });
+    enriched.forEach((r) => { counts[r.category as keyof typeof counts]++; });
     return counts;
   }, [enriched]);
 
@@ -352,7 +299,7 @@ export default function ResultsClient({
                   className={styles.sidebarInput} />
               </div>
               <div className={styles.inputRow}>
-                <label>Class 12 %</label>
+                <label>Class 12 % (Eligibility)</label>
                 <input type="number" min="0" max="100" step="0.1"
                   value={quizAnswers.class12Percentage ?? ""}
                   onChange={(e) => updateQuiz({ class12Percentage: e.target.value ? Number(e.target.value) : null })}
@@ -550,10 +497,10 @@ export default function ResultsClient({
                         </div>
                       </div>
                       <div className={styles.gridSection} style={{ borderRight: "none" }}>
-                        <h4 className={styles.sectionTitle}>Cutoffs</h4>
+                        <h4 className={styles.sectionTitle}>Admission Criteria</h4>
                         <p className={styles.cutoffSubtext}>
-                          JEE: {branch.minJeePercentileCutoff ? `~${branch.minJeePercentileCutoff}%` : "N/A"}<br />
-                          Class 12: {branch.minClass12Cutoff ? `~${branch.minClass12Cutoff}%` : "N/A"}
+                          JEE Main: {branch.minJeePercentileCutoff ? `≥ ${branch.minJeePercentileCutoff} percentile` : "N/A"}<br />
+                          Eligibility: {branch.minClass12Cutoff ? `Class 12 ≥ ${branch.minClass12Cutoff}%` : "N/A"}
                         </p>
                       </div>
                     </div>
