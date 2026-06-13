@@ -45,6 +45,7 @@ export async function GET(request: Request) {
           isPartner: c.isPartner,
           isNewGen: c.isNewGen,
           commissionRate: c.commissionRate,
+          nirf_ranking: meta.nirf_ranking ?? "",
           infra_rating: meta.infra_rating ?? "",
           startup_ecosystem: meta.startup_ecosystem ?? "",
           research_output: meta.research_output ?? "",

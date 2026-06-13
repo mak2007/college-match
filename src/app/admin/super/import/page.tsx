@@ -29,9 +29,9 @@ interface ImportResult {
 // ─── EXACT TEMPLATES (headers only + 2 sample rows) ──────────────
 const TEMPLATES: Record<ImportType, string> = {
   colleges: [
-    "name,state,city,officialApplyUrl,website,placementScore,collegeLifeScore,curriculumScore,isPartner,commissionRate,infra_rating,startup_ecosystem,research_output,international_exposure",
-    "Vellore Institute of Technology,Tamil Nadu,Vellore,https://vit.ac.in/apply,https://vit.ac.in,9.2,8.8,9.0,true,25000,90,8.5,7.0,6.5",
-    "Manipal Institute of Technology,Karnataka,Manipal,https://manipal.edu/apply,https://manipal.edu,8.9,9.6,8.7,true,30000,95,9.0,8.5,9.2",
+    "name,state,city,officialApplyUrl,website,placementScore,collegeLifeScore,curriculumScore,isPartner,commissionRate,nirf_ranking,infra_rating,startup_ecosystem,research_output,international_exposure",
+    "Vellore Institute of Technology,Tamil Nadu,Vellore,https://vit.ac.in/apply,https://vit.ac.in,9.2,8.8,9.0,true,25000,11,90,8.5,7.0,6.5",
+    "Manipal Institute of Technology,Karnataka,Manipal,https://manipal.edu/apply,https://manipal.edu,8.9,9.6,8.7,true,30000,21,95,9.0,8.5,9.2",
   ].join("\n"),
   branches: [
     "collegeName,branchCode,branchName,tuitionFeeAnnual,hostelFeeAnnual,seatCapacity,avgSalary,medianSalary,highestSalary,minJeePercentileCutoff,minClass12Cutoff,branchStrengthScore,placementPercentage",
@@ -67,6 +67,7 @@ const SCHEMAS: Record<ImportType, { label: string; description: string; required
       { field: "curriculumScore", note: "0-10 scale" },
       { field: "isPartner", note: "true / false" },
       { field: "commissionRate", note: "Flat INR per referral" },
+      { field: "nirf_ranking", note: "0-100 (inverse of rank)" },
       { field: "infra_rating", note: "0-100" },
       { field: "startup_ecosystem", note: "0-100" },
       { field: "research_output", note: "0-100" },
