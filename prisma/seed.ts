@@ -10,7 +10,7 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("Starting database cleanup and seeding with requested 4 colleges...");
+  console.log("Starting database cleanup and seeding with 4 new colleges...");
 
   // 1. Clean up existing database tables
   console.log("Cleaning up old data...");
@@ -108,181 +108,181 @@ async function main() {
 
   // Create college admin accounts
   await prisma.user.create({
-    data: { email: "admissions@kiit.ac.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
+    data: { email: "admissions@mit.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
   await prisma.user.create({
-    data: { email: "admissions@flame.edu.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
+    data: { email: "admissions@sitpune.edu.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
   await prisma.user.create({
-    data: { email: "admissions@mitb.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
+    data: { email: "admissions@nmims.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
   await prisma.user.create({
-    data: { email: "admissions@srmist.edu.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
+    data: { email: "admissions@amrita.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
 
   // 4. Define 4 Colleges Data
   const collegesData = [
     {
-      name: "KIIT Bhubaneswar (KIIT DU)",
-      slug: "kiit-bhubaneswar",
-      state: "Odisha",
-      city: "Bhubaneswar",
+      name: "Manipal Institute of Technology (MIT Manipal)",
+      slug: "mit-manipal",
+      state: "Karnataka",
+      city: "Manipal",
       logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1562774053-701939374585?w=800&h=400&fit=crop",
-      brochureUrl: "https://kiit.ac.in/brochure.pdf",
-      officialApplyUrl: "https://kiitee.kiit.ac.in",
-      website: "https://kiit.ac.in",
+      coverImageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=400&fit=crop",
+      brochureUrl: "https://manipal.edu/brochure.pdf",
+      officialApplyUrl: "https://manipal.edu/mit/program-list/btech.html",
+      website: "https://manipal.edu/mit.html",
       isPartner: false,
       isNewGen: false,
       commissionRate: 0.0,
-      placementScore: 8.5,
-      collegeLifeScore: 8.3,
-      curriculumScore: 8.4,
-      adminEmail: "admissions@kiit.ac.in",
+      placementScore: 8.9,
+      collegeLifeScore: 9.0,
+      curriculumScore: 8.6,
+      adminEmail: "admissions@mit.edu",
       metadata: JSON.stringify({
-        infra_rating: 82,
+        infra_rating: 87,
         startup_ecosystem: 7.8,
-        research_output: 7.4,
-        exposure_score: 8.6,
-      }),
-      branches: [
-        {
-          branchName: "Computer Science & Engineering",
-          branchCode: "CSE",
-          tuitionFeeAnnual: 350000,
-          hostelFeeAnnual: 100000,
-          seatCapacity: 500,
-          avgSalary: 900000,
-          medianSalary: 750000,
-          highestSalary: 5300000,
-          minJeePercentileCutoff: 95.0,
-          minClass12Cutoff: 50.0, // Baseline typical fallback
-          branchStrengthScore: 8.6,
-          placementPercentage: 92.0,
-          metadata: JSON.stringify({ acceptsOwnExam: true, jeeOverlapRange: "93-97" }),
-        }
-      ]
-    },
-    {
-      name: "FLAME University (CS/DS UG)",
-      slug: "flame-university",
-      state: "Maharashtra",
-      city: "Pune",
-      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=400&fit=crop",
-      brochureUrl: "https://www.flame.edu.in/brochure.pdf",
-      officialApplyUrl: "https://www.flame.edu.in/admissions/ug",
-      website: "https://www.flame.edu.in",
-      isPartner: false,
-      isNewGen: true,
-      commissionRate: 0.0,
-      placementScore: 7.8,
-      collegeLifeScore: 8.5,
-      curriculumScore: 8.0,
-      adminEmail: "admissions@flame.edu.in",
-      metadata: JSON.stringify({
-        infra_rating: 82,
-        startup_ecosystem: 7.5,
-        research_output: 6.8,
-        exposure_score: 8.0,
-      }),
-      branches: [
-        {
-          branchName: "Computer Science & Engineering (B.Sc CS/Data Science)",
-          branchCode: "CSE",
-          tuitionFeeAnnual: 950000,
-          hostelFeeAnnual: 195000,
-          seatCapacity: 60,
-          avgSalary: 650000, // Safe default fallback as placement details are blank
-          medianSalary: 600000,
-          highestSalary: 1200000,
-          minJeePercentileCutoff: 70.0, // Typical fallback cutoff
-          minClass12Cutoff: 50.0,
-          branchStrengthScore: 8.0,
-          placementPercentage: 80.0,
-          metadata: JSON.stringify({ acceptsOwnExam: true }),
-        }
-      ]
-    },
-    {
-      name: "MIT Bengaluru (Manipal Institute of Technology, Bengaluru)",
-      slug: "mit-bengaluru",
-      state: "Karnataka",
-      city: "Bengaluru",
-      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop",
-      brochureUrl: "https://manipal.edu/brochure.pdf",
-      officialApplyUrl: "https://manipal.edu/mit-bengaluru.html",
-      website: "https://manipal.edu/mit-bengaluru.html",
-      isPartner: false,
-      isNewGen: true,
-      commissionRate: 0.0,
-      placementScore: 8.7,
-      collegeLifeScore: 8.4,
-      curriculumScore: 8.5,
-      adminEmail: "admissions@mitb.edu",
-      metadata: JSON.stringify({
-        infra_rating: 84,
-        startup_ecosystem: 7.8,
-        research_output: 7.5,
-        exposure_score: 8.5,
+        research_output: 8.0,
+        exposure_score: 8.8,
       }),
       branches: [
         {
           branchName: "Computer Science & Engineering",
           branchCode: "CSE",
           tuitionFeeAnnual: 500000,
-          hostelFeeAnnual: 140000, // Estimated benchmark MIT hostel fee
-          seatCapacity: 180,
-          avgSalary: 1050000,
-          medianSalary: 900000,
-          highestSalary: 5100000,
-          minJeePercentileCutoff: 94.0,
+          hostelFeeAnnual: 260000,
+          seatCapacity: 400,
+          avgSalary: 1500000,
+          medianSalary: 1200000,
+          highestSalary: 6925000,
+          minJeePercentileCutoff: 97.5,
           minClass12Cutoff: 50.0,
-          branchStrengthScore: 8.7,
-          placementPercentage: 90.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, jeeOverlapRange: "92-97" }),
+          branchStrengthScore: 8.8,
+          placementPercentage: 82.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, jeeOverlapRange: "96-99" }),
         }
       ]
     },
     {
-      name: "SRM Institute of Science and Technology (SRM KTR)",
-      slug: "srm-ktr",
-      state: "Tamil Nadu",
-      city: "Kattankulathur",
+      name: "Symbiosis Institute of Technology (SIT Pune)",
+      slug: "sit-pune",
+      state: "Maharashtra",
+      city: "Pune",
       logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1527891751199-7225231a68dd?w=800&h=400&fit=crop",
-      brochureUrl: "https://www.srmist.edu.in/brochure.pdf",
-      officialApplyUrl: "https://admissions.srmist.edu.in",
-      website: "https://www.srmist.edu.in",
+      coverImageUrl: "https://images.unsplash.com/photo-1562774053-701939374585?w=800&h=400&fit=crop",
+      brochureUrl: "https://www.sitpune.edu.in/brochure.pdf",
+      officialApplyUrl: "https://www.sitpune.edu.in/first-year-admission-eligibility",
+      website: "https://www.sitpune.edu.in",
       isPartner: false,
       isNewGen: false,
       commissionRate: 0.0,
-      placementScore: 8.8,
-      collegeLifeScore: 8.3,
-      curriculumScore: 8.5,
-      adminEmail: "admissions@srmist.edu.in",
+      placementScore: 8.6,
+      collegeLifeScore: 8.2,
+      curriculumScore: 8.3,
+      adminEmail: "admissions@sitpune.edu.in",
       metadata: JSON.stringify({
-        infra_rating: 84,
-        startup_ecosystem: 7.9,
-        research_output: 7.4,
-        exposure_score: 8.7,
+        infra_rating: 80,
+        startup_ecosystem: 7.5,
+        research_output: 7.3,
+        exposure_score: 8.5,
       }),
       branches: [
         {
           branchName: "Computer Science & Engineering",
           branchCode: "CSE",
-          tuitionFeeAnnual: 410000,
-          hostelFeeAnnual: 150000,
-          seatCapacity: 1200,
-          avgSalary: 800000,
-          medianSalary: 650000,
-          highestSalary: 5000000,
+          tuitionFeeAnnual: 400000,
+          hostelFeeAnnual: 260000,
+          seatCapacity: 180,
+          avgSalary: 1500000,
+          medianSalary: 1300000,
+          highestSalary: 3500000, // Benchmark typical high package for SIT Pune
           minJeePercentileCutoff: 96.0,
+          minClass12Cutoff: 45.0,
+          branchStrengthScore: 8.6,
+          placementPercentage: 97.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsStateExam: true, acceptsOwnExam: true, jeeOverlapRange: "93-97" }),
+        }
+      ]
+    },
+    {
+      name: "NMIMS MPSTME (Mumbai)",
+      slug: "nmims-mpstme",
+      state: "Maharashtra",
+      city: "Mumbai",
+      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
+      coverImageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop",
+      brochureUrl: "https://engineering.nmims.edu/brochure.pdf",
+      officialApplyUrl: "https://engineering.nmims.edu/admissions",
+      website: "https://engineering.nmims.edu",
+      isPartner: false,
+      isNewGen: true,
+      commissionRate: 0.0,
+      placementScore: 8.2,
+      collegeLifeScore: 8.0,
+      curriculumScore: 8.3,
+      adminEmail: "admissions@nmims.edu",
+      metadata: JSON.stringify({
+        infra_rating: 82,
+        startup_ecosystem: 7.6,
+        research_output: 7.2,
+        exposure_score: 8.3,
+      }),
+      branches: [
+        {
+          branchName: "Computer Science & Engineering",
+          branchCode: "CSE",
+          tuitionFeeAnnual: 500000,
+          hostelFeeAnnual: 300000,
+          seatCapacity: 240,
+          avgSalary: 900000,
+          medianSalary: 800000,
+          highestSalary: 2200000,
+          minJeePercentileCutoff: 88.0,
           minClass12Cutoff: 50.0,
-          branchStrengthScore: 8.8,
-          placementPercentage: 95.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, jeeOverlapRange: "93-99" }),
+          branchStrengthScore: 8.4,
+          placementPercentage: 85.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, jeeOverlapRange: "80-95" }),
+        }
+      ]
+    },
+    {
+      name: "Amrita Vishwa Vidyapeetham (Coimbatore Campus)",
+      slug: "amrita-coimbatore",
+      state: "Tamil Nadu",
+      city: "Coimbatore",
+      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
+      coverImageUrl: "https://images.unsplash.com/photo-1527891751199-7225231a68dd?w=800&h=400&fit=crop",
+      brochureUrl: "https://www.amrita.edu/brochure.pdf",
+      officialApplyUrl: "https://www.amrita.edu/admissions/engineering/",
+      website: "https://www.amrita.edu",
+      isPartner: false,
+      isNewGen: false,
+      commissionRate: 0.0,
+      placementScore: 8.5,
+      collegeLifeScore: 8.3,
+      curriculumScore: 8.4,
+      adminEmail: "admissions@amrita.edu",
+      metadata: JSON.stringify({
+        infra_rating: 82,
+        startup_ecosystem: 7.5,
+        research_output: 7.8,
+        exposure_score: 8.4,
+      }),
+      branches: [
+        {
+          branchName: "Computer Science & Engineering",
+          branchCode: "CSE",
+          tuitionFeeAnnual: 600000,
+          hostelFeeAnnual: 100000,
+          seatCapacity: 360,
+          avgSalary: 775000,
+          medianSalary: 600000,
+          highestSalary: 2500000,
+          minJeePercentileCutoff: 92.0,
+          minClass12Cutoff: 60.0,
+          branchStrengthScore: 8.7,
+          placementPercentage: 98.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, jeeOverlapRange: "88-96" }),
         }
       ]
     }
