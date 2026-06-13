@@ -10,7 +10,7 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("Starting seed script...");
+  console.log("Starting database cleanup and seeding with requested 4 colleges...");
 
   // 1. Clean up existing database tables
   console.log("Cleaning up old data...");
@@ -81,8 +81,7 @@ async function main() {
       { id: "partner_b", type: "IS_PARTNER", bonus: 2.0, reason: "Exclusive CollegeMatch Partner" }
     ],
     customScoringAttributes: [
-      { key: "nirf_ranking", label: "NIRF Ranking Score", weight: 0.03, defaultValue: 70 },
-      { key: "infra_rating", label: "Infrastructure Score", weight: 0.02, defaultValue: 80 }
+      { key: "infra_rating", label: "Infrastructure Score", weight: 0.05, defaultValue: 80 }
     ]
   };
 
@@ -92,7 +91,6 @@ async function main() {
       value: JSON.stringify(defaultMatchingRules, null, 2),
     },
   });
-  console.log("Seeded matching rules configuration.");
 
   // 3. Create Superadmin User
   console.log("Creating users...");
@@ -100,126 +98,216 @@ async function main() {
   const adminPasswordHash = await bcrypt.hash("AdminPass123!", salt);
   const collegePasswordHash = await bcrypt.hash("CollegePass123!", salt);
 
-  const superadmin = await prisma.user.create({
+  await prisma.user.create({
     data: {
       email: "admin@collegematch.in",
       passwordHash: adminPasswordHash,
       role: "SUPERADMIN",
     },
   });
-  console.log(`Superadmin user created: ${superadmin.email}`);
 
   // Create college admin accounts
   await prisma.user.create({
     data: {
-      email: "admissions@vit.edu",
+      email: "admissions@opju.ac.in",
       passwordHash: collegePasswordHash,
       role: "COLLEGE_ADMIN",
     },
   });
   await prisma.user.create({
     data: {
-      email: "admissions@manipal.edu",
+      email: "admissions@quantum.edu",
+      passwordHash: collegePasswordHash,
+      role: "COLLEGE_ADMIN",
+    },
+  });
+  await prisma.user.create({
+    data: {
+      email: "admissions@dsce.edu",
+      passwordHash: collegePasswordHash,
+      role: "COLLEGE_ADMIN",
+    },
+  });
+  await prisma.user.create({
+    data: {
+      email: "admissions@bennett.edu.in",
       passwordHash: collegePasswordHash,
       role: "COLLEGE_ADMIN",
     },
   });
 
-  // 4. Define 15+ Private Engineering Colleges
+  // 4. Define 4 Colleges Data
   const collegesData = [
     {
-      name: "Vellore Institute of Technology (VIT)",
-      slug: "vit-vellore",
-      state: "Tamil Nadu",
-      city: "Vellore",
+      name: "OP Jindal University (Raigarh)",
+      slug: "op-jindal-university-raigarh",
+      state: "Chhattisgarh",
+      city: "Raigarh",
       logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
       coverImageUrl: "https://images.unsplash.com/photo-1562774053-701939374585?w=800&h=400&fit=crop",
-      brochureUrl: "https://vit.ac.in/files/brochure.pdf",
-      officialApplyUrl: "https://viteee.vit.ac.in/",
-      website: "https://vit.ac.in",
-      isPartner: true,
-      commissionRate: 25000.00,
-      placementScore: 9.2,
-      collegeLifeScore: 8.8,
-      curriculumScore: 9.0,
-      adminEmail: "admissions@vit.edu",
-      metadata: JSON.stringify({ nirf_ranking: 11, infra_rating: 90, startup_ecosystem: 8.5, research_output: 7.0, international_exposure: 6.5 }),
+      brochureUrl: "https://www.opju.ac.in/brochure.pdf",
+      officialApplyUrl: "https://www.opju.ac.in/programmes/btech-cse",
+      website: "https://www.opju.ac.in",
+      isPartner: false,
+      isNewGen: false,
+      commissionRate: 0.0,
+      placementScore: 7.8,
+      collegeLifeScore: 7.6,
+      curriculumScore: 7.8,
+      adminEmail: "admissions@opju.ac.in",
+      metadata: JSON.stringify({
+        infra_rating: 77,
+        startup_ecosystem: 7.0,
+        research_output: 6.8,
+        exposure_score: 7.8,
+      }),
       branches: [
-        { branchName: "Computer Science & Engineering", branchCode: "CSE", tuitionFeeAnnual: 198000, hostelFeeAnnual: 95000, seatCapacity: 1200, avgSalary: 920000, medianSalary: 850000, highestSalary: 4400000, minJeePercentileCutoff: 94.5, minClass12Cutoff: 85.0, branchStrengthScore: 9.5, placementPercentage: 95.0, metadata: JSON.stringify({ lab_rating: 9.2 }) },
-        { branchName: "Electronics & Communication Engineering", branchCode: "ECE", tuitionFeeAnnual: 195000, hostelFeeAnnual: 95000, seatCapacity: 600, avgSalary: 750000, medianSalary: 700000, highestSalary: 2200000, minJeePercentileCutoff: 90.0, minClass12Cutoff: 80.0, branchStrengthScore: 8.8, placementPercentage: 88.0, metadata: JSON.stringify({ lab_rating: 8.5 }) },
-        { branchName: "Information Technology", branchCode: "IT", tuitionFeeAnnual: 198000, hostelFeeAnnual: 95000, seatCapacity: 300, avgSalary: 860000, medianSalary: 800000, highestSalary: 3200000, minJeePercentileCutoff: 93.0, minClass12Cutoff: 82.0, branchStrengthScore: 9.2, placementPercentage: 92.0, metadata: JSON.stringify({ lab_rating: 9.0 }) },
+        {
+          branchName: "Computer Science & Engineering",
+          branchCode: "CSE",
+          tuitionFeeAnnual: 187500,
+          hostelFeeAnnual: 70000, // Reasonable default for hostel if unspecified
+          seatCapacity: 120,
+          avgSalary: 500000,
+          medianSalary: 450000,
+          highestSalary: 700000,
+          minJeePercentileCutoff: 60.0,
+          minClass12Cutoff: 50.0,
+          branchStrengthScore: 7.8,
+          placementPercentage: 80.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true }),
+        }
       ]
     },
     {
-      name: "Manipal Institute of Technology (MIT)",
-      slug: "mit-manipal",
-      state: "Karnataka",
-      city: "Manipal",
+      name: "Quantum University (Roorkee)",
+      slug: "quantum-university-roorkee",
+      state: "Uttarakhand",
+      city: "Roorkee",
       logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
       coverImageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=400&fit=crop",
-      brochureUrl: "https://manipal.edu/brochure.pdf",
-      officialApplyUrl: "https://apply.manipal.edu/",
-      website: "https://manipal.edu",
-      isPartner: true,
-      commissionRate: 30000.00,
-      placementScore: 8.9,
-      collegeLifeScore: 9.6,
-      curriculumScore: 8.7,
-      adminEmail: "admissions@manipal.edu",
-      metadata: JSON.stringify({ nirf_ranking: 21, infra_rating: 95, startup_ecosystem: 9.0, research_output: 8.5, international_exposure: 9.2 }),
+      brochureUrl: "https://quantumuniversity.edu.in/brochure.pdf",
+      officialApplyUrl: "https://quantumuniversity.edu.in/admissions/btech",
+      website: "https://quantumuniversity.edu.in",
+      isPartner: false,
+      isNewGen: false,
+      commissionRate: 0.0,
+      placementScore: 7.5,
+      collegeLifeScore: 7.8,
+      curriculumScore: 7.6,
+      adminEmail: "admissions@quantum.edu",
+      metadata: JSON.stringify({
+        infra_rating: 74,
+        startup_ecosystem: 7.0,
+        research_output: 6.6,
+        exposure_score: 7.5,
+      }),
       branches: [
-        { branchName: "Computer Science & Engineering", branchCode: "CSE", tuitionFeeAnnual: 335000, hostelFeeAnnual: 110000, seatCapacity: 400, avgSalary: 1250000, medianSalary: 1100000, highestSalary: 5400000, minJeePercentileCutoff: 96.0, minClass12Cutoff: 88.0, branchStrengthScore: 9.4, placementPercentage: 97.0, metadata: JSON.stringify({ lab_rating: 9.5 }) },
-        { branchName: "Electronics & Communication Engineering", branchCode: "ECE", tuitionFeeAnnual: 290000, hostelFeeAnnual: 110000, seatCapacity: 240, avgSalary: 900000, medianSalary: 820000, highestSalary: 2800000, minJeePercentileCutoff: 91.5, minClass12Cutoff: 80.0, branchStrengthScore: 8.9, placementPercentage: 90.0, metadata: JSON.stringify({ lab_rating: 8.8 }) },
+        {
+          branchName: "Computer Science & Engineering",
+          branchCode: "CSE",
+          tuitionFeeAnnual: 135000,
+          hostelFeeAnnual: 75000,
+          seatCapacity: 180,
+          avgSalary: 480000,
+          medianSalary: 420000,
+          highestSalary: 1200000,
+          minJeePercentileCutoff: 55.0,
+          minClass12Cutoff: 50.0,
+          branchStrengthScore: 7.5,
+          placementPercentage: 75.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true }),
+        }
       ]
     },
     {
-      name: "RV College of Engineering (RVCE)",
-      slug: "rvce-bangalore",
+      name: "Dayananda Sagar College of Engineering (DSCE)",
+      slug: "dsce-bangalore",
       state: "Karnataka",
       city: "Bengaluru",
       logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
       coverImageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop",
-      brochureUrl: "https://rvce.edu.in/brochure.pdf",
-      officialApplyUrl: "https://rvce.edu.in/admissions",
-      website: "https://rvce.edu.in",
+      brochureUrl: "https://www.dsce.edu.in/brochure.pdf",
+      officialApplyUrl: "https://www.dsce.edu.in/admissions",
+      website: "https://www.dsce.edu.in",
       isPartner: false,
-      commissionRate: 0.00,
-      placementScore: 9.6,
-      collegeLifeScore: 7.2,
-      curriculumScore: 8.5,
-      metadata: JSON.stringify({ nirf_ranking: 9, infra_rating: 78, startup_ecosystem: 7.5, research_output: 9.0, international_exposure: 7.0 }),
+      isNewGen: false,
+      commissionRate: 0.0,
+      placementScore: 8.5,
+      collegeLifeScore: 8.2,
+      curriculumScore: 8.3,
+      adminEmail: "admissions@dsce.edu",
+      metadata: JSON.stringify({
+        infra_rating: 82,
+        startup_ecosystem: 7.6,
+        research_output: 7.3,
+        exposure_score: 8.5,
+      }),
       branches: [
-        { branchName: "Computer Science & Engineering", branchCode: "CSE", tuitionFeeAnnual: 250000, hostelFeeAnnual: 85000, seatCapacity: 240, avgSalary: 1540000, medianSalary: 1400000, highestSalary: 5700000, minJeePercentileCutoff: 97.2, minClass12Cutoff: 90.0, branchStrengthScore: 9.8, placementPercentage: 98.0, metadata: JSON.stringify({ lab_rating: 9.4 }) },
-        { branchName: "Information Science & Engineering", branchCode: "ISE", tuitionFeeAnnual: 250000, hostelFeeAnnual: 85000, seatCapacity: 180, avgSalary: 1320000, medianSalary: 1200000, highestSalary: 4200000, minJeePercentileCutoff: 96.5, minClass12Cutoff: 88.0, branchStrengthScore: 9.5, placementPercentage: 96.0, metadata: JSON.stringify({ lab_rating: 9.2 }) },
+        {
+          branchName: "Computer Science & Engineering",
+          branchCode: "CSE",
+          tuitionFeeAnnual: 110000,
+          hostelFeeAnnual: 120000,
+          seatCapacity: 240,
+          avgSalary: 750000,
+          medianSalary: 600000,
+          highestSalary: 5600000,
+          minJeePercentileCutoff: 97.0,
+          minClass12Cutoff: 45.0,
+          branchStrengthScore: 8.6,
+          placementPercentage: 85.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsStateExam: true }),
+        }
       ]
     },
     {
-      name: "DY Patil College of Engineering (Akurdi)",
-      slug: "dypatil-pune",
-      state: "Maharashtra",
-      city: "Pune",
+      name: "Bennett University (Greater Noida)",
+      slug: "bennett-greater-noida",
+      state: "Uttar Pradesh",
+      city: "Greater Noida",
       logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
       coverImageUrl: "https://images.unsplash.com/photo-1527891751199-7225231a68dd?w=800&h=400&fit=crop",
-      brochureUrl: "https://dypcoeakurdi.ac.in/brochure.pdf",
-      officialApplyUrl: "https://dypcoeakurdi.ac.in/admissions",
-      website: "https://dypcoeakurdi.ac.in",
-      isPartner: true,
-      commissionRate: 15000.00,
-      placementScore: 7.7,
+      brochureUrl: "https://www.bennett.edu.in/brochure.pdf",
+      officialApplyUrl: "https://www.bennett.edu.in/programmes/btech-cse",
+      website: "https://www.bennett.edu.in",
+      isPartner: false,
+      isNewGen: true,
+      commissionRate: 0.0,
+      placementScore: 9.0,
       collegeLifeScore: 8.4,
-      curriculumScore: 7.9,
-      metadata: JSON.stringify({ nirf_ranking: 150, infra_rating: 84, startup_ecosystem: 6.0, research_output: 5.5, international_exposure: 5.0 }),
+      curriculumScore: 8.8,
+      adminEmail: "admissions@bennett.edu.in",
+      metadata: JSON.stringify({
+        infra_rating: 85,
+        startup_ecosystem: 8.2,
+        research_output: 7.8,
+        exposure_score: 9.0,
+      }),
       branches: [
-        { branchName: "Computer Engineering", branchCode: "CSE", tuitionFeeAnnual: 135000, hostelFeeAnnual: 90000, seatCapacity: 180, avgSalary: 580000, medianSalary: 520000, highestSalary: 1800000, minJeePercentileCutoff: 87.0, minClass12Cutoff: 75.0, branchStrengthScore: 8.0, placementPercentage: 82.0, metadata: JSON.stringify({ lab_rating: 8.0 }) },
+        {
+          branchName: "Computer Science & Engineering",
+          branchCode: "CSE",
+          tuitionFeeAnnual: 403750,
+          hostelFeeAnnual: 170000,
+          seatCapacity: 600,
+          avgSalary: 942000,
+          medianSalary: 800000,
+          highestSalary: 13700000,
+          minJeePercentileCutoff: 62.0,
+          minClass12Cutoff: 55.0,
+          branchStrengthScore: 9.0,
+          placementPercentage: 92.0,
+          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, jeeOverlapRange: "60-88" }),
+        }
       ]
     }
   ];
 
-  console.log("Seeding colleges and branches...");
+  console.log("Seeding new colleges and branches...");
   for (const c of collegesData) {
     const { branches, adminEmail, ...collegeInfo } = c;
 
-    // Create the College record
     const createdCollege = await prisma.college.create({
       data: {
         ...collegeInfo,
@@ -228,7 +316,6 @@ async function main() {
 
     console.log(`Created College: ${createdCollege.name}`);
 
-    // Create branches
     for (const b of branches) {
       await prisma.collegeBranch.create({
         data: {
@@ -238,7 +325,6 @@ async function main() {
       });
     }
 
-    // Link Admin User
     if (adminEmail) {
       const associatedAdmin = await prisma.user.findUnique({
         where: { email: adminEmail },
@@ -254,7 +340,7 @@ async function main() {
     }
   }
 
-  console.log("Database seeded successfully!");
+  console.log("Database seeding with custom 4 colleges completed successfully!");
 }
 
 main()
