@@ -246,11 +246,11 @@ const DEFAULT_EXTRA_DIMENSIONS: Record<CareerGoalType, CareerGoalExtraDimension[
       metadataKey: "research_output",
     },
     {
-      key: "INTERNATIONAL_EXPOSURE",
-      label: "International exposure & exchange programs",
+      key: "EXPOSURE_SCORE",
+      label: "Industry & internship exposure",
       weight: 0.05,
       source: "college_metadata",
-      metadataKey: "international_exposure",
+      metadataKey: "exposure_score",
     },
   ],
   NOT_SURE: [],
@@ -363,7 +363,7 @@ const QUALITY_WEIGHTS = {
   CURRICULUM: 0.20,
   BRANCH_STRENGTH: 0.20,
   ROI: 0.15,
-  NIRF: 0.10,
+  EXPOSURE: 0.10,
   INFRA: 0.05,
   PLACEMENT_PCT: 0.05,
 };
@@ -389,8 +389,8 @@ function computeQualityScore(
   const logRoi = Math.log(1 + roiRatio);
   const sRoi = logRoiRange > 0 ? 30 + ((logRoi - minLogRoi) / logRoiRange) * 70 : 50;
 
-  // 5. NIRF ranking (0-100, from metadata)
-  const nirf = Math.min(100, Math.max(0, Number(collegeMeta.nirf_ranking) || 50));
+  // 5. Exposure score (0-100, from metadata)
+  const exposure = Math.min(100, Math.max(0, (Number(collegeMeta.exposure_score) || 5) * 10));
 
   // 6. Infrastructure (0-100, from metadata)
   const infra = Math.min(100, Math.max(0, Number(collegeMeta.infra_rating) || 50));
@@ -404,7 +404,7 @@ function computeQualityScore(
     sCurriculum * QUALITY_WEIGHTS.CURRICULUM +
     sBranch * QUALITY_WEIGHTS.BRANCH_STRENGTH +
     sRoi * QUALITY_WEIGHTS.ROI +
-    nirf * QUALITY_WEIGHTS.NIRF +
+    exposure * QUALITY_WEIGHTS.EXPOSURE +
     infra * QUALITY_WEIGHTS.INFRA +
     placementPct * QUALITY_WEIGHTS.PLACEMENT_PCT;
 

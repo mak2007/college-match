@@ -33,7 +33,7 @@ function getDefaultConfig(): ScoringConfig {
       STARTUP: [{ key: "STARTUP_ECOSYSTEM", label: "Startup ecosystem & incubation", weight: 0.10, source: "college_metadata", metadataKey: "startup_ecosystem" }],
       HIGHER_STUDIES: [
         { key: "RESEARCH_OUTPUT", label: "Research output & publications", weight: 0.10, source: "college_metadata", metadataKey: "research_output" },
-        { key: "INTERNATIONAL_EXPOSURE", label: "International exposure & exchange programs", weight: 0.05, source: "college_metadata", metadataKey: "international_exposure" },
+        { key: "EXPOSURE_SCORE", label: "Industry & internship exposure", weight: 0.05, source: "college_metadata", metadataKey: "exposure_score" },
       ],
       NOT_SURE: [],
     },
