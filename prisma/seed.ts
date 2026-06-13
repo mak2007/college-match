@@ -10,7 +10,7 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("Starting database cleanup and seeding with 4 new colleges...");
+  console.log("Starting database cleanup and seeding with VIT Vellore...");
 
   // 1. Clean up existing database tables
   console.log("Cleaning up old data...");
@@ -108,181 +108,94 @@ async function main() {
 
   // Create college admin accounts
   await prisma.user.create({
-    data: { email: "admissions@mit.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
-  });
-  await prisma.user.create({
-    data: { email: "admissions@sitpune.edu.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
-  });
-  await prisma.user.create({
-    data: { email: "admissions@nmims.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
-  });
-  await prisma.user.create({
-    data: { email: "admissions@amrita.edu", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
+    data: { email: "admissions@vit.ac.in", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },
   });
 
-  // 4. Define 4 Colleges Data
+  // 4. Define VIT Vellore Data
   const collegesData = [
     {
-      name: "Manipal Institute of Technology (MIT Manipal)",
-      slug: "mit-manipal",
-      state: "Karnataka",
-      city: "Manipal",
-      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=400&fit=crop",
-      brochureUrl: "https://manipal.edu/brochure.pdf",
-      officialApplyUrl: "https://manipal.edu/mit/program-list/btech.html",
-      website: "https://manipal.edu/mit.html",
-      isPartner: false,
-      isNewGen: false,
-      commissionRate: 0.0,
-      placementScore: 8.9,
-      collegeLifeScore: 9.0,
-      curriculumScore: 8.6,
-      adminEmail: "admissions@mit.edu",
-      metadata: JSON.stringify({
-        infra_rating: 87,
-        startup_ecosystem: 7.8,
-        research_output: 8.0,
-        exposure_score: 8.8,
-      }),
-      branches: [
-        {
-          branchName: "Computer Science & Engineering",
-          branchCode: "CSE",
-          tuitionFeeAnnual: 500000,
-          hostelFeeAnnual: 260000,
-          seatCapacity: 400,
-          avgSalary: 1500000,
-          medianSalary: 1200000,
-          highestSalary: 6925000,
-          minJeePercentileCutoff: 97.5,
-          minClass12Cutoff: 50.0,
-          branchStrengthScore: 8.8,
-          placementPercentage: 82.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, jeeOverlapRange: "96-99" }),
-        }
-      ]
-    },
-    {
-      name: "Symbiosis Institute of Technology (SIT Pune)",
-      slug: "sit-pune",
-      state: "Maharashtra",
-      city: "Pune",
+      name: "Vellore Institute of Technology (VIT)",
+      slug: "vit-vellore",
+      state: "Tamil Nadu",
+      city: "Vellore",
       logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
       coverImageUrl: "https://images.unsplash.com/photo-1562774053-701939374585?w=800&h=400&fit=crop",
-      brochureUrl: "https://www.sitpune.edu.in/brochure.pdf",
-      officialApplyUrl: "https://www.sitpune.edu.in/first-year-admission-eligibility",
-      website: "https://www.sitpune.edu.in",
+      brochureUrl: "https://vit.ac.in/files/brochure.pdf",
+      officialApplyUrl: "https://viteee.vit.ac.in",
+      website: "https://vit.ac.in",
       isPartner: false,
       isNewGen: false,
       commissionRate: 0.0,
-      placementScore: 8.6,
-      collegeLifeScore: 8.2,
-      curriculumScore: 8.3,
-      adminEmail: "admissions@sitpune.edu.in",
+      placementScore: 9.2,
+      collegeLifeScore: 8.8,
+      curriculumScore: 9.0,
+      adminEmail: "admissions@vit.ac.in",
       metadata: JSON.stringify({
-        infra_rating: 80,
-        startup_ecosystem: 7.5,
-        research_output: 7.3,
-        exposure_score: 8.5,
+        infra_rating: 90,
+        startup_ecosystem: 8.5,
+        research_output: 7.0,
+        exposure_score: 8.9,
       }),
       branches: [
         {
-          branchName: "Computer Science & Engineering",
-          branchCode: "CSE",
-          tuitionFeeAnnual: 400000,
-          hostelFeeAnnual: 260000,
-          seatCapacity: 180,
-          avgSalary: 1500000,
-          medianSalary: 1300000,
-          highestSalary: 3500000, // Benchmark typical high package for SIT Pune
-          minJeePercentileCutoff: 96.0,
-          minClass12Cutoff: 45.0,
-          branchStrengthScore: 8.6,
-          placementPercentage: 97.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsStateExam: true, acceptsOwnExam: true, jeeOverlapRange: "93-97" }),
-        }
-      ]
-    },
-    {
-      name: "NMIMS MPSTME (Mumbai)",
-      slug: "nmims-mpstme",
-      state: "Maharashtra",
-      city: "Mumbai",
-      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop",
-      brochureUrl: "https://engineering.nmims.edu/brochure.pdf",
-      officialApplyUrl: "https://engineering.nmims.edu/admissions",
-      website: "https://engineering.nmims.edu",
-      isPartner: false,
-      isNewGen: true,
-      commissionRate: 0.0,
-      placementScore: 8.2,
-      collegeLifeScore: 8.0,
-      curriculumScore: 8.3,
-      adminEmail: "admissions@nmims.edu",
-      metadata: JSON.stringify({
-        infra_rating: 82,
-        startup_ecosystem: 7.6,
-        research_output: 7.2,
-        exposure_score: 8.3,
-      }),
-      branches: [
-        {
-          branchName: "Computer Science & Engineering",
-          branchCode: "CSE",
-          tuitionFeeAnnual: 500000,
-          hostelFeeAnnual: 300000,
+          branchName: "Computer Science & Engineering (Category 1)",
+          branchCode: "CSE_CAT1",
+          tuitionFeeAnnual: 195000,
+          hostelFeeAnnual: 160000,
           seatCapacity: 240,
-          avgSalary: 900000,
-          medianSalary: 800000,
-          highestSalary: 2200000,
-          minJeePercentileCutoff: 88.0,
-          minClass12Cutoff: 50.0,
-          branchStrengthScore: 8.4,
-          placementPercentage: 85.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, jeeOverlapRange: "80-95" }),
-        }
-      ]
-    },
-    {
-      name: "Amrita Vishwa Vidyapeetham (Coimbatore Campus)",
-      slug: "amrita-coimbatore",
-      state: "Tamil Nadu",
-      city: "Coimbatore",
-      logoUrl: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=100&h=100&fit=crop",
-      coverImageUrl: "https://images.unsplash.com/photo-1527891751199-7225231a68dd?w=800&h=400&fit=crop",
-      brochureUrl: "https://www.amrita.edu/brochure.pdf",
-      officialApplyUrl: "https://www.amrita.edu/admissions/engineering/",
-      website: "https://www.amrita.edu",
-      isPartner: false,
-      isNewGen: false,
-      commissionRate: 0.0,
-      placementScore: 8.5,
-      collegeLifeScore: 8.3,
-      curriculumScore: 8.4,
-      adminEmail: "admissions@amrita.edu",
-      metadata: JSON.stringify({
-        infra_rating: 82,
-        startup_ecosystem: 7.5,
-        research_output: 7.8,
-        exposure_score: 8.4,
-      }),
-      branches: [
+          avgSalary: 990000,
+          medianSalary: 899000,
+          highestSalary: 8800000,
+          minJeePercentileCutoff: 97.0,
+          minClass12Cutoff: 60.0,
+          branchStrengthScore: 8.9,
+          placementPercentage: 92.0,
+          metadata: JSON.stringify({ acceptsOwnExam: true, feeCategory: "Category 1", jeeOverlapRange: "95-99" }),
+        },
         {
-          branchName: "Computer Science & Engineering",
-          branchCode: "CSE",
-          tuitionFeeAnnual: 600000,
-          hostelFeeAnnual: 100000,
-          seatCapacity: 360,
-          avgSalary: 775000,
-          medianSalary: 600000,
-          highestSalary: 2500000,
+          branchName: "Computer Science & Engineering (Category 2)",
+          branchCode: "CSE_CAT2",
+          tuitionFeeAnnual: 290000,
+          hostelFeeAnnual: 160000,
+          seatCapacity: 240,
+          avgSalary: 990000,
+          medianSalary: 899000,
+          highestSalary: 8800000,
+          minJeePercentileCutoff: 95.0,
+          minClass12Cutoff: 60.0,
+          branchStrengthScore: 8.9,
+          placementPercentage: 92.0,
+          metadata: JSON.stringify({ acceptsOwnExam: true, feeCategory: "Category 2", jeeOverlapRange: "93-97" }),
+        },
+        {
+          branchName: "Computer Science & Engineering (Category 3)",
+          branchCode: "CSE_CAT3",
+          tuitionFeeAnnual: 375000,
+          hostelFeeAnnual: 160000,
+          seatCapacity: 240,
+          avgSalary: 990000,
+          medianSalary: 899000,
+          highestSalary: 8800000,
           minJeePercentileCutoff: 92.0,
           minClass12Cutoff: 60.0,
-          branchStrengthScore: 8.7,
-          placementPercentage: 98.0,
-          metadata: JSON.stringify({ acceptsJEE: true, acceptsOwnExam: true, jeeOverlapRange: "88-96" }),
+          branchStrengthScore: 8.9,
+          placementPercentage: 92.0,
+          metadata: JSON.stringify({ acceptsOwnExam: true, feeCategory: "Category 3", jeeOverlapRange: "90-95" }),
+        },
+        {
+          branchName: "Computer Science & Engineering (Category 4)",
+          branchCode: "CSE_CAT4",
+          tuitionFeeAnnual: 400000,
+          hostelFeeAnnual: 160000,
+          seatCapacity: 240,
+          avgSalary: 990000,
+          medianSalary: 899000,
+          highestSalary: 8800000,
+          minJeePercentileCutoff: 90.0,
+          minClass12Cutoff: 60.0,
+          branchStrengthScore: 8.9,
+          placementPercentage: 92.0,
+          metadata: JSON.stringify({ acceptsOwnExam: true, feeCategory: "Category 4", jeeOverlapRange: "88-93" }),
         }
       ]
     }
@@ -324,7 +237,7 @@ async function main() {
     }
   }
 
-  console.log("Database seeding with custom 4 colleges completed successfully!");
+  console.log("Database seeding with VIT Vellore completed successfully!");
 }
 
 main()
