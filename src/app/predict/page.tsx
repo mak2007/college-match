@@ -31,16 +31,26 @@ interface MatchResult {
   keyReasons: string[];
   scoreBreakdown: {
     baseScore: number;
-    penalties: number;
-    bonuses: number;
-    contributions: {
-      PLACEMENTS: number;
-      ROI: number;
-      BRANCH_STRENGTH: number;
-      COLLEGE_LIFE: number;
-      CURRICULUM: number;
-      [key: string]: number;
-    };
+    factorContributions: {
+      factor: string;
+      label: string;
+      score: number;
+      weight: number;
+      contribution: number;
+    }[];
+    appliedBonuses: {
+      id: string;
+      type: "BONUS" | "PENALTY";
+      value: number;
+      reason: string;
+    }[];
+    appliedPenalties: {
+      id: string;
+      type: "BONUS" | "PENALTY";
+      value: number;
+      reason: string;
+    }[];
+    finalScore: number;
   };
 }
 
@@ -60,12 +70,13 @@ export default function Predictor() {
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
   const [locationMode, setLocationMode] = useState<"all" | "states">("all");
   const [selectedStates, setSelectedStates] = useState<string[]>([]);
+  const [careerGoal, setCareerGoal] = useState<string>("placement");
   const [ranking, setRanking] = useState<string[]>([
     "placements",
-    "curriculum",
-    "campus_life",
-    "research",
-    "extracurriculars"
+    "roi",
+    "college_life",
+    "branch_strength",
+    "curriculum"
   ]);
 
   // Load from localStorage on mount
@@ -83,6 +94,7 @@ export default function Predictor() {
         if (parsed.selectedRegions !== undefined) setSelectedRegions(parsed.selectedRegions);
         if (parsed.locationMode !== undefined) setLocationMode(parsed.locationMode);
         if (parsed.selectedStates !== undefined) setSelectedStates(parsed.selectedStates);
+        if (parsed.careerGoal !== undefined) setCareerGoal(parsed.careerGoal);
         if (parsed.ranking !== undefined) setRanking(parsed.ranking);
       }
     } catch (e) {
@@ -92,7 +104,7 @@ export default function Predictor() {
 
   // Save to localStorage when quiz values change
   useEffect(() => {
-    if (step < 6) {
+    if (step < 7) {
       const progress = {
         step,
         jeePercentile,
@@ -103,6 +115,7 @@ export default function Predictor() {
         selectedRegions,
         locationMode,
         selectedStates,
+        careerGoal,
         ranking,
       };
       localStorage.setItem("cm_predictor_progress", JSON.stringify(progress));
@@ -117,6 +130,7 @@ export default function Predictor() {
     selectedRegions,
     locationMode,
     selectedStates,
+    careerGoal,
     ranking,
   ]);
 
@@ -145,7 +159,7 @@ export default function Predictor() {
           const parsed = JSON.parse(pending);
           if (parsed.matches && parsed.matches.length > 0) {
             setResults(parsed.matches);
-            setStep(6);
+            setStep(7);
             localStorage.removeItem('cm_pending_results');
             localStorage.removeItem('cm_predictor_progress');
           }
@@ -157,7 +171,7 @@ export default function Predictor() {
   }, [isAuthenticated]);
 
   const handleNext = () => {
-    if (step < 5) {
+    if (step < 6) {
       setStep(prev => prev + 1);
     } else {
       handleSubmit();
@@ -189,9 +203,9 @@ export default function Predictor() {
       // Map ranking list to engine priorities
       const CRITERIA_MAPPING: Record<string, string> = {
         placements: "placements",
-        extracurriculars: "roi",
-        campus_life: "college_life",
-        research: "branch_strength",
+        roi: "roi",
+        college_life: "college_life",
+        branch_strength: "branch_strength",
         curriculum: "curriculum"
       };
 
@@ -222,7 +236,8 @@ export default function Predictor() {
           restrictLocation: statesToFilter.length > 0,
           preferredLocations: statesToFilter.map(state => ({ state, city: "" })),
           preferredBranches,
-          priorities
+          priorities,
+          careerGoal
         })
       });
 
@@ -240,12 +255,13 @@ export default function Predictor() {
               isBudgetConstraint,
               preferredBranches,
               selectedRegions,
+              careerGoal,
               ranking
             }
           }));
         }
         localStorage.removeItem("cm_predictor_progress"); // Clear on completion
-        setStep(6); // Show results view
+        setStep(7); // Show results view
       } else {
         alert("Engine failed to compute results: " + (data.error || "Unknown error"));
       }
@@ -257,7 +273,7 @@ export default function Predictor() {
     }
   };
 
-  const STEP_LABELS = ["Academics", "Location", "Priorities", "Budget", "Branches"];
+  const STEP_LABELS = ["Academics", "Location", "Career Goal", "Priorities", "Budget", "Branches"];
 
   const renderStepIndicator = () => {
     return (
@@ -426,13 +442,40 @@ export default function Predictor() {
             </div>
           </div>
         );
-      case 3: // Priorities Ranking
+      case 3: // Career Goal
+        return (
+          <div className={styles.questionGroup}>
+            <h2 className={styles.questionTitle}>Your Primary Career Focus</h2>
+            <p className={styles.questionSubtitle}>Select what you want to focus on after graduation to tailor recommendations</p>
+
+            <div className={styles.optionsGrid}>
+              {[
+                { id: "placement", label: "Corporate Placements", icon: "💼", desc: "Focus on high-paying jobs in tech, consulting, or MNCs" },
+                { id: "startup", label: "Startups & Entrepreneurship", icon: "🚀", desc: "Focus on launching a startup, incubator resources, and coding culture" },
+                { id: "higher_studies", label: "Research & Higher Studies", icon: "🔬", desc: "Focus on academic reputation, patent support, and MS/PhD admissions" }
+              ].map(goal => (
+                <div
+                  key={goal.id}
+                  className={`${styles.optionCard} ${careerGoal === goal.id ? styles.optionCardActive : ""}`}
+                  onClick={() => setCareerGoal(goal.id)}
+                >
+                  <input type="radio" name="careerGoal" checked={careerGoal === goal.id} readOnly />
+                  <span className={styles.optionTitle}>{goal.label}</span>
+                  <span className={styles.optionDesc}>
+                    {goal.desc}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case 4: // Priorities Ranking
         const itemsMap = {
-          placements: { label: "Placements & Salaries", icon: "💼", desc: "Top recruiters, package statistics, and career growth" },
-          extracurriculars: { label: "Extracurricular activities and sports", icon: "⚽", desc: "Clubs, student chapters, athletic events, and active groups" },
-          campus_life: { label: "Campus Life & crowd", icon: "🌴", desc: "Modern hostels, food courts, diverse student body, and events" },
-          research: { label: "Research and opportunities", icon: "🔬", desc: "Academic projects, internships, patent support, and labs" },
-          curriculum: { label: "Modern Course Standards", icon: "📖", desc: "Updated syllabus, industry readiness, and faculty standards" }
+          placements: { label: "Placements & Career Outcomes", icon: "💼", desc: "Top recruiters, package statistics, and career growth" },
+          roi: { label: "Return on Investment (ROI)", icon: "💰", desc: "Balance of low tuition fees vs. high starting packages" },
+          college_life: { label: "Campus Life & Hostels", icon: "🌴", desc: "Modern hostels, food courts, diverse student body, sports, and events" },
+          branch_strength: { label: "Department & Branch Reputation", icon: "🏫", desc: "Branch strength, cutoffs, specific lab ratings, and research opportunities" },
+          curriculum: { label: "Course Syllabus & Curriculum", icon: "📖", desc: "Updated syllabus, industry readiness, and faculty standards" }
         };
 
         const moveItem = (index: number, direction: "up" | "down") => {
@@ -529,7 +572,7 @@ export default function Predictor() {
             </div>
           </div>
         );
-      case 4: // Budget
+      case 5: // Budget
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Tuition & Hostel Budget</h2>
@@ -561,7 +604,7 @@ export default function Predictor() {
             </label>
           </div>
         );
-      case 5: // Branch Preference
+      case 6: // Branch Preference
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Preferred B.Tech Branches</h2>
@@ -676,6 +719,47 @@ export default function Predictor() {
                 </ul>
               </div>
 
+              {/* Detailed Score Breakdown */}
+              <div className={styles.scoreBreakdownContainer}>
+                <div className={styles.breakdownHeader}>
+                  <span>🧮 Score Calculation Breakdown</span>
+                </div>
+                <div className={styles.breakdownGrid}>
+                  {match.scoreBreakdown?.factorContributions?.map((contrib) => (
+                    <div key={contrib.factor} className={styles.breakdownRow}>
+                      <span className={styles.factorName}>{contrib.label}</span>
+                      <span className={styles.factorValue}>
+                        Score: <strong>{contrib.score}</strong> × Wt: <strong>{contrib.weight.toFixed(2)}</strong> = <strong>+{contrib.contribution.toFixed(1)}</strong>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                
+                {match.scoreBreakdown?.appliedBonuses?.length > 0 && (
+                  <div className={styles.modifiersSection}>
+                    <div className={styles.modifierTitle}>🎁 Applied Bonuses:</div>
+                    {match.scoreBreakdown.appliedBonuses.map((bonus, idx) => (
+                      <div key={idx} className={styles.modifierRow}>
+                        <span className={styles.bonusBadge}>+{bonus.value}</span>
+                        <span className={styles.modifierReason}>{bonus.reason}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {match.scoreBreakdown?.appliedPenalties?.length > 0 && (
+                  <div className={styles.modifiersSection}>
+                    <div className={styles.modifierTitle}>⚠️ Applied Penalties:</div>
+                    {match.scoreBreakdown.appliedPenalties.map((penalty, idx) => (
+                      <div key={idx} className={styles.modifierRow}>
+                        <span className={styles.penaltyBadge}>-{penalty.value}</span>
+                        <span className={styles.modifierReason}>{penalty.reason}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* Strengths & Tradeoffs Grid */}
               <div className={styles.strengthsGrid}>
                 <div className={styles.strengthBlock}>
@@ -759,7 +843,7 @@ export default function Predictor() {
       <Navbar />
 
       {/* Main quiz interface or results panel */}
-      {step === 6 ? (
+      {step === 7 ? (
         <>
           <div className={!isAuthenticated ? styles.blurredResultsContainer : ""}>
             {renderResults()}
@@ -797,7 +881,7 @@ export default function Predictor() {
                 <div />
               )}
               <button className={styles.nextBtn} onClick={handleNext} disabled={loading}>
-                {loading ? "Calculating..." : step === 5 ? "Generate Results" : "Next →"}
+                {loading ? "Calculating..." : step === 6 ? "Generate Results" : "Next →"}
               </button>
             </div>
           </div>

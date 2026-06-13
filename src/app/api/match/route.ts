@@ -22,6 +22,7 @@ export async function POST(request: Request) {
         : false;
     const preferredLocations = body.preferredLocations || body.locations || [];
     const preferredBranches = body.preferredBranches || body.preferred_branches || [];
+    const careerGoal = body.careerGoal || body.career_goal || null;
     
     // Priorities list mapping - if empty or missing, provide a standard default rank order
     let prioritiesInput = body.priorities || [];
@@ -144,6 +145,7 @@ export async function POST(request: Request) {
       })),
       priorities: prioritiesInput,
       preferredBranches: preferredBranches,
+      careerGoal: careerGoal,
     };
 
     // 4. Run Configurable Recommendation Scoring Engine
@@ -174,6 +176,7 @@ export async function GET(request: Request) {
     const budgetLimit = searchParams.get("budgetLimit") || searchParams.get("budget_limit");
     const isBudgetConstraint = searchParams.get("isBudgetConstraint") === "true" || searchParams.get("is_budget_constraint") === "true" || !!budgetLimit;
     const restrictLocation = searchParams.get("restrictLocation") === "true" || searchParams.get("restrict_location") === "true";
+    const careerGoal = searchParams.get("careerGoal") || searchParams.get("career_goal");
     
     // Parse preferred branches (comma-separated list)
     const branchesStr = searchParams.get("preferredBranches") || searchParams.get("preferred_branches");
@@ -313,6 +316,7 @@ export async function GET(request: Request) {
       preferredLocations: preferredLocations,
       priorities: prioritiesInput,
       preferredBranches: preferredBranches,
+      careerGoal: careerGoal,
     };
 
     const matches = generateRecommendations(engineProfile, candidates, config);

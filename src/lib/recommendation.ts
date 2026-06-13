@@ -9,6 +9,7 @@ export interface StudentProfile {
   preferredLocations: { state: string; city: string }[];
   priorities: { criteria: string; rankOrder: number }[]; // 1 to 5
   preferredBranches: string[];
+  careerGoal?: string | null; // placement, startup, higher_studies
 }
 
 export interface CollegeCandidate {
@@ -200,9 +201,10 @@ export function generateRecommendations(
   
   // Pre-calculate ROI ranges for normalization
   const roiRatios = candidates.map(c => {
-    const total4YrTuition = c.tuitionFeeAnnual * 4;
+    const tuition = Math.max(50000, c.tuitionFeeAnnual);
+    const total4YrTuition = tuition * 4;
     const avgSal = c.avgSalary || 450000;
-    return total4YrTuition > 0 ? avgSal / total4YrTuition : 0;
+    return avgSal / total4YrTuition;
   });
   
   const maxRoi = Math.max(...roiRatios, 0.1);
@@ -367,11 +369,12 @@ export function generateRecommendations(
     });
     
     // Core 5: ROI
-    const currentRoiRatio = (c.avgSalary || 450000) / (c.tuitionFeeAnnual * 4);
+    const tuition = Math.max(50000, c.tuitionFeeAnnual);
+    const currentRoiRatio = (c.avgSalary || 450000) / (tuition * 4);
     const range = maxRoi - minRoi;
-    const sRoi = range > 0
+    const sRoi = Math.min(100, range > 0
       ? 30 + ((currentRoiRatio - minRoi) / range) * 70
-      : 75;
+      : 75);
     const wRoi = weights.ROI || 0;
     factorContributions.push({
       factor: "ROI",
@@ -386,8 +389,19 @@ export function generateRecommendations(
       // Check if attribute key exists in college level metadata
       const rawVal = collegeMeta[attr.key] !== undefined ? collegeMeta[attr.key] : attr.defaultValue;
       
-      // Let's assume custom scores are already on a scale of 0-100.
-      const score = Math.min(100, Math.max(0, Number(rawVal)));
+      let valNum = Number(rawVal);
+      if (attr.key === "nirf_ranking") {
+        // Convert NIRF rank to a 0-100 score: Rank 1-10 -> 95-100, Rank 11-30 -> 85-95, Rank 31-100 -> 70-85, others -> 50-70
+        if (valNum <= 0) valNum = attr.defaultValue;
+        else if (valNum <= 10) valNum = 98 - valNum; // Rank 1 -> 97, Rank 10 -> 88
+        else if (valNum <= 50) valNum = 90 - (valNum / 2); // Rank 50 -> 65
+        else valNum = Math.max(30, 70 - (valNum / 10)); // Rank 150 -> 55
+      } else if (valNum > 0 && valNum <= 10) {
+        // Scale 0-10 values to 0-100
+        valNum = valNum * 10;
+      }
+      
+      const score = Math.min(100, Math.max(0, valNum));
       const weight = weights[attr.key.toUpperCase()] || 0;
       
       factorContributions.push({
@@ -436,6 +450,41 @@ export function generateRecommendations(
         }
       }
     });
+
+    // Career Goal Modifiers
+    if (student.careerGoal === "placement") {
+      if (c.placementScore >= 8.5 || (c.avgSalary && c.avgSalary >= 1200000)) {
+        bonusSum += 5.0;
+        appliedBonuses.push({
+          id: "career_placement_focus",
+          type: "BONUS",
+          value: 5.0,
+          reason: "Excellent placement statistics align with your Corporate Career goal"
+        });
+      }
+    } else if (student.careerGoal === "startup") {
+      const startupEco = collegeMeta.startup_ecosystem ? Number(collegeMeta.startup_ecosystem) : 7.0;
+      if (startupEco >= 8.0) {
+        bonusSum += 7.0;
+        appliedBonuses.push({
+          id: "career_startup_focus",
+          type: "BONUS",
+          value: 7.0,
+          reason: `Exceptional startup ecosystem (${startupEco}/10) supports your Entrepreneurship goal`
+        });
+      }
+    } else if (student.careerGoal === "higher_studies") {
+      const researchOut = collegeMeta.research_output ? Number(collegeMeta.research_output) : 7.0;
+      if (researchOut >= 8.0) {
+        bonusSum += 7.0;
+        appliedBonuses.push({
+          id: "career_research_focus",
+          type: "BONUS",
+          value: 7.0,
+          reason: `Outstanding research output (${researchOut}/10) supports your Higher Studies/Academia goal`
+        });
+      }
+    }
     
     // Final score sum
     const totalPenalty = budgetPenaltyVal + academicPenaltyVal;
