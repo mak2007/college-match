@@ -505,22 +505,21 @@ export function generateRecommendations(
     let category: "Dream" | "Target" | "Safe" = "Target";
     let badgeText = "Good Fit";
 
+    // Class 12 is eligibility only — if below cutoff, exclude entirely
+    const c12Eligible =
+      !student.class12Percentage || !c.minClass12Cutoff
+        ? true
+        : student.class12Percentage >= c.minClass12Cutoff;
+
+    if (!c12Eligible) continue;
+
+    // Admission probability is based on JEE gap only
     const jeeGap =
       student.jeePercentile && c.minJeePercentileCutoff
         ? student.jeePercentile - c.minJeePercentileCutoff
         : null;
 
-    const c12Gap =
-      student.class12Percentage && c.minClass12Cutoff
-        ? student.class12Percentage - c.minClass12Cutoff
-        : null;
-
-    let bestGap: number | null = null;
-    if (jeeGap !== null && c12Gap !== null) {
-      bestGap = Math.max(jeeGap, c12Gap);
-    } else {
-      bestGap = jeeGap !== null ? jeeGap : c12Gap;
-    }
+    const bestGap = jeeGap;
 
     if (config.academicCompetitiveness.active && bestGap !== null) {
       const activeLimits = config.academicCompetitiveness;
