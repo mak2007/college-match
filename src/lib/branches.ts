@@ -17,6 +17,9 @@ export const BRANCH_OPTIONS: BranchOption[] = [
   // { code: "ECE", label: "Electronics & Communication (ECE)", shortLabel: "Electronics & Comm" },
 ];
 
+// All CSE variants that count as "CSE" for recommendation evaluation
+export const CSE_VARIANTS = ["CSE", "CSE_CAT1", "CSE_CAT2", "CSE_CAT3", "CSE_CAT4"];
+
 export const SUPPORTED_BRANCH_CODES = BRANCH_OPTIONS.map((b) => b.code);
 
 // ─── BRANCH FAMILY MAPPINGS ───────────────────────────────────────
