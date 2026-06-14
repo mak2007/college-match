@@ -170,12 +170,11 @@ export async function POST(request: Request) {
     };
 
     const recommendations = generateRecommendations(engineProfile, candidates, config);
-    const top10 = recommendations.slice(0, 10);
 
     await prisma.recommendation.deleteMany({ where: { studentId: dbStudent.id } });
-    if (top10.length > 0) {
+    if (recommendations.length > 0) {
       await prisma.recommendation.createMany({
-        data: top10.map((r) => ({
+        data: recommendations.map((r) => ({
           studentId: dbStudent.id,
           collegeId: r.collegeId,
           branchCode: r.branchCode,
@@ -188,7 +187,7 @@ export async function POST(request: Request) {
       });
     }
 
-    return NextResponse.json({ student_id: dbStudent.id, recommendations: top10 });
+    return NextResponse.json({ student_id: dbStudent.id, recommendations });
   } catch (error: any) {
     console.error("Recommendations API Error:", error);
     return NextResponse.json({ error: "Internal Server Error", details: error.message }, { status: 500 });

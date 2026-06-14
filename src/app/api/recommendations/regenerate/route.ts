@@ -194,13 +194,12 @@ export async function POST(request: Request) {
     };
 
     const recommendations = generateRecommendations(engineProfile, candidates, config);
-    const top15 = recommendations.slice(0, 15);
 
     // 5. Store new recommendations (persist core fields for history)
     await prisma.recommendation.deleteMany({ where: { studentId } });
-    if (top15.length > 0) {
+    if (recommendations.length > 0) {
       await prisma.recommendation.createMany({
-        data: top15.map((r) => ({
+        data: recommendations.map((r) => ({
           studentId,
           collegeId: r.collegeId,
           branchCode: r.branchCode,
@@ -214,7 +213,7 @@ export async function POST(request: Request) {
     }
 
     // 6. Fetch college data with branches for UI
-    const collegeIds = [...new Set(top15.map((r) => r.collegeId))];
+    const collegeIds = [...new Set(recommendations.map((r) => r.collegeId))];
     const colleges = await prisma.college.findMany({
       where: { id: { in: collegeIds } },
       include: { branches: true },
@@ -222,7 +221,7 @@ export async function POST(request: Request) {
     const collegeMap = new Map(colleges.map((c) => [c.id, c]));
 
     // 7. Attach college data with branches to each recommendation
-    const recommendationsWithBranches = top15.map((r) => ({
+    const recommendationsWithBranches = recommendations.map((r) => ({
       ...r,
       college: collegeMap.get(r.collegeId) || { id: r.collegeId, name: r.name, slug: r.slug, state: r.state, city: r.city, isNewGen: r.isNewGen, branches: [] },
     }));
