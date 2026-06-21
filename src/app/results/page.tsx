@@ -157,11 +157,12 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
       return {
         id: rec.id,
         matchScore: scored ? scored.matchScore : rec.matchScore,
-        qualityScore: rec.qualityScore,
-        admissionProbability: rec.admissionProbability,
-        rankPosition: rec.rankPosition,
+        qualityScore: scored ? scored.qualityScore : rec.qualityScore,
+        admissionProbability: scored ? scored.admissionProbability : rec.admissionProbability,
+        rankPosition: scored ? scored.rankPosition : rec.rankPosition,
         branchCode: rec.branchCode,
-        reasons: rec.reasons,
+        reasons: scored ? JSON.stringify(scored.keyReasons) : rec.reasons,
+        admissionCompetitiveness: scored ? scored.admissionCompetitiveness : undefined,
         college: rec.college,
         scoreBreakdown: scored ? scored.scoreBreakdown : undefined,
       };

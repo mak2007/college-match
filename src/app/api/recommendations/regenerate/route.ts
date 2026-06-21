@@ -221,10 +221,21 @@ export async function POST(request: Request) {
     const collegeMap = new Map(colleges.map((c) => [c.id, c]));
 
     // 7. Attach college data with branches to each recommendation
-    const recommendationsWithBranches = recommendations.map((r) => ({
-      ...r,
-      college: collegeMap.get(r.collegeId) || { id: r.collegeId, name: r.name, slug: r.slug, state: r.state, city: r.city, isNewGen: r.isNewGen, branches: [] },
-    }));
+    const recommendationsWithBranches = recommendations.map((r, idx) => {
+      const college = collegeMap.get(r.collegeId);
+      return {
+        id: `${r.collegeId}-${r.branchCode}`,
+        matchScore: r.matchScore,
+        qualityScore: r.qualityScore,
+        admissionProbability: r.admissionProbability,
+        rankPosition: idx + 1,
+        branchCode: r.branchCode,
+        reasons: JSON.stringify(r.keyReasons),
+        admissionCompetitiveness: r.admissionCompetitiveness,
+        scoreBreakdown: r.scoreBreakdown,
+        college: college || { id: r.collegeId, name: r.name, slug: r.slug, state: r.state, city: r.city, isNewGen: r.isNewGen, branches: [] },
+      };
+    });
 
     return NextResponse.json({ recommendations: recommendationsWithBranches });
   } catch (error: any) {

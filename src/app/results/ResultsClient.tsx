@@ -229,12 +229,9 @@ export default function ResultsClient({
   }, [recommendations]);
 
   const filtered = useMemo(() => {
-    let result = enriched;
-    if (!admissionFilter.high) result = result.filter((r) => r.admissionProb < 60);
-    if (!admissionFilter.medium) result = result.filter((r) => r.admissionProb < 35 || r.admissionProb >= 60);
-    if (!admissionFilter.low) result = result.filter((r) => r.admissionProb >= 35);
-
     const allChecked = admissionFilter.high && admissionFilter.medium && admissionFilter.low;
+    let result = enriched;
+
     if (!allChecked) {
       const allowed: string[] = [];
       if (admissionFilter.high) allowed.push("Safe");
