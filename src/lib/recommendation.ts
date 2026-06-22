@@ -189,32 +189,32 @@ export interface MatchResult {
 
 const DEFAULT_CAREER_GOAL_WEIGHTS: Record<CareerGoalType, CareerGoalWeights> = {
   PLACEMENT: {
-    PLACEMENTS: 0.40,
-    ROI: 0.20,
-    BRANCH_STRENGTH: 0.15,
-    COLLEGE_LIFE: 0.10,
+    PLACEMENTS: 0.50,
+    ROI: 0.0,
+    BRANCH_STRENGTH: 0.20,
+    COLLEGE_LIFE: 0.15,
     CURRICULUM: 0.15,
   },
   STARTUP: {
-    PLACEMENTS: 0.10,
-    ROI: 0.10,
-    BRANCH_STRENGTH: 0.20,
+    PLACEMENTS: 0.15,
+    ROI: 0.0,
+    BRANCH_STRENGTH: 0.25,
     COLLEGE_LIFE: 0.15,
     CURRICULUM: 0.45,
   },
   HIGHER_STUDIES: {
-    PLACEMENTS: 0.05,
-    ROI: 0.12,
-    BRANCH_STRENGTH: 0.15,
-    COLLEGE_LIFE: 0.13,
+    PLACEMENTS: 0.10,
+    ROI: 0.0,
+    BRANCH_STRENGTH: 0.20,
+    COLLEGE_LIFE: 0.15,
     CURRICULUM: 0.55,
   },
   NOT_SURE: {
-    PLACEMENTS: 0.20,
-    ROI: 0.20,
-    BRANCH_STRENGTH: 0.20,
-    COLLEGE_LIFE: 0.20,
-    CURRICULUM: 0.20,
+    PLACEMENTS: 0.25,
+    ROI: 0.0,
+    BRANCH_STRENGTH: 0.25,
+    COLLEGE_LIFE: 0.25,
+    CURRICULUM: 0.25,
   },
 };
 
@@ -288,15 +288,17 @@ export function getWeights(
       weights[key.toUpperCase()] = val;
     });
   } else if (config.weightStrategy === "EQUAL") {
-    const CORE_CRITERIA = ["PLACEMENTS", "ROI", "BRANCH_STRENGTH", "COLLEGE_LIFE", "CURRICULUM"];
+    const CORE_CRITERIA = ["PLACEMENTS", "BRANCH_STRENGTH", "COLLEGE_LIFE", "CURRICULUM"];
     CORE_CRITERIA.forEach((key) => {
-      weights[key] = 0.20;
+      weights[key] = 0.25;
     });
+    weights["ROI"] = 0.0;
   } else if (config.weightStrategy === "ROC") {
     const sorted = [...priorities].sort((a, b) => a.rankOrder - b.rankOrder);
     const ROC_WEIGHTS = [0.4567, 0.2567, 0.1567, 0.0900, 0.0400];
-    const CORE_CRITERIA = ["PLACEMENTS", "ROI", "BRANCH_STRENGTH", "COLLEGE_LIFE", "CURRICULUM"];
+    const CORE_CRITERIA = ["PLACEMENTS", "BRANCH_STRENGTH", "COLLEGE_LIFE", "CURRICULUM"];
     CORE_CRITERIA.forEach((key) => { weights[key] = 0.01; }); // small baseline
+    weights["ROI"] = 0.0;
     sorted.forEach((p, idx) => {
       const criteria = p.criteria.toUpperCase();
       const mappedKey = ENGINE_CRITERIA_MAP[criteria] || criteria;
