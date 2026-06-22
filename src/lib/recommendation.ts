@@ -178,7 +178,7 @@ export interface MatchResult {
   };
 
   admissionCompetitiveness: {
-    category: "Dream" | "Target" | "Safe";
+    category: "Dream" | "Target" | "Safe" | "Out of Reach";
     badgeText: string;
     jeeGap: number | null;
   };
@@ -265,6 +265,65 @@ function normalizeWeights(weights: Record<string, number>): Record<string, numbe
     normalized[key] = weights[key] / total;
   }
   return normalized;
+}
+
+// ── Admission Probability: Sigmoid / Logistic Curve ──────────────────────────
+// Replaces all hard if/else blocks with a smooth continuous curve.
+// Formula: P = 100 / (1 + exp(-k * (UserPercentile - Cutoff)))
+// Steepness k = 0.8 gives a smooth S-curve centered at the cutoff.
+
+export type AdmissionCategory = "Safe" | "Target" | "Dream" | "Out of Reach" | "Unknown";
+
+export interface AdmissionResult {
+  probability: number | null;    // 0-100, rounded to nearest integer
+  category: AdmissionCategory;
+}
+
+const SIGMOID_K = 0.8;
+
+export function calculateAdmissionProbability(
+  userPercentile: number | null | undefined,
+  collegeCutoff: number | null | undefined
+): AdmissionResult {
+  // Edge case: missing cutoff data
+  if (collegeCutoff == null) {
+    return { probability: null, category: "Unknown" };
+  }
+
+  // Edge case: missing student percentile — can't calculate
+  if (userPercentile == null) {
+    return { probability: null, category: "Unknown" };
+  }
+
+  // Sigmoid: P = 100 / (1 + e^(-k * (user - cutoff)))
+  const exponent = -SIGMOID_K * (userPercentile - collegeCutoff);
+  const rawProbability = 100 / (1 + Math.exp(exponent));
+  const probability = Math.round(rawProbability);
+
+  // Category thresholds applied after sigmoid calculation
+  let category: AdmissionCategory;
+  if (probability >= 80) {
+    category = "Safe";
+  } else if (probability >= 40) {
+    category = "Target";
+  } else if (probability >= 10) {
+    category = "Dream";
+  } else {
+    category = "Out of Reach";
+  }
+
+  return { probability, category };
+}
+
+// Category → badge text mapping
+function admissionBadgeText(category: AdmissionCategory, probability: number | null): string {
+  switch (category) {
+    case "Safe":         return `Admission: Safe — strong chances (${probability}%)`;
+    case "Target":       return `Admission: Target — good fit for your profile (${probability}%)`;
+    case "Dream":        return `Admission: Dream — competitive, requires strong profile (${probability}%)`;
+    case "Out of Reach": return `Admission: Out of Reach — very low chance (${probability}%)`;
+    case "Unknown":      return "Admission: Unknown — cutoff data unavailable";
+  }
 }
 
 const ENGINE_CRITERIA_MAP: Record<string, string> = {
@@ -515,10 +574,7 @@ export function generateRecommendations(
       }
     }
 
-    // --- STAGE 3: ACADEMIC FIT (admission probability ONLY — does NOT affect ranking) ---
-    let category: "Dream" | "Target" | "Safe" = "Target";
-    let badgeText = "Good Fit";
-
+    // --- STAGE 3: ACADEMIC FIT (admission probability via sigmoid curve) ---
     // Class 12 is eligibility only — if below cutoff, exclude entirely
     const c12Eligible =
       !student.class12Percentage || !c.minClass12Cutoff
@@ -527,33 +583,31 @@ export function generateRecommendations(
 
     if (!c12Eligible) continue;
 
-    // Admission probability is based on JEE gap only
+    // Calculate admission probability using sigmoid curve
+    const admissionCalc = calculateAdmissionProbability(
+      student.jeePercentile,
+      c.minJeePercentileCutoff
+    );
+
+    // Map the sigmoid result to the engine's category type
+    let category: "Dream" | "Target" | "Safe" | "Out of Reach" = "Target";
+    let badgeText = "Good Fit";
+
+    if (admissionCalc.probability !== null) {
+      // Apply excludeLimit filter: if sigmoid prob is extremely low, skip
+      if (config.academicCompetitiveness.active && admissionCalc.category === "Out of Reach") {
+        continue; // Filter out colleges with < 10% admission chance
+      }
+      category = admissionCalc.category as "Dream" | "Target" | "Safe" | "Out of Reach";
+      badgeText = admissionBadgeText(admissionCalc.category, admissionCalc.probability);
+    }
+
+    // Compute JEE gap for display purposes
     const jeeGap =
       student.jeePercentile && c.minJeePercentileCutoff
         ? student.jeePercentile - c.minJeePercentileCutoff
         : null;
-
     const bestGap = jeeGap;
-
-    if (config.academicCompetitiveness.active && bestGap !== null) {
-      const activeLimits = config.academicCompetitiveness;
-
-      if (bestGap < activeLimits.excludeLimit) {
-        continue;
-      } else if (bestGap < activeLimits.unlikelyThreshold) {
-        category = "Dream";
-        badgeText = "Admission: Dream — low chance, but worth trying";
-      } else if (bestGap < activeLimits.reachThreshold) {
-        category = "Dream";
-        badgeText = "Admission: Dream — competitive, requires strong profile";
-      } else if (bestGap >= activeLimits.safeThreshold) {
-        category = "Safe";
-        badgeText = "Admission: Safe — strong chances";
-      } else {
-        category = "Target";
-        badgeText = "Admission: Target — good fit for your profile";
-      }
-    }
 
     // --- STAGE 4: FACTOR SUB-SCORES (0-100) & CONTRIBUTIONS ---
     const factorContributions: FactorContribution[] = [];
@@ -760,19 +814,8 @@ export function generateRecommendations(
       keyReasons.push("Strong balanced scores across all categories");
     }
 
-    // --- ADMISSION PROBABILITY (separate from ranking) ---
-    // Calculates probability based on academic gap vs cutoff thresholds
-    let admissionProb = 50; // default if no cutoff data
-    if (bestGap !== null) {
-      if (bestGap >= 10) admissionProb = 95;
-      else if (bestGap >= 7) admissionProb = 85;
-      else if (bestGap >= 5) admissionProb = 75;
-      else if (bestGap >= 3) admissionProb = 60;
-      else if (bestGap >= 1) admissionProb = 45;
-      else if (bestGap >= 0) admissionProb = 40;
-      else if (bestGap >= -2) admissionProb = 20;
-      else admissionProb = 10;
-    }
+    // --- ADMISSION PROBABILITY (sigmoid-based, calculated in Stage 3) ---
+    const admissionProb = admissionCalc.probability ?? 50;
 
     results.push({
       collegeId: c.id,

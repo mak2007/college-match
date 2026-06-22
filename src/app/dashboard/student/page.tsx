@@ -517,32 +517,6 @@ export default function StudentDashboard() {
                       {rec.isPartner && <span className={styles.partnerBadge}>✓ Partner</span>}
                     </div>
 
-                    <div className={styles.matchStats}>
-                      <div className={styles.matchStat}>
-                        <span>4-Year Cost</span>
-                        <strong>
-                          {rec.total4YrCost != null
-                            ? `₹${(rec.total4YrCost / 100000).toFixed(1)}L`
-                            : "N/A"}
-                        </strong>
-                      </div>
-                      <div className={styles.matchStat}>
-                        <span>Avg Package</span>
-                        <strong>
-                          {rec.avgSalary != null
-                            ? `₹${(rec.avgSalary / 100000).toFixed(1)} LPA`
-                            : "N/A"}
-                        </strong>
-                      </div>
-                      <div className={styles.matchStat}>
-                        <span>Annual Tuition</span>
-                        <strong>
-                          {rec.annualTuition != null
-                            ? `₹${(rec.annualTuition / 100000).toFixed(1)}L`
-                            : "N/A"}
-                        </strong>
-                      </div>
-                    </div>
 
                     {rec.keyReasons.length > 0 && (
                       <div className={styles.matchReasons}>

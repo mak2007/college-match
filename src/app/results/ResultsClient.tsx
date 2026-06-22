@@ -223,7 +223,7 @@ export default function ResultsClient({
     console.log("Enriching recommendations:", recommendations.length);
     return recommendations.map((rec) => {
       const branch = rec.college?.branches?.find((b) => b.branchCode === rec.branchCode);
-      const category = rec.admissionProbability >= 70 ? "Safe" : rec.admissionProbability >= 40 ? "Target" : "Dream";
+      const category = rec.admissionProbability >= 80 ? "Safe" : rec.admissionProbability >= 40 ? "Target" : rec.admissionProbability >= 10 ? "Dream" : "Out of Reach";
       return { ...rec, category, admissionProb: rec.admissionProbability ?? 0 };
     });
   }, [recommendations]);
@@ -490,7 +490,9 @@ export default function ResultsClient({
 
                 const total4YrCost = (branch.tuitionFeeAnnual + branch.hostelFeeAnnual) * 4;
                 const bucketClass = rec.category === "Dream" ? styles.badgeDream
-                  : rec.category === "Safe" ? styles.badgeSafe : styles.badgeTarget;
+                  : rec.category === "Safe" ? styles.badgeSafe
+                  : rec.category === "Out of Reach" ? styles.badgeDream
+                  : styles.badgeTarget;
                 const applyRedirectUrl = `/api/leads/apply?student_id=${student.id}&college_id=${rec.college.id}&branch_code=${rec.branchCode}`;
 
                 return (
@@ -521,48 +523,6 @@ export default function ResultsClient({
                     <div className={styles.branchBox}>
                       <span className={styles.branchBadge}>{branch.branchCode}</span>
                       <span className={styles.branchTitle}>{branch.branchName}</span>
-                    </div>
-
-                    <div className={styles.cardGrid}>
-                      <div className={styles.gridSection}>
-                        <h4 className={styles.sectionTitle}>Placements</h4>
-                        <div className={styles.statRow}>
-                          <span>Average Package:</span>
-                          <strong>₹{branch.avgSalary ? (Number(branch.avgSalary) / 100000).toFixed(2) : "N/A"} LPA</strong>
-                        </div>
-                        <div className={styles.statRow}>
-                          <span>Median Package:</span>
-                          <strong>₹{branch.medianSalary ? (Number(branch.medianSalary) / 100000).toFixed(2) : "N/A"} LPA</strong>
-                        </div>
-                        {branch.highestSalary && (
-                          <div className={styles.statRow}>
-                            <span>Highest Package:</span>
-                            <strong>₹{(Number(branch.highestSalary) / 100000).toFixed(2)} LPA</strong>
-                          </div>
-                        )}
-                      </div>
-                      <div className={styles.gridSection}>
-                        <h4 className={styles.sectionTitle}>4-Year Financials</h4>
-                        <div className={styles.statRow}>
-                          <span>Annual Tuition:</span>
-                          <strong>₹{branch.tuitionFeeAnnual ? (Number(branch.tuitionFeeAnnual) / 100000).toFixed(2) : "N/A"} L</strong>
-                        </div>
-                        <div className={styles.statRow}>
-                          <span>Annual Hostel:</span>
-                          <strong>₹{branch.hostelFeeAnnual ? (Number(branch.hostelFeeAnnual) / 100000).toFixed(2) : "N/A"} L</strong>
-                        </div>
-                        <div className={styles.totalRow}>
-                          <span>Est. Total Cost:</span>
-                          <strong>₹{(total4YrCost / 100000).toFixed(2)} Lakh</strong>
-                        </div>
-                      </div>
-                      <div className={styles.gridSection} style={{ borderRight: "none" }}>
-                        <h4 className={styles.sectionTitle}>Admission Criteria</h4>
-                        <p className={styles.cutoffSubtext}>
-                          JEE Main: {branch.minJeePercentileCutoff ? `≥ ${branch.minJeePercentileCutoff} percentile` : "N/A"}<br />
-                          Eligibility: {branch.minClass12Cutoff ? `Class 12 ≥ ${branch.minClass12Cutoff}%` : "N/A"}
-                        </p>
-                      </div>
                     </div>
 
                     {rec.scoreBreakdown && (
