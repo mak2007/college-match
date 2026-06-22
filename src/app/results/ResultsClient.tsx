@@ -90,7 +90,7 @@ interface ResultsClientProps {
   recommendations: Recommendation[];
 }
 
-type SortMode = "best_fit" | "admission_chance";
+type SortMode = "best_fit" | "admission_chance" | "all";
 
 const CAREER_GOALS = [
   { value: "PLACEMENT", label: "Get Placed" },
@@ -232,12 +232,18 @@ export default function ResultsClient({
     const allChecked = admissionFilter.high && admissionFilter.medium && admissionFilter.low;
     let result = enriched;
 
+    if (sortMode === "best_fit") {
+      result = enriched.filter((r) => r.admissionProb >= 40);
+    } else if (sortMode === "all") {
+      result = enriched.filter((r) => r.admissionProb >= 10);
+    }
+
     if (!allChecked) {
       const allowed: string[] = [];
       if (admissionFilter.high) allowed.push("Safe");
       if (admissionFilter.medium) allowed.push("Target");
       if (admissionFilter.low) allowed.push("Dream");
-      result = enriched.filter((r) => allowed.includes(r.category));
+      result = result.filter((r) => allowed.includes(r.category));
     }
 
     return result.sort((a, b) => {
@@ -281,6 +287,11 @@ export default function ResultsClient({
                   <input type="radio" name="sortMode" checked={sortMode === "admission_chance"}
                     onChange={() => setSortMode("admission_chance")} />
                   <span>Admission Chance</span>
+                </label>
+                <label className={styles.radioLabel}>
+                  <input type="radio" name="sortMode" checked={sortMode === "all"}
+                    onChange={() => setSortMode("all")} />
+                  <span>All</span>
                 </label>
               </div>
             </div>
