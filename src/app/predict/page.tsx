@@ -455,15 +455,6 @@ export default function Predictor() {
                 onChange={(e) => setBudgetLimit(Number(e.target.value))}
               />
             </div>
-
-            <label className={styles.checkboxLabel} style={{ marginTop: "2rem" }}>
-              <input
-                type="checkbox"
-                checked={isBudgetConstraint}
-                onChange={(e) => setIsBudgetConstraint(e.target.checked)}
-              />
-              Enforce strictly (exceeding costs will trigger heavy score penalties)
-            </label>
           </div>
         );
       case 6:
