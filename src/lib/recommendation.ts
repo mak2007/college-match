@@ -672,8 +672,43 @@ export function generateRecommendations(
     const appliedBonuses: AppliedModifier[] = [];
     let bonusSum = 0;
 
-    // All dynamic bonuses and adjustments are disabled as per user instruction. 
-    // Scores and rankings are strictly calculated from the raw scores in the sheet.
+    // Career Goal Modifiers: Provide a +5.0 bonus if the college excels in the student's chosen career focus.
+    const goalUpper = student.careerGoal?.toUpperCase();
+    if (goalUpper === "PLACEMENT") {
+      if (c.placementScore >= 8.0 || (c.avgSalary && c.avgSalary >= 1000000)) {
+        bonusSum += 5.0;
+        appliedBonuses.push({
+          id: "career_placement_focus",
+          type: "BONUS",
+          value: 5.0,
+          reason: "Matches your career goal: Excellent placements & average packages (Placement Score >= 8.0 or average salary >= 10 LPA)"
+        });
+      }
+    } else if (goalUpper === "STARTUP") {
+      const startupEco = collegeMeta.startup_ecosystem ? Number(collegeMeta.startup_ecosystem) : 7.0;
+      const scoreScale = startupEco <= 10 ? startupEco : startupEco / 10;
+      if (scoreScale >= 8.0) {
+        bonusSum += 5.0;
+        appliedBonuses.push({
+          id: "career_startup_focus",
+          type: "BONUS",
+          value: 5.0,
+          reason: `Matches your career goal: Strong entrepreneurship & startup ecosystem (Startup Score: ${scoreScale.toFixed(1)}/10)`
+        });
+      }
+    } else if (goalUpper === "HIGHER_STUDIES") {
+      const researchOut = collegeMeta.research_output ? Number(collegeMeta.research_output) : 7.0;
+      const scoreScale = researchOut <= 10 ? researchOut : researchOut / 10;
+      if (scoreScale >= 8.0) {
+        bonusSum += 5.0;
+        appliedBonuses.push({
+          id: "career_research_focus",
+          type: "BONUS",
+          value: 5.0,
+          reason: `Matches your career goal: High academic research output & publications (Research Score: ${scoreScale.toFixed(1)}/10)`
+        });
+      }
+    }
 
     // Final score = base + bonuses - budget penalty ONLY (no academic penalty)
     const totalPenalty = budgetPenaltyVal;
