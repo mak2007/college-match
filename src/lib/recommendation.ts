@@ -806,7 +806,7 @@ export function generateRecommendations(
       else if (bestGap >= 5) admissionProb = 75;
       else if (bestGap >= 3) admissionProb = 60;
       else if (bestGap >= 1) admissionProb = 45;
-      else if (bestGap >= 0) admissionProb = 35;
+      else if (bestGap >= 0) admissionProb = 40;
       else if (bestGap >= -2) admissionProb = 20;
       else admissionProb = 10;
     }

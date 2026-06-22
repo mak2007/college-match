@@ -223,7 +223,7 @@ export default function ResultsClient({
     console.log("Enriching recommendations:", recommendations.length);
     return recommendations.map((rec) => {
       const branch = rec.college?.branches?.find((b) => b.branchCode === rec.branchCode);
-      const category = rec.admissionProbability >= 70 ? "Safe" : rec.admissionProbability >= 35 ? "Target" : "Dream";
+      const category = rec.admissionProbability >= 70 ? "Safe" : rec.admissionProbability >= 40 ? "Target" : "Dream";
       return { ...rec, category, admissionProb: rec.admissionProbability ?? 0 };
     });
   }, [recommendations]);

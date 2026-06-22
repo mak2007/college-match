@@ -142,6 +142,52 @@ export default function ImportPage() {
   const [fileName, setFileName] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Master Excel Upload States
+  const [masterFile, setMasterFile] = useState<File | null>(null);
+  const [masterImporting, setMasterImporting] = useState(false);
+  const [masterResult, setMasterResult] = useState<{ success: boolean; message: string; output: string; errors?: string } | null>(null);
+  const masterFileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleMasterFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setMasterFile(file);
+      setMasterResult(null);
+    }
+  };
+
+  const handleMasterImport = async () => {
+    if (!masterFile) return;
+    setMasterImporting(true);
+    setMasterResult(null);
+
+    const formData = new FormData();
+    formData.append("file", masterFile);
+
+    try {
+      const res = await fetch("/api/admin/import-master-excel", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Master import failed");
+      setMasterResult({
+        success: data.success,
+        message: data.message,
+        output: data.output,
+        errors: data.errors,
+      });
+    } catch (err: any) {
+      setMasterResult({
+        success: false,
+        message: err.message || "Unknown error occurred",
+        output: err.details || "",
+      });
+    } finally {
+      setMasterImporting(false);
+    }
+  };
+
   const reset = () => {
     setParsedRows([]);
     setErrors([]);
@@ -325,6 +371,121 @@ export default function ImportPage() {
           >
             All (Multi-Sheet)
           </button>
+        </div>
+
+        {/* Master Excel Upload Section */}
+        <div style={{
+          background: "var(--light-surface)",
+          border: "1px solid var(--light-border)",
+          borderRadius: "12px",
+          padding: "1.5rem",
+          marginBottom: "2rem",
+          boxShadow: "0 4px 12px rgba(15, 45, 82, 0.04)"
+        }}>
+          <h2 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--primary-color)", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+            <span>🚀</span> Overwrite Database with Master Excel
+          </h2>
+          <p style={{ fontSize: "0.85rem", color: "var(--light-text-secondary)", marginBottom: "1.25rem", lineHeight: "1.5" }}>
+            Upload the master production Excel file. This will overwrite the existing file on the server,
+            <strong> wipe all current college/branch data</strong>, and run the production import script to
+            completely rebuild college match recommendations.
+          </p>
+
+          <div style={{ display: "flex", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
+            <button
+              onClick={() => masterFileInputRef.current?.click()}
+              style={{
+                padding: "0.6rem 1.2rem",
+                background: "white",
+                color: "var(--primary-color)",
+                border: "1px solid var(--light-border)",
+                borderRadius: "8px",
+                fontSize: "0.85rem",
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.2s ease"
+              }}
+            >
+              Select Master Excel File
+            </button>
+            <input
+              ref={masterFileInputRef}
+              type="file"
+              accept=".xlsx,.xls"
+              style={{ display: "none" }}
+              onChange={handleMasterFileChange}
+            />
+            {masterFile && (
+              <span style={{ fontSize: "0.85rem", color: "var(--light-text-primary)", fontWeight: 500 }}>
+                📄 {masterFile.name} ({(masterFile.size / 1024).toFixed(1)} KB)
+              </span>
+            )}
+            {masterFile && (
+              <button
+                onClick={handleMasterImport}
+                disabled={masterImporting}
+                style={{
+                  padding: "0.6rem 1.5rem",
+                  background: "#d97706",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "0.85rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  opacity: masterImporting ? 0.6 : 1,
+                  boxShadow: "0 2px 4px rgba(217, 119, 6, 0.2)"
+                }}
+              >
+                {masterImporting ? "Processing Overwrite..." : "Wipe & Re-Import Database"}
+              </button>
+            )}
+          </div>
+
+          {masterResult && (
+            <div style={{
+              marginTop: "1.5rem",
+              padding: "1rem",
+              borderRadius: "8px",
+              background: masterResult.success ? "rgba(34, 197, 94, 0.08)" : "rgba(239, 68, 68, 0.08)",
+              border: `1px solid ${masterResult.success ? "rgba(34, 197, 94, 0.2)" : "rgba(239, 68, 68, 0.2)"}`
+            }}>
+              <h3 style={{
+                fontSize: "0.95rem",
+                fontWeight: 700,
+                color: masterResult.success ? "#15803d" : "#b91c1c",
+                marginBottom: "0.5rem"
+              }}>
+                {masterResult.success ? "✓ Master Import Completed Successfully" : "✗ Master Import Failed"}
+              </h3>
+              <p style={{ fontSize: "0.8rem", color: "var(--light-text-secondary)", marginBottom: "0.75rem" }}>
+                {masterResult.message}
+              </p>
+
+              {masterResult.output && (
+                <div>
+                  <span style={{ fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", color: "var(--light-text-secondary)" }}>
+                    Console Output Log:
+                  </span>
+                  <pre style={{
+                    marginTop: "0.25rem",
+                    padding: "0.75rem",
+                    borderRadius: "6px",
+                    background: "#1e1e1e",
+                    color: "#f8f8f2",
+                    fontSize: "0.75rem",
+                    fontFamily: "monospace",
+                    maxHeight: "250px",
+                    overflowY: "auto",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-all"
+                  }}>
+                    {masterResult.output}
+                  </pre>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Tabs */}
