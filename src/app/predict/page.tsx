@@ -336,7 +336,7 @@ export default function Predictor() {
           placements: { label: "Placements & Salaries", icon: "💼", desc: "Top recruiters, package statistics, and career growth" },
           extracurriculars: { label: "Extracurricular activities and sports", icon: "⚽", desc: "Clubs, student chapters, athletic events, and active groups" },
           campus_life: { label: "Campus Life & crowd", icon: "🌴", desc: "Modern hostels, food courts, diverse student body, and events" },
-          research: { label: "Research and opportunities", icon: "🔬", desc: "Academic projects, internships, patent support, and labs" },
+          research: { label: "Startup ecosystem", icon: "🚀", desc: "Incubation center, funding support, startup culture, and entrepreneurial resources" },
           curriculum: { label: "Modern Course Standards", icon: "📖", desc: "Updated syllabus, industry readiness, and faculty standards" }
         };
 

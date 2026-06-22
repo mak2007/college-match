@@ -48,7 +48,7 @@ export default function Wizard() {
     { id: "placements", label: "Placements & Salaries" },
     { id: "curriculum", label: "Modern Course Standards" },
     { id: "campus_life", label: "Campus Life & crowd" },
-    { id: "research", label: "Research and Opportunities" },
+    { id: "research", label: "Startup ecosystem" },
     { id: "extracurriculars", label: "Extracurricular activities and sports" },
   ]);
 

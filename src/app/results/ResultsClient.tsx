@@ -111,7 +111,7 @@ const PRIORITY_LABELS: Record<string, string> = {
   PLACEMENTS: "Placements & Salaries",
   CURRICULUM: "Modern Course Standards",
   CAMPUS_LIFE: "Campus Life & Crowd",
-  RESEARCH: "Research and Opportunities",
+  RESEARCH: "Startup ecosystem",
   EXTRACURRICULARS: "Extracurricular Activities and Sports",
 };
 

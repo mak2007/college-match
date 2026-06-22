@@ -71,12 +71,12 @@ const CRITERIA_LABELS: Record<string, string> = {
   placements: "💼 Placements & Salaries",
   curriculum: "📖 Modern Course Standards",
   campus_life: "🌴 Campus Life & Crowd",
-  research: "🔬 Research & Opportunities",
+  research: "🚀 Startup ecosystem",
   extracurriculars: "⚽ Extracurricular Activities",
   PLACEMENTS: "💼 Placements & Salaries",
   CURRICULUM: "📖 Modern Course Standards",
   CAMPUS_LIFE: "🌴 Campus Life & Crowd",
-  RESEARCH: "🔬 Research & Opportunities",
+  RESEARCH: "🚀 Startup ecosystem",
   EXTRACURRICULARS: "⚽ Extracurricular Activities and Sports",
 };
 
