@@ -198,13 +198,13 @@ export async function POST(request: Request) {
     };
 
     const recommendations = generateRecommendations(engineProfile, candidates, config);
-    const top10 = recommendations.slice(0, 10);
+    const top100 = recommendations.slice(0, 100);
 
     // 6. Store recommendations in DB
     await prisma.recommendation.deleteMany({ where: { studentId: dbStudent.id } });
-    if (top10.length > 0) {
+    if (top100.length > 0) {
       await prisma.recommendation.createMany({
-        data: top10.map((r) => ({
+        data: top100.map((r) => ({
           studentId: dbStudent.id,
           collegeId: r.collegeId,
           branchCode: r.branchCode,

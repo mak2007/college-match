@@ -17,7 +17,7 @@ export async function GET(
         },
         recommendations: {
           orderBy: { rankPosition: "asc" },
-          take: 10,
+          take: 100,
           include: {
             college: {
               include: { branches: true },

@@ -151,7 +151,7 @@ export async function POST(request: Request) {
 
     const matches = generateRecommendations(engineProfile, candidates, config);
 
-    return NextResponse.json({ success: true, matches: matches.slice(0, 10) });
+    return NextResponse.json({ success: true, matches: matches.slice(0, 100) });
   } catch (error: any) {
     console.error("Match API Error:", error);
     return NextResponse.json({ success: false, error: "Internal Server Error", details: error.message }, { status: 500 });
@@ -224,7 +224,7 @@ export async function GET(request: Request) {
 
     const matches = generateRecommendations(engineProfile, candidates, config);
 
-    return NextResponse.json({ success: true, matches: matches.slice(0, 10) });
+    return NextResponse.json({ success: true, matches: matches.slice(0, 100) });
   } catch (error: any) {
     console.error("Match API GET Error:", error);
     return NextResponse.json({ success: false, error: "Internal Server Error", details: error.message }, { status: 500 });

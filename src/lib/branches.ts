@@ -51,7 +51,8 @@ const BRANCH_FAMILY_MAP: Record<string, string> = {
  * Returns the canonical code if recognized, or the uppercased input if unknown.
  */
 export function normalizeBranchCode(code: string): string {
-  const upper = code.toUpperCase().replace(/[^A-Z]/g, "");
+  const clean = code.toUpperCase().split("_CAT")[0];
+  const upper = clean.replace(/[^A-Z]/g, "");
   return BRANCH_FAMILY_MAP[upper] || upper;
 }
 

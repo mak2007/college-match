@@ -1,0 +1,210 @@
+const { execSync } = require('child_process');
+const fs = require('fs');
+
+const commits = [
+  'ed7e23b',
+  'ea8895b',
+  'cf08b0c',
+  '9b393f7',
+  '0ff997f',
+  'd38855d',
+  'cb5022f'
+];
+
+let allColleges = [];
+let adminEmails = new Set();
+let adminCreates = [];
+
+for (const commit of commits) {
+  const content = execSync(`git show ${commit}:prisma/seed.ts`).toString();
+  
+  // Extract collegesData array using regex/eval
+  const match = content.match(/const collegesData = (\[[\s\S]*?\]);\s*console\.log\(/);
+  if (match) {
+    // Some commits might use `];` directly, so let's be careful. Let's just match up to the end of the array before console.log or //
+    try {
+      const arrayStr = match[1];
+      const colleges = eval(arrayStr);
+      for (const col of colleges) {
+        if (!allColleges.find(c => c.slug === col.slug)) {
+          allColleges.push(col);
+          if (col.adminEmail && !adminEmails.has(col.adminEmail)) {
+            adminEmails.add(col.adminEmail);
+            adminCreates.push(`  await prisma.user.create({\n    data: { email: "${col.adminEmail}", passwordHash: collegePasswordHash, role: "COLLEGE_ADMIN" },\n  });`);
+          }
+        }
+      }
+    } catch (e) {
+      console.log(`Failed to parse colleges from ${commit}`, e);
+    }
+  } else {
+    console.log(`Could not find collegesData array in ${commit}`);
+  }
+}
+
+// Write the combined seed.ts
+const baseTemplate = `import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
+import * as bcrypt from "bcryptjs";
+import "dotenv/config";
+
+const connectionString = process.env.DATABASE_URL || "";
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
+
+async function main() {
+  console.log("Starting database cleanup and seeding with ALL colleges...");
+
+  // 1. Clean up existing database tables
+  console.log("Cleaning up old data...");
+  await prisma.systemConfig.deleteMany({});
+  await prisma.commissionTransaction.deleteMany({});
+  await prisma.lead.deleteMany({});
+  await prisma.recommendation.deleteMany({});
+  await prisma.studentPriority.deleteMany({});
+  await prisma.studentLocation.deleteMany({});
+  await prisma.student.deleteMany({});
+  await prisma.collegeBranch.deleteMany({});
+  await prisma.collegeAdminProfile.deleteMany({});
+  await prisma.college.deleteMany({});
+  await prisma.user.deleteMany({});
+
+  // 2. Create Default Matching Configuration Rules
+  console.log("Seeding system configurations...");
+  const defaultMatchingRules = {
+    weightStrategy: "CAREER_GOAL_PRIORITY",
+    manualWeights: {
+      PLACEMENTS: 0.30,
+      ROI: 0.25,
+      BRANCH_STRENGTH: 0.20,
+      COLLEGE_LIFE: 0.15,
+      CURRICULUM: 0.10,
+    },
+    careerGoalWeights: {
+      PLACEMENT: { PLACEMENTS: 0.40, ROI: 0.20, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.10, CURRICULUM: 0.15 },
+      STARTUP: { PLACEMENTS: 0.10, ROI: 0.10, BRANCH_STRENGTH: 0.20, COLLEGE_LIFE: 0.15, CURRICULUM: 0.45 },
+      HIGHER_STUDIES: { PLACEMENTS: 0.05, ROI: 0.12, BRANCH_STRENGTH: 0.15, COLLEGE_LIFE: 0.13, CURRICULUM: 0.55 },
+      NOT_SURE: { PLACEMENTS: 0.20, ROI: 0.20, BRANCH_STRENGTH: 0.20, COLLEGE_LIFE: 0.20, CURRICULUM: 0.20 },
+    },
+    priorityAdjustment: {
+      active: true,
+      boostPerRank: 0.10,
+      maxAdjustment: 0.30,
+    },
+    careerGoalExtraDimensions: {
+      PLACEMENT: [
+        { key: "PLACEMENT_PERCENTAGE", label: "Branch placement rate", weight: 0.15, source: "branch_metadata", computation: "placement_percentage" },
+      ],
+      STARTUP: [
+        { key: "STARTUP_ECOSYSTEM", label: "Startup ecosystem & incubation", weight: 0.15, source: "college_metadata", metadataKey: "startup_ecosystem" },
+      ],
+      HIGHER_STUDIES: [
+        { key: "RESEARCH_OUTPUT", label: "Research output & publications", weight: 0.10, source: "college_metadata", metadataKey: "research_output" },
+        { key: "INTERNATIONAL_EXPOSURE", label: "International exposure & exchange programs", weight: 0.05, source: "college_metadata", metadataKey: "international_exposure" },
+      ],
+      NOT_SURE: [],
+    },
+    budgetPenalty: {
+      active: true,
+      thresholdMultiplier: 1.15,
+      basePenaltyWeight: 50.0,
+      exponent: 2.5,
+    },
+    academicCompetitiveness: {
+      active: true,
+      safeThreshold: 5.0,
+      reachThreshold: 0.0,
+      unlikelyThreshold: -5.0,
+      reachPenaltyScale: 5.0,
+      unlikelyPenaltyScale: 8.0,
+      excludeLimit: -15.0,
+    },
+    bonusRules: [
+      { id: "placement_ex", type: "PLACEMENT_AVERAGE", threshold: 900000, bonus: 5.0, reason: "Placement average package exceeds ₹9 LPA" },
+      { id: "partner_b", type: "IS_PARTNER", bonus: 2.0, reason: "Exclusive CollegeMatch Partner" }
+    ],
+    customScoringAttributes: [
+      { key: "infra_rating", label: "Infrastructure Score", weight: 0.05, defaultValue: 80 }
+    ]
+  };
+
+  await prisma.systemConfig.create({
+    data: {
+      key: "matching_rules",
+      value: JSON.stringify(defaultMatchingRules, null, 2),
+    },
+  });
+
+  // 3. Create Superadmin User
+  console.log("Creating users...");
+  const salt = await bcrypt.genSalt(10);
+  const adminPasswordHash = await bcrypt.hash("AdminPass123!", salt);
+  const collegePasswordHash = await bcrypt.hash("CollegePass123!", salt);
+
+  await prisma.user.create({
+    data: {
+      email: "admin@collegematch.in",
+      passwordHash: adminPasswordHash,
+      role: "SUPERADMIN",
+    },
+  });
+
+  // Create college admin accounts
+${adminCreates.join('\n')}
+
+  // 4. Define ALL Colleges Data
+  const collegesData = ${JSON.stringify(allColleges, null, 2)};
+
+  console.log("Seeding new colleges and branches...");
+  for (const c of collegesData) {
+    const { branches, adminEmail, ...collegeInfo } = c;
+
+    const createdCollege = await prisma.college.create({
+      data: {
+        ...collegeInfo,
+      },
+    });
+
+    console.log(\`Created College: \${createdCollege.name}\`);
+
+    for (const b of branches) {
+      await prisma.collegeBranch.create({
+        data: {
+          ...b,
+          collegeId: createdCollege.id,
+        },
+      });
+    }
+
+    if (adminEmail) {
+      const associatedAdmin = await prisma.user.findUnique({
+        where: { email: adminEmail },
+      });
+      if (associatedAdmin) {
+        await prisma.collegeAdminProfile.create({
+          data: {
+            userId: associatedAdmin.id,
+            collegeId: createdCollege.id,
+          },
+        });
+      }
+    }
+  }
+
+  console.log("Database seeding with ALL colleges completed successfully!");
+}
+
+main()
+  .catch((e) => {
+    console.error("Error running seed script:", e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+`;
+
+fs.writeFileSync('prisma/seed.ts', baseTemplate);
+console.log('Successfully generated seed.ts with', allColleges.length, 'colleges');

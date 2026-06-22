@@ -436,7 +436,7 @@ export function generateRecommendations(
 
   // V1: Only evaluate CSE variants (CSE, CSE_CAT1-4). IT/ECE deferred to V2/V3.
   candidates = candidates.filter((c) =>
-    CSE_VARIANTS.includes(c.branchCode.toUpperCase().replace(/[^A-Z]/g, ""))
+    CSE_VARIANTS.includes(c.branchCode.toUpperCase().trim())
   );
   if (candidates.length === 0) return [];
 

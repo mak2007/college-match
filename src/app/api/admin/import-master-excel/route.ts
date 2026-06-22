@@ -71,6 +71,16 @@ const ADMIN_EMAIL_MAP: Record<string, string> = {
   'amrita-coimbatore': 'admissions@amrita.edu',
 };
 
+const FALLBACK_FEES: Record<string, { tuition: number; hostel: number }> = {
+  'iiit-bangalore': { tuition: 400000, hostel: 120000 },
+  'iiit-hyderabad': { tuition: 400000, hostel: 120000 },
+  'snu-greater-noida': { tuition: 350000, hostel: 150000 },
+  'lnmiit-jaipur': { tuition: 320000, hostel: 90000 },
+  'daiict-gandhinagar': { tuition: 270000, hostel: 80000 },
+  'pec-chandigarh': { tuition: 180000, hostel: 70000 },
+  'mit-jaipur': { tuition: 325000, hostel: 120000 },
+};
+
 function slugify(name: string): string {
   return name.toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
@@ -300,8 +310,17 @@ export async function POST(request: Request) {
         else if (branchCode.endsWith("_CAT3")) branchName = "Computer Science & Engineering (Category 3)";
         else if (branchCode.endsWith("_CAT4")) branchName = "Computer Science & Engineering (Category 4)";
 
-        const tuitionFeeAnnual = num(row.tuitionFeeAnnual);
-        const hostelFeeAnnual = num(row.hostelFeeAnnual);
+        const collegeSlug = SLUG_OVERRIDES[collegeName] || slugify(collegeName);
+        let tuitionFeeAnnual = num(row.tuitionFeeAnnual);
+        let hostelFeeAnnual = num(row.hostelFeeAnnual);
+
+        if (tuitionFeeAnnual === 0) {
+          const fallback = FALLBACK_FEES[collegeSlug];
+          if (fallback) {
+            tuitionFeeAnnual = fallback.tuition;
+            hostelFeeAnnual = fallback.hostel;
+          }
+        }
         const minJeePercentileCutoff = num(row['equivalent jeepercentilecutoff'] !== undefined ? row['equivalent jeepercentilecutoff'] : row.minJeePercentileCutoff);
         const minClass12Cutoff = num(row.minClass12Cutoff);
         const avgSalary = num(row.avgSalary) || null;
@@ -410,12 +429,12 @@ export async function POST(request: Request) {
           );
 
           const recommendations = generateRecommendations(engineProfile, candidates, config);
-          const top15 = recommendations.slice(0, 15);
+          const top100 = recommendations.slice(0, 100);
 
           await prisma.recommendation.deleteMany({ where: { studentId: student.id } });
-          if (top15.length > 0) {
+          if (top100.length > 0) {
             await prisma.recommendation.createMany({
-              data: top15.map((r) => ({
+              data: top100.map((r) => ({
                 studentId: student.id,
                 collegeId: r.collegeId,
                 branchCode: r.branchCode,
