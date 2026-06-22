@@ -354,8 +354,7 @@ export function getWeights(
   });
 
   // Fold in career goal extra dimensions
-  const goal = careerGoal || "NOT_SURE";
-  const extras = config.careerGoalExtraDimensions?.[goal] || DEFAULT_EXTRA_DIMENSIONS[goal] || [];
+  const extras: CareerGoalExtraDimension[] = [];
   let totalExtraWeight = extras.reduce((sum, e) => sum + e.weight, 0);
 
   if (totalExtraWeight > 0) {
@@ -459,7 +458,7 @@ export function generateRecommendations(
   const careerGoal = student.careerGoal || "NOT_SURE";
 
   // Get extra dimensions for this career goal
-  const extras = config.careerGoalExtraDimensions?.[careerGoal] || DEFAULT_EXTRA_DIMENSIONS[careerGoal] || [];
+  const extras: CareerGoalExtraDimension[] = [];
 
   const results: MatchResult[] = [];
 
@@ -673,79 +672,8 @@ export function generateRecommendations(
     const appliedBonuses: AppliedModifier[] = [];
     let bonusSum = 0;
 
-    config.bonusRules.forEach((rule) => {
-      if (rule.type === "IS_PARTNER" && c.isPartner) {
-        bonusSum += rule.bonus;
-        appliedBonuses.push({
-          id: rule.id,
-          type: "BONUS",
-          value: rule.bonus,
-          reason: rule.reason,
-        });
-      } else if (
-        rule.type === "PLACEMENT_AVERAGE" &&
-        c.avgSalary &&
-        rule.threshold &&
-        c.avgSalary >= rule.threshold
-      ) {
-        bonusSum += rule.bonus;
-        appliedBonuses.push({
-          id: rule.id,
-          type: "BONUS",
-          value: rule.bonus,
-          reason: rule.reason,
-        });
-      } else if (rule.type === "CUSTOM_ATTRIBUTE" && rule.attributeKey) {
-        const hasAttr = collegeMeta[rule.attributeKey] !== undefined;
-        if (hasAttr && Number(collegeMeta[rule.attributeKey]) >= (rule.threshold || 0)) {
-          bonusSum += rule.bonus;
-          appliedBonuses.push({
-            id: rule.id,
-            type: "BONUS",
-            value: rule.bonus,
-            reason: rule.reason,
-          });
-        }
-      }
-    });
-
-    // Career Goal Modifiers (dynamic bonuses based on student's chosen path)
-    const goalUpper = student.careerGoal?.toUpperCase();
-    if (goalUpper === "PLACEMENT") {
-      if (c.placementScore >= 8.5 || (c.avgSalary && c.avgSalary >= 1200000)) {
-        bonusSum += 5.0;
-        appliedBonuses.push({
-          id: "career_placement_focus",
-          type: "BONUS",
-          value: 5.0,
-          reason: "Excellent placement statistics align with your Corporate Career goal"
-        });
-      }
-    } else if (goalUpper === "STARTUP") {
-      const startupEco = collegeMeta.startup_ecosystem ? Number(collegeMeta.startup_ecosystem) : 7.0;
-      const threshold = startupEco <= 10 ? 8.0 : 80;
-      if (startupEco >= threshold) {
-        bonusSum += 7.0;
-        appliedBonuses.push({
-          id: "career_startup_focus",
-          type: "BONUS",
-          value: 7.0,
-          reason: `Exceptional startup ecosystem (${startupEco}${startupEco <= 10 ? "/10" : ""}) supports your Entrepreneurship goal`
-        });
-      }
-    } else if (goalUpper === "HIGHER_STUDIES") {
-      const researchOut = collegeMeta.research_output ? Number(collegeMeta.research_output) : 7.0;
-      const threshold = researchOut <= 10 ? 8.0 : 80;
-      if (researchOut >= threshold) {
-        bonusSum += 7.0;
-        appliedBonuses.push({
-          id: "career_research_focus",
-          type: "BONUS",
-          value: 7.0,
-          reason: `Outstanding research output (${researchOut}${researchOut <= 10 ? "/10" : ""}) supports your Higher Studies/Academia goal`
-        });
-      }
-    }
+    // All dynamic bonuses and adjustments are disabled as per user instruction. 
+    // Scores and rankings are strictly calculated from the raw scores in the sheet.
 
     // Final score = base + bonuses - budget penalty ONLY (no academic penalty)
     const totalPenalty = budgetPenaltyVal;
