@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import styles from "./results.module.css";
 import { BRANCH_OPTIONS, normalizeBranchCode } from "@/lib/branches";
@@ -252,6 +252,17 @@ export default function ResultsClient({
     });
   }, [enriched, sortMode, admissionFilter]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [sortMode, admissionFilter, recommendations]);
+
+  const paginated = useMemo(() => {
+    return filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  }, [filtered, currentPage]);
+
   const bucketCounts = useMemo(() => {
     const counts = { Dream: 0, Target: 0, Safe: 0 };
     enriched.forEach((r) => { counts[r.category as keyof typeof counts]++; });
@@ -466,7 +477,7 @@ export default function ResultsClient({
             </div>
           ) : (
             <div className={styles.resultsList}>
-              {filtered.map((rec, idx) => {
+              {paginated.map((rec, idx) => {
                 console.log("Rendering rec:", rec.id, rec.college?.name, rec.category);
                 const branch = rec.college?.branches?.find((b) => b.branchCode === rec.branchCode);
                 if (!branch) {
@@ -486,7 +497,7 @@ export default function ResultsClient({
                   <div key={rec.id} className={styles.collegeCard}>
                     <div className={styles.cardHeader}>
                       <div className={styles.collegeMeta}>
-                        <span className={styles.rankBadge}>#{idx + 1}</span>
+                        <span className={styles.rankBadge}>#{(currentPage - 1) * pageSize + idx + 1}</span>
                         <div>
                           <h2 className={styles.collegeName}>{rec.college.name}</h2>
                           <p className={styles.collegeLocation}>{rec.college.city}, {rec.college.state}</p>
@@ -636,6 +647,35 @@ export default function ResultsClient({
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {filtered.length > pageSize && (
+            <div className={styles.pagination}>
+              <button
+                onClick={() => {
+                  setCurrentPage((p) => Math.max(1, p - 1));
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                disabled={currentPage === 1}
+                className={styles.pageBtn}
+              >
+                ← Previous Page
+              </button>
+              <span className={styles.pageInfo}>
+                Page <strong>{currentPage}</strong> of {Math.ceil(filtered.length / pageSize)}
+              </span>
+              <button
+                onClick={() => {
+                  setCurrentPage((p) => Math.min(Math.ceil(filtered.length / pageSize), p + 1));
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                disabled={currentPage === Math.ceil(filtered.length / pageSize)}
+                className={styles.pageBtn}
+              >
+                Next Page →
+              </button>
             </div>
           )}
         </main>

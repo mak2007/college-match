@@ -744,3 +744,53 @@
 .modifierReason {
   flex: 1;
 }
+
+/* ===== Pagination ===== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e3dc;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.pageBtn {
+  background: #ffffff;
+  border: 1px solid #e5e3dc;
+  color: #0F2D52;
+  font-weight: 700;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(15, 45, 82, 0.04);
+}
+
+.pageBtn:hover:not(:disabled) {
+  border-color: #C4A484;
+  background-color: #faf8f4;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 45, 82, 0.08);
+}
+
+.pageBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #f4eee2;
+}
+
+.pageInfo {
+  font-size: 0.95rem;
+  color: #4a4a4a;
+}
+
+.pageInfo strong {
+  color: #0F2D52;
+}
