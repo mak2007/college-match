@@ -112,45 +112,44 @@ function StudentLoginContent() {
   const handleGoogleLogin = () => {
     setError("");
     setLoading(true);
-    // Simulated Google login for demo
     setTimeout(async () => {
       try {
-        const dummyEmail = `student_${Math.floor(1000 + Math.random() * 9000)}@gmail.com`;
-        const res = await fetch("/api/auth/register", {
+        const dummyEmail = "google_user@collegematch.in";
+        const dummyPassword = "GoogleAuth_Demo_Pass_2026";
+        
+        // Try logging in first
+        let res = await fetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: dummyEmail,
-            password: "GoogleAuth_" + Date.now(),
-            name: "Google User",
-          }),
+          body: JSON.stringify({ email: dummyEmail, password: dummyPassword }),
         });
+
+        if (!res.ok) {
+          // If user doesn't exist yet, register
+          res = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: dummyEmail,
+              password: dummyPassword,
+              name: "Google User",
+            }),
+          });
+        }
 
         if (res.ok) {
           const finalRedirect = await handlePostAuth();
           router.push(finalRedirect);
           router.refresh();
         } else {
-          // User might already exist, try login
-          const loginRes = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: dummyEmail, password: "GoogleAuth_" + Date.now() }),
-          });
-          if (loginRes.ok) {
-            const finalRedirect = await handlePostAuth();
-            router.push(finalRedirect);
-            router.refresh();
-          } else {
-            setError("Google authentication failed. Please try email login.");
-            setLoading(false);
-          }
+          setError("Google login failed. Please register or sign in with email.");
+          setLoading(false);
         }
       } catch (err) {
-        setError("Google authentication service is currently unavailable");
+        setError("Google authentication failed. Please try again.");
         setLoading(false);
       }
-    }, 800);
+    }, 600);
   };
 
   return (
