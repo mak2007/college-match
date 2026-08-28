@@ -495,21 +495,15 @@ export default function Predictor() {
 
           <div className={styles.lockedActions}>
             <Link
-              href="/login?mode=signup&redirect=/predict"
+              href="/login?redirect=/predict"
               className={styles.lockedSignupBtn}
             >
-              Sign Up to Unlock Results →
-            </Link>
-            <Link
-              href="/login?redirect=/predict"
-              className={styles.lockedLoginBtn}
-            >
-              Already have an account? Log in
+              Enter Email to Unlock Results →
             </Link>
           </div>
 
           <p className={styles.lockedFootnote}>
-            Your quiz progress is saved. Results will appear instantly after authentication.
+            Your quiz progress is saved. Results will appear instantly.
           </p>
         </div>
       </div>

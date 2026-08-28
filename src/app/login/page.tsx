@@ -27,14 +27,11 @@ function StudentLoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/dashboard/student";
-  const isSignupMode = searchParams.get("mode") === "signup";
 
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   // After auth, check for pending quiz data and complete the flow
   const handlePostAuth = async (): Promise<string> => {
@@ -60,47 +57,24 @@ function StudentLoginContent() {
     return redirectUrl;
   };
 
-  const handleEmailPasswordSubmit = async (e: React.FormEvent) => {
+  const handleInstantSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
     setLoading(true);
 
     try {
-      let finalRedirect = redirectUrl;
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, name }),
+      });
+      const data = await res.json();
 
-      if (isSignupMode) {
-        // Signup: create user via register endpoint
-        const res = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, name: name || email.split("@")[0] }),
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || "Signup failed");
-        }
-
-        // Check for pending quiz data after signup
-        finalRedirect = await handlePostAuth();
-      } else {
-        // Login
-        const res = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || "Login failed");
-        }
-
-        // Check for pending quiz data after login
-        finalRedirect = await handlePostAuth();
+      if (!res.ok) {
+        throw new Error(data.error || "Authentication failed");
       }
 
+      const finalRedirect = await handlePostAuth();
       router.push(finalRedirect);
       router.refresh();
     } catch (err: any) {
@@ -120,35 +94,30 @@ function StudentLoginContent() {
 
       <div className={styles.container}>
         <div className={styles.card}>
-          <h2 className={styles.title}>{isSignupMode ? "Create your account" : "Welcome back"}</h2>
+          <h2 className={styles.title}>Access Your Matches</h2>
           <p className={styles.subtitle}>
-            {isSignupMode
-              ? "Sign up to unlock personalized college recommendations and save your results"
-              : "Sign in to access your dashboard and saved results"}
+            Enter your email address to unlock your personalized college recommendations and dashboard.
           </p>
 
           {error && <div className={styles.errorAlert}>{error}</div>}
-          {success && <div className={styles.successAlert}>{success}</div>}
 
-          <form onSubmit={handleEmailPasswordSubmit} className={styles.form}>
-            {isSignupMode && (
-              <div className={styles.formGroup}>
-                <label>Full Name</label>
-                <input
-                  type="text"
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  disabled={loading}
-                />
-              </div>
-            )}
+          <form onSubmit={handleInstantSubmit} className={styles.form}>
+            <div className={styles.formGroup}>
+              <label>Your Name (Optional)</label>
+              <input
+                type="text"
+                placeholder="e.g. Aarav Mehta"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={loading}
+              />
+            </div>
 
             <div className={styles.formGroup}>
               <label>Email Address</label>
               <input
                 type="email"
-                placeholder="john@example.com"
+                placeholder="aarav@example.com"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -156,31 +125,10 @@ function StudentLoginContent() {
               />
             </div>
 
-            <div className={styles.formGroup}>
-              <label>Password</label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-
             <button type="submit" className={styles.submitBtn} disabled={loading}>
-              {loading ? (isSignupMode ? "Creating account..." : "Signing in...") : (isSignupMode ? "Create Account" : "Sign In")}
+              {loading ? "Accessing Dashboard..." : "Continue to Dashboard →"}
             </button>
           </form>
-
-          <div className={styles.modeToggle}>
-            {isSignupMode ? (
-              <p>Already have an account? <Link href={`/login${redirectUrl !== '/dashboard/student' ? `?redirect=${redirectUrl}` : ''}`}>Log in</Link></p>
-            ) : (
-              <p>Don&apos;t have an account? <Link href={`/login?mode=signup${redirectUrl !== '/dashboard/student' ? `&redirect=${redirectUrl}` : ''}`}>Sign up</Link></p>
-            )}
-          </div>
         </div>
       </div>
     </div>
@@ -189,15 +137,17 @@ function StudentLoginContent() {
 
 export default function StudentLogin() {
   return (
-    <Suspense fallback={
-      <div className={styles.wrapper}>
-        <div className={styles.container}>
-          <div className={styles.card} style={{ textAlign: "center" }}>
-            <h2 style={{ color: "#0F2D52", marginBottom: "0.5rem" }}>Loading...</h2>
+    <Suspense
+      fallback={
+        <div className={styles.wrapper}>
+          <div className={styles.container}>
+            <div className={styles.card} style={{ textAlign: "center" }}>
+              <h2 style={{ color: "#0F2D52", marginBottom: "0.5rem" }}>Loading...</h2>
+            </div>
           </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <StudentLoginContent />
     </Suspense>
   );
