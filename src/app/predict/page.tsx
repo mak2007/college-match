@@ -34,15 +34,9 @@ export default function Predictor() {
   ]);
   const [careerGoal, setCareerGoal] = useState<string>("NOT_SURE");
 
-  // On mount: check if quiz was already completed (pending signup)
+  // On mount: restore saved quiz progress
   useEffect(() => {
     try {
-      const pending = localStorage.getItem(PENDING_QUIZ_KEY);
-      if (pending) {
-        setQuizCompleted(true);
-        setStep(6);
-        return;
-      }
       const saved = localStorage.getItem(PROGRESS_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -497,71 +491,44 @@ export default function Predictor() {
     }
   };
 
-  const renderLockedModal = () => {
-    return (
-      <div className={styles.modalBackdrop}>
-        <div className={styles.lockedCard}>
-          <div className={styles.lockedIcon}>🔒</div>
-          <h2 className={styles.lockedTitle}>Your Results Are Ready!</h2>
-          <p className={styles.lockedSubtitle}>
-            We&apos;ve analyzed your profile across 20 colleges. Sign up to unlock your personalized recommendations.
-          </p>
-
-          <div className={styles.lockedActions}>
-            <Link
-              href="/login?redirect=/predict"
-              className={styles.lockedSignupBtn}
-            >
-              Enter Email to Unlock Results →
-            </Link>
-          </div>
-
-          <p className={styles.lockedFootnote}>
-            Your quiz progress is saved. Results will appear instantly.
-          </p>
-        </div>
-      </div>
-    );
-  };
+  return (
+    <div className={styles.wrapper}>
+      <Navbar />
 
   return (
     <div className={styles.wrapper}>
       <Navbar />
 
-      {quizCompleted ? (
-        renderLockedModal()
-      ) : (
-        <div className={styles.quizLayout}>
-          <div className={styles.illustrationSide}>
-            <div style={{ fontSize: "6rem" }}>🎓</div>
-            <h3 className={styles.illusTitle}>College Predictor Quiz</h3>
-            <p className={styles.illusDesc}>
-              Answer a few simple questions to test and predict your competitive admissions probability
-            </p>
+      <div className={styles.quizLayout}>
+        <div className={styles.illustrationSide}>
+          <div style={{ fontSize: "6rem" }}>🎓</div>
+          <h3 className={styles.illusTitle}>College Predictor Quiz</h3>
+          <p className={styles.illusDesc}>
+            Answer a few simple questions to test and predict your competitive admissions probability
+          </p>
+        </div>
+
+        <div className={styles.quizSide}>
+          {renderStepIndicator()}
+
+          <div key={step} className={styles.stepTransition}>
+            {renderQuizStep()}
           </div>
 
-          <div className={styles.quizSide}>
-            {renderStepIndicator()}
-
-            <div key={step} className={styles.stepTransition}>
-              {renderQuizStep()}
-            </div>
-
-            <div className={styles.buttonGroup}>
-              {step > 1 ? (
-                <button className={styles.prevBtn} onClick={handleBack} disabled={loading}>
-                  ← Back
-                </button>
-              ) : (
-                <div />
-              )}
-              <button className={styles.nextBtn} onClick={handleNext} disabled={loading}>
-                {loading ? "Saving..." : step === 6 ? "Generate Results" : "Next →"}
+          <div className={styles.buttonGroup}>
+            {step > 1 ? (
+              <button className={styles.prevBtn} onClick={handleBack} disabled={loading}>
+                ← Back
               </button>
-            </div>
+            ) : (
+              <div />
+            )}
+            <button className={styles.nextBtn} onClick={handleNext} disabled={loading}>
+              {loading ? "Generating Results..." : step === 6 ? "Generate Results →" : "Next →"}
+            </button>
           </div>
         </div>
-      )}
+      </div>
 
       <footer className={styles.header} style={{ marginTop: "auto", borderTop: "1px solid #e5e3dc", borderBottom: "none", padding: "2rem 0" }}>
         <div className={styles.headerContainer} style={{ height: "auto" }}>
