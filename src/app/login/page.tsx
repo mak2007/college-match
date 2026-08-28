@@ -109,49 +109,6 @@ function StudentLoginContent() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    setError("");
-    setLoading(true);
-    setTimeout(async () => {
-      try {
-        const dummyEmail = "google_user@collegematch.in";
-        const dummyPassword = "GoogleAuth_Demo_Pass_2026";
-        
-        // Try logging in first
-        let res = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: dummyEmail, password: dummyPassword }),
-        });
-
-        if (!res.ok) {
-          // If user doesn't exist yet, register
-          res = await fetch("/api/auth/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: dummyEmail,
-              password: dummyPassword,
-              name: "Google User",
-            }),
-          });
-        }
-
-        if (res.ok) {
-          const finalRedirect = await handlePostAuth();
-          router.push(finalRedirect);
-          router.refresh();
-        } else {
-          setError("Google login failed. Please register or sign in with email.");
-          setLoading(false);
-        }
-      } catch (err) {
-        setError("Google authentication failed. Please try again.");
-        setLoading(false);
-      }
-    }, 600);
-  };
-
   return (
     <div className={styles.wrapper}>
       <header className={styles.header}>
@@ -172,30 +129,6 @@ function StudentLoginContent() {
 
           {error && <div className={styles.errorAlert}>{error}</div>}
           {success && <div className={styles.successAlert}>{success}</div>}
-
-          <button className={styles.googleBtn} onClick={handleGoogleLogin} disabled={loading}>
-            <svg width="18" height="18" viewBox="0 0 24 24" style={{ marginRight: "4px" }}>
-              <path
-                fill="#4285F4"
-                d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.69a5.74 5.74 0 0 1-2.49 3.77v3.12h4.01c2.34-2.16 3.68-5.32 3.68-8.74z"
-              />
-              <path
-                fill="#34A853"
-                d="M12 24c3.24 0 5.97-1.08 7.96-2.91l-4.01-3.12c-1.12.75-2.54 1.19-3.95 1.19-3.05 0-5.63-2.06-6.55-4.83H1.31v3.23A12 12 0 0 0 12 24z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M5.45 14.33a7.22 7.22 0 0 1 0-4.66V6.44H1.31a12 12 0 0 0 0 11.12l4.14-3.23z"
-              />
-              <path
-                fill="#EA4335"
-                d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.43-3.43A11.96 11.96 0 0 0 12 0 12 12 0 0 0 1.31 6.44l4.14 3.23c.92-2.77 3.5-4.83 6.55-4.83z"
-              />
-            </svg>
-            Continue with Google
-          </button>
-
-          <div className={styles.divider}>or</div>
 
           <form onSubmit={handleEmailPasswordSubmit} className={styles.form}>
             {isSignupMode && (
