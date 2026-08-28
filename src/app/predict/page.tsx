@@ -495,10 +495,6 @@ export default function Predictor() {
     <div className={styles.wrapper}>
       <Navbar />
 
-  return (
-    <div className={styles.wrapper}>
-      <Navbar />
-
       <div className={styles.quizLayout}>
         <div className={styles.illustrationSide}>
           <div style={{ fontSize: "6rem" }}>🎓</div>
