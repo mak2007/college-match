@@ -98,7 +98,7 @@ export default function Predictor() {
     }
   };
 
-  const handleQuizComplete = () => {
+  const handleQuizComplete = async () => {
     setLoading(true);
 
     const quizData = {
@@ -118,9 +118,21 @@ export default function Predictor() {
       })),
     };
 
-    localStorage.setItem(PENDING_QUIZ_KEY, JSON.stringify(quizData));
-    localStorage.removeItem(PROGRESS_KEY);
-    setQuizCompleted(true);
+    try {
+      const res = await fetch("/api/recommendations/from-quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quizData }),
+      });
+      const data = await res.json();
+      if (res.ok && data.student_id) {
+        localStorage.removeItem(PROGRESS_KEY);
+        router.push(`/results?student_id=${data.student_id}`);
+        return;
+      }
+    } catch (e) {
+      console.error("Error submitting quiz:", e);
+    }
     setLoading(false);
   };
 

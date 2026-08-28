@@ -115,11 +115,8 @@ export default function Navbar() {
 
           {/* Right: Actions */}
           <div className={styles.rightActions}>
-            <Link href="/login" className={styles.loginLink}>
-              Login
-            </Link>
-            <Link href="/login?mode=signup" className={styles.signUpBtn}>
-              Sign Up <span style={{ fontSize: "0.85rem" }}>→</span>
+            <Link href="/predict" className={styles.signUpBtn}>
+              Find My Match <span style={{ fontSize: "0.85rem" }}>→</span>
             </Link>
           </div>
 
@@ -157,15 +154,8 @@ export default function Navbar() {
         </div>
 
         <div className={styles.mobileCta}>
-          <Link href="/login?mode=signup" className={styles.signUpBtn} style={{ justifyContent: "center" }}>
-            Sign Up →
-          </Link>
-          <Link
-            href="/login"
-            className={styles.loginLink}
-            style={{ textAlign: "center", padding: "0.75rem" }}
-          >
-            Login
+          <Link href="/predict" className={styles.signUpBtn} style={{ justifyContent: "center" }}>
+            Find My Match →
           </Link>
         </div>
       </div>

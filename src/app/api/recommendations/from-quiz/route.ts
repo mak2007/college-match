@@ -98,16 +98,10 @@ function mapCandidate(b: any): CollegeCandidate {
  */
 export async function POST(request: Request) {
   try {
-    // 1. Verify authentication
+    // 1. Get user session or generate guest identifier
     const cookieStore = await cookies();
     const token = cookieStore.get("cm_auth_token")?.value;
-    if (!token) {
-      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
-    }
-    const session = await verifyToken(token);
-    if (!session) {
-      return NextResponse.json({ error: "Invalid or expired session" }, { status: 401 });
-    }
+    const session = token ? await verifyToken(token) : null;
 
     // 2. Parse quiz data from request body
     const body = await request.json();
@@ -119,8 +113,8 @@ export async function POST(request: Request) {
 
     const careerGoal: CareerGoalType = quizData.careerGoal || "NOT_SURE";
 
-    // 3. Find or create student record linked to this user's email
-    const email = session.email;
+    // 3. Find or create student record
+    const email = session?.email || `guest_${Date.now()}_${Math.floor(Math.random() * 1000)}@collegematch.in`;
     const name = email.split("@")[0];
 
     const dbStudent = await prisma.student.upsert({
