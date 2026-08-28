@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./predict.module.css";
 import Navbar from "@/components/Navbar";
@@ -10,6 +11,7 @@ const PENDING_QUIZ_KEY = "cm_pending_quiz";
 const PROGRESS_KEY = "cm_predictor_progress";
 
 export default function Predictor() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
