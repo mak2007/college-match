@@ -32,13 +32,8 @@ function getDatabaseUrl(): string {
 
 function createPrismaClient(): PrismaClient {
   const url = getDatabaseUrl();
-  return new PrismaClient({
-    datasources: {
-      db: {
-        url,
-      },
-    },
-  });
+  process.env.DATABASE_URL = url;
+  return new PrismaClient();
 }
 
 export const prisma = globalForPrisma.prisma || createPrismaClient();
