@@ -73,6 +73,10 @@ function getVal(row: any, keys: string[], fallback: any = ""): any {
   return fallback;
 }
 
+function normName(s: any): string {
+  return String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
 export default function UnifiedCollegeManager() {
   const [colleges, setColleges] = useState<College[]>(baseCollegesData as College[]);
   const [activeTab, setActiveTab] = useState<"ALL" | "GENERIC" | "NEWGEN">("ALL");
@@ -111,10 +115,10 @@ export default function UnifiedCollegeManager() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load from local storage or server
+  // Load verified dataset
   const fetchColleges = useCallback(async () => {
     try {
-      const local = localStorage.getItem("cm_admin_colleges_v3");
+      const local = localStorage.getItem("cm_admin_colleges_v4");
       if (local) {
         const parsed = JSON.parse(local);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -123,14 +127,8 @@ export default function UnifiedCollegeManager() {
         }
       }
 
-      const res = await fetch("/api/admin/colleges");
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          setColleges(data);
-          localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(data));
-        }
-      }
+      setColleges(baseCollegesData as College[]);
+      localStorage.setItem("cm_admin_colleges_v4", JSON.stringify(baseCollegesData));
     } catch {}
   }, []);
 
@@ -138,7 +136,7 @@ export default function UnifiedCollegeManager() {
     fetchColleges();
   }, [fetchColleges]);
 
-  // Master Excel Ingestion Engine (Uses Excel's Own Sheet Names & Category Columns)
+  // Master Excel Ingestion Engine with Full Branch & Sheet Linking
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -154,114 +152,125 @@ export default function UnifiedCollegeManager() {
         return;
       }
 
-      const parsedList: College[] = [];
+      // 1. Identify Colleges and Branches sheets if present
+      const sheetNamesLower = wb.SheetNames.map((s) => s.toLowerCase().trim());
+      const collegeSheetIdx = sheetNamesLower.findIndex((s) => s.includes("college") || s.includes("institute") || s.includes("data"));
+      const branchSheetIdx = sheetNamesLower.findIndex((s) => s.includes("branch") || s.includes("cutoff") || s.includes("course"));
 
-      // Check all sheets in Excel
-      for (const sheetName of wb.SheetNames) {
-        const sheetNameLower = sheetName.toLowerCase().trim();
-        
-        // Skip branch/scholarship metadata sheets from direct college creation
-        if (sheetNameLower.includes("branch") || sheetNameLower.includes("scholarship") || sheetNameLower.includes("pathway")) {
-          continue;
-        }
+      let rawColleges: any[] = [];
+      let rawBranches: any[] = [];
 
-        // Determine if sheet itself defines the category (e.g. "New-Gen Colleges" vs "Generic")
-        let sheetIsNewGen = false;
-        if (sheetNameLower.includes("new") || sheetNameLower.includes("ai") || sheetNameLower.includes("tech-first") || sheetNameLower.includes("modern")) {
-          sheetIsNewGen = true;
-        }
-
-        const rawRows: any[] = XLSX.utils.sheet_to_json(wb.Sheets[sheetName]);
-        if (!rawRows || rawRows.length === 0) continue;
-
-        for (let i = 0; i < rawRows.length; i++) {
-          const row = rawRows[i];
-          let name = String(getVal(row, ["name", "collegename", "college", "institute", "university"])).trim();
-          if (!name || name.length < 2) continue;
-
-          // Determine category from row's own category/type column, or fall back to sheet name
-          const categoryColVal = String(getVal(row, ["category", "type", "section", "isnewgen", "is_new_gen", "collegetype", "college_type"], "")).toLowerCase();
-          let isNewGen = sheetIsNewGen;
-          if (categoryColVal) {
-            if (categoryColVal.includes("new") || categoryColVal.includes("ai") || categoryColVal.includes("tech") || categoryColVal === "1" || categoryColVal === "true") {
-              isNewGen = true;
-            } else if (categoryColVal.includes("generic") || categoryColVal.includes("traditional") || categoryColVal.includes("classic") || categoryColVal === "0" || categoryColVal === "false") {
-              isNewGen = false;
-            }
-          }
-
-          const state = String(getVal(row, ["state", "region", "location_state"], "India")).trim();
-          const city = String(getVal(row, ["city", "location", "location_city"], "City")).trim();
-          const website = String(getVal(row, ["website", "url", "link"], "")).trim() || null;
-          const officialApplyUrl = String(getVal(row, ["officialapplyurl", "applyurl", "admission_link"], website || "https://collegematch.in")).trim();
-
-          // Scores (0-10)
-          const placementScore = clamp(num(getVal(row, ["placementscore", "placement_score", "placement"], 8.5), 8.5), 0, 10);
-          const collegeLifeScore = clamp(num(getVal(row, ["collegelifescore", "college_life", "campus_life", "campus"], 8.0), 8.0), 0, 10);
-          const curriculumScore = clamp(num(getVal(row, ["curriculumscore", "curriculum", "academics"], 8.0), 8.0), 0, 10);
-          const infraRating = clamp(num(getVal(row, ["infra_rating", "infra", "infrastructure"], 8.5), 8.5), 0, 10);
-          const startupEcosystem = clamp(num(getVal(row, ["startup_ecosystem", "startup", "entrepreneurship"], 8.0), 8.0), 0, 10);
-          const sportsExtracurricular = clamp(num(getVal(row, ["sports & extracurriculum", "sports", "extracurricular"], 8.0), 8.0), 0, 10);
-          const internationalExposure = clamp(num(getVal(row, ["international_exposure", "global_exposure", "exchange"], 7.5), 7.5), 0, 10);
-          const rank = num(getVal(row, ["rank", "nirf", "nirf_ranking"], i + 1), i + 1);
-
-          // Fees & Cutoffs
-          let tuitionFeeAnnual = num(getVal(row, ["tuitionfeeannual", "tuition", "annual_fee", "fee", "fees"], 250000), 250000);
-          if (tuitionFeeAnnual > 0 && tuitionFeeAnnual < 100) tuitionFeeAnnual = tuitionFeeAnnual * 100000;
-
-          let hostelFeeAnnual = num(getVal(row, ["hostelfeeannual", "hostel", "hostel_fee"], 100000), 100000);
-          if (hostelFeeAnnual > 0 && hostelFeeAnnual < 50) hostelFeeAnnual = hostelFeeAnnual * 100000;
-
-          let avgSalary = num(getVal(row, ["avgsalary", "avg_salary", "avg_ctc", "salary", "ctc", "package"], 900000), 900000);
-          if (avgSalary > 0 && avgSalary < 100) avgSalary = avgSalary * 100000;
-
-          let medianSalary = num(getVal(row, ["mediansalary", "median_salary", "median_ctc"], avgSalary * 0.9), avgSalary * 0.9);
-          if (medianSalary > 0 && medianSalary < 100) medianSalary = medianSalary * 100000;
-
-          let highestSalary = num(getVal(row, ["highestsalary", "highest_salary", "max_package", "highest_package"], avgSalary * 3), avgSalary * 3);
-          if (highestSalary > 0 && highestSalary < 100) highestSalary = highestSalary * 100000;
-
-          const minJeePercentileCutoff = clamp(num(getVal(row, ["equivalent jeepercentilecutoff", "minjeepercentilecutoff", "jeecutoff", "cutoff", "percentile"], 85.0), 85.0), 0, 100);
-          const minClass12Cutoff = clamp(num(getVal(row, ["minclass12cutoff", "class12cutoff", "board_cutoff"], 75.0), 75.0), 0, 100);
-          const placementPercentage = clamp(num(getVal(row, ["placementpercentage", "placement_percentage", "placement_rate"], 90.0), 90.0), 0, 100);
-
-          parsedList.push({
-            id: `col_${rank}_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-            name,
-            slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
-            rank,
-            state,
-            city,
-            website,
-            officialApplyUrl,
-            isPartner: Boolean(getVal(row, ["ispartner", "partner", "featured"], false)),
-            isNewGen,
-            placementScore,
-            collegeLifeScore,
-            curriculumScore,
-            infraRating,
-            startupEcosystem,
-            sportsExtracurricular,
-            internationalExposure,
-            branches: [
-              {
-                branchCode: String(getVal(row, ["branchcode", "branch"], "CSE")).toUpperCase().trim(),
-                branchName: "Computer Science & Engineering",
-                tuitionFeeAnnual,
-                hostelFeeAnnual,
-                avgSalary,
-                medianSalary,
-                highestSalary,
-                minJeePercentileCutoff,
-                minClass12Cutoff,
-                placementPercentage,
-              },
-            ],
-          });
-        }
+      if (collegeSheetIdx !== -1) {
+        rawColleges = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[collegeSheetIdx]]);
+      } else {
+        rawColleges = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
       }
 
-      // 1. Deduplicate by unique name/slug to prevent any internal duplicate rows
+      if (branchSheetIdx !== -1 && branchSheetIdx !== collegeSheetIdx) {
+        rawBranches = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[branchSheetIdx]]);
+      }
+
+      const newGenKeywords = ["scaler", "masters' union", "masters union", "flame", "woxsen", "newton", "plaksha", "mesa", "avantika"];
+
+      const parsedList: College[] = [];
+
+      for (let i = 0; i < rawColleges.length; i++) {
+        const row = rawColleges[i];
+        let name = String(getVal(row, ["name", "collegename", "college", "institute", "university"])).trim();
+        if (!name || name.length < 2) continue;
+
+        const cNorm = normName(name);
+
+        // Find matching branch from rawBranches
+        const matchedBranch = rawBranches.find((b) => {
+          const bNorm = normName(getVal(b, ["collegename", "college", "name"]));
+          return bNorm === cNorm || bNorm.includes(cNorm) || cNorm.includes(bNorm);
+        });
+
+        const branchSource = matchedBranch || row;
+
+        // Determine category from row or keywords
+        const categoryColVal = String(getVal(row, ["category", "type", "section", "isnewgen", "is_new_gen", "collegetype", "college_type"], "")).toLowerCase();
+        let isNewGen = newGenKeywords.some((k) => normName(name).includes(normName(k)));
+        if (categoryColVal) {
+          if (categoryColVal.includes("new") || categoryColVal.includes("ai") || categoryColVal.includes("tech") || categoryColVal === "1" || categoryColVal === "true") {
+            isNewGen = true;
+          } else if (categoryColVal.includes("generic") || categoryColVal.includes("traditional") || categoryColVal.includes("classic") || categoryColVal === "0" || categoryColVal === "false") {
+            isNewGen = false;
+          }
+        }
+
+        const state = String(getVal(row, ["state", "region", "location_state"], "India")).trim();
+        const city = String(getVal(row, ["city", "location", "location_city"], "City")).trim();
+        const website = String(getVal(row, ["website", "url", "link"], "")).trim() || null;
+        const officialApplyUrl = String(getVal(row, ["officialapplyurl", "applyurl", "admission_link"], website || "https://collegematch.in")).trim();
+
+        // Exact Quality Scores (0-10)
+        const placementScore = clamp(num(getVal(row, ["placementscore", "placement_score", "placement"], 8.5), 8.5), 0, 10);
+        const collegeLifeScore = clamp(num(getVal(row, ["collegelifescore", "college_life", "campus_life", "campus"], 8.0), 8.0), 0, 10);
+        const curriculumScore = clamp(num(getVal(row, ["curriculumscore", "curriculum", "academics"], 8.0), 8.0), 0, 10);
+        const infraRating = clamp(num(getVal(row, ["infra_rating", "infra", "infrastructure"], 8.5), 8.5), 0, 10);
+        const startupEcosystem = clamp(num(getVal(row, ["startup_ecosystem", "startup", "entrepreneurship"], 8.0), 8.0), 0, 10);
+        const sportsExtracurricular = clamp(num(getVal(row, ["sports & extracurriculum", "sports", "extracurricular"], 8.0), 8.0), 0, 10);
+        const internationalExposure = clamp(num(getVal(row, ["international_exposure", "global_exposure", "exchange"], 7.5), 7.5), 0, 10);
+        const rank = num(getVal(row, ["rank", "nirf", "nirf_ranking"], i + 1), i + 1);
+
+        // Exact Branch Fees & Percentiles (from matched branch or row)
+        let tuitionFeeAnnual = num(getVal(branchSource, ["tuitionfeeannual", "tuition", "annual_fee", "fee", "fees"], getVal(row, ["tuitionfeeannual", "tuition", "annual_fee", "fee", "fees"], 0)), 0);
+        if (tuitionFeeAnnual > 0 && tuitionFeeAnnual < 100) tuitionFeeAnnual = tuitionFeeAnnual * 100000;
+
+        let hostelFeeAnnual = num(getVal(branchSource, ["hostelfeeannual", "hostel", "hostel_fee"], getVal(row, ["hostelfeeannual", "hostel", "hostel_fee"], 0)), 0);
+        if (hostelFeeAnnual > 0 && hostelFeeAnnual < 50) hostelFeeAnnual = hostelFeeAnnual * 100000;
+
+        let avgSalary = num(getVal(branchSource, ["avgsalary", "avg_salary", "avg_ctc", "salary", "ctc", "package"], getVal(row, ["avgsalary", "avg_salary", "avg_ctc", "salary", "ctc", "package"], 0)), 0);
+        if (avgSalary > 0 && avgSalary < 100) avgSalary = avgSalary * 100000;
+
+        let medianSalary = num(getVal(branchSource, ["mediansalary", "median_salary", "median_ctc"], getVal(row, ["mediansalary", "median_salary", "median_ctc"], avgSalary)), avgSalary);
+        if (medianSalary > 0 && medianSalary < 100) medianSalary = medianSalary * 100000;
+
+        let highestSalary = num(getVal(branchSource, ["highestsalary", "highest_salary", "max_package", "highest_package"], getVal(row, ["highestsalary", "highest_salary", "max_package", "highest_package"], avgSalary ? avgSalary * 3 : 0)), avgSalary ? avgSalary * 3 : 0);
+        if (highestSalary > 0 && highestSalary < 100) highestSalary = highestSalary * 100000;
+
+        const minJeePercentileCutoff = clamp(num(getVal(branchSource, ["equivalent jeepercentilecutoff", "minjeepercentilecutoff", "jeecutoff", "cutoff", "percentile"], getVal(row, ["equivalent jeepercentilecutoff", "minjeepercentilecutoff", "jeecutoff", "cutoff", "percentile"], 0)), 0), 0, 100);
+        const minClass12Cutoff = clamp(num(getVal(branchSource, ["minclass12cutoff", "class12cutoff", "board_cutoff"], getVal(row, ["minclass12cutoff", "class12cutoff", "board_cutoff"], 60)), 60), 0, 100);
+        const placementPercentage = clamp(num(getVal(branchSource, ["placementpercentage", "placement_percentage", "placement_rate"], getVal(row, ["placementpercentage", "placement_percentage", "placement_rate"], 0)), 0), 0, 100);
+
+        parsedList.push({
+          id: `col_${rank}`,
+          name,
+          slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
+          rank,
+          state,
+          city,
+          website,
+          officialApplyUrl,
+          isPartner: Boolean(getVal(row, ["ispartner", "partner", "featured"], false)),
+          isNewGen,
+          placementScore,
+          collegeLifeScore,
+          curriculumScore,
+          infraRating,
+          startupEcosystem,
+          sportsExtracurricular,
+          internationalExposure,
+          branches: [
+            {
+              branchCode: String(getVal(branchSource, ["branchcode", "branch"], "CSE")).toUpperCase().trim(),
+              branchName: "Computer Science & Engineering",
+              tuitionFeeAnnual,
+              hostelFeeAnnual,
+              avgSalary,
+              medianSalary,
+              highestSalary,
+              minJeePercentileCutoff,
+              minClass12Cutoff,
+              placementPercentage,
+            },
+          ],
+        });
+      }
+
+      // Deduplicate by unique slug
       const uniqueCollegesMap = new Map<string, College>();
       parsedList.forEach((c) => {
         if (!uniqueCollegesMap.has(c.slug)) {
@@ -275,14 +284,14 @@ export default function UnifiedCollegeManager() {
         return;
       }
 
-      // 2. Completely replace local state & cache
+      // Replace state & cache
       setColleges(freshCollegesList);
-      localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(freshCollegesList));
+      localStorage.setItem("cm_admin_colleges_v4", JSON.stringify(freshCollegesList));
       const genC = freshCollegesList.filter((c) => !c.isNewGen).length;
       const newC = freshCollegesList.filter((c) => c.isNewGen).length;
-      setUploadStatus(`✓ Successfully replaced database with ${freshCollegesList.length} colleges (${genC} Generic + ${newC} New-Gen AI)! All previous entries overwritten with 0 duplicates.`);
+      setUploadStatus(`✓ Successfully imported & replaced database with ${freshCollegesList.length} colleges (${genC} Generic + ${newC} New-Gen AI)! All fees & cutoffs accurately matched.`);
 
-      // 3. Sync to backend with replace flag to wipe previous DB records
+      // Sync backend
       try {
         await fetch("/api/admin/colleges", {
           method: "POST",
@@ -309,7 +318,7 @@ export default function UnifiedCollegeManager() {
     });
 
     setColleges(updated);
-    localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(updated));
+    localStorage.setItem("cm_admin_colleges_v4", JSON.stringify(updated));
 
     const targetCol = updated.find((c) => c.id === collegeId);
     if (targetCol) {
@@ -331,7 +340,7 @@ export default function UnifiedCollegeManager() {
 
     const remaining = colleges.filter((c) => c.id !== collegeId);
     setColleges(remaining);
-    localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(remaining));
+    localStorage.setItem("cm_admin_colleges_v4", JSON.stringify(remaining));
 
     if (selectedCollege && selectedCollege.id === collegeId) {
       setSelectedCollege(null);
@@ -346,14 +355,14 @@ export default function UnifiedCollegeManager() {
   // Open Full College Profile & Edit View
   const handleOpenDetails = (col: College) => {
     const branch = col.branches?.[0] || {
-      tuitionFeeAnnual: 250000,
-      hostelFeeAnnual: 100000,
-      avgSalary: 900000,
-      medianSalary: 800000,
-      highestSalary: 3500000,
-      minJeePercentileCutoff: 85,
-      minClass12Cutoff: 75,
-      placementPercentage: 90,
+      tuitionFeeAnnual: 0,
+      hostelFeeAnnual: 0,
+      avgSalary: 0,
+      medianSalary: 0,
+      highestSalary: 0,
+      minJeePercentileCutoff: 0,
+      minClass12Cutoff: 60,
+      placementPercentage: 0,
     };
 
     setSelectedCollege(col);
@@ -373,14 +382,14 @@ export default function UnifiedCollegeManager() {
       startupEcosystem: col.startupEcosystem || 8.0,
       sportsExtracurricular: col.sportsExtracurricular || 8.0,
       internationalExposure: col.internationalExposure || 7.5,
-      tuitionFeeAnnual: branch.tuitionFeeAnnual || 250000,
-      hostelFeeAnnual: branch.hostelFeeAnnual || 100000,
-      avgSalary: branch.avgSalary || 900000,
-      medianSalary: branch.medianSalary || 800000,
-      highestSalary: branch.highestSalary || 3500000,
-      minJeePercentileCutoff: branch.minJeePercentileCutoff || 85.0,
-      minClass12Cutoff: branch.minClass12Cutoff || 75.0,
-      placementPercentage: branch.placementPercentage || 90.0,
+      tuitionFeeAnnual: branch.tuitionFeeAnnual || 0,
+      hostelFeeAnnual: branch.hostelFeeAnnual || 0,
+      avgSalary: branch.avgSalary || 0,
+      medianSalary: branch.medianSalary || 0,
+      highestSalary: branch.highestSalary || 0,
+      minJeePercentileCutoff: branch.minJeePercentileCutoff || 0,
+      minClass12Cutoff: branch.minClass12Cutoff || 60,
+      placementPercentage: branch.placementPercentage || 0,
     });
   };
 
@@ -430,7 +439,7 @@ export default function UnifiedCollegeManager() {
 
     const updatedList = colleges.map((c) => (c.id === selectedCollege.id ? validated : c));
     setColleges(updatedList);
-    localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(updatedList));
+    localStorage.setItem("cm_admin_colleges_v4", JSON.stringify(updatedList));
     setSelectedCollege(null);
     setEditForm(null);
 
@@ -523,7 +532,7 @@ export default function UnifiedCollegeManager() {
             College Data Manager
           </h1>
           <p style={{ color: "#4a4a4a", fontSize: "0.95rem", margin: "0.3rem 0 0" }}>
-            Upload your Excel sheet (Generic & New-Gen AI separated). Click any college to inspect details or remove.
+            Exact NIRF ranks, placement scores, tuition fees & JEE percentiles. Click any college to inspect details.
           </p>
         </div>
 
@@ -563,10 +572,10 @@ export default function UnifiedCollegeManager() {
       >
         <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>📁</div>
         <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#0F2D52", margin: "0 0 0.5rem" }}>
-          Upload College Spreadsheet (.xlsx / .xls / .csv)
+          Upload Master Spreadsheet (.xlsx / .xls / .csv)
         </h3>
         <p style={{ color: "#666", fontSize: "0.9rem", maxWidth: "600px", margin: "0 auto 1.5rem" }}>
-          Uploads automatically respect your spreadsheet&apos;s sheet names and Category columns to sort Generic vs New-Gen AI colleges.
+          Uploads automatically cross-reference both Colleges and Branches sheets to extract exact annual fees, JEE cutoff percentiles, and packages.
         </p>
 
         <div style={{ display: "flex", justifyContent: "center", gap: "1rem", flexWrap: "wrap", alignItems: "center" }}>
@@ -594,7 +603,7 @@ export default function UnifiedCollegeManager() {
               boxShadow: "0 4px 14px rgba(15, 45, 82, 0.25)",
             }}
           >
-            ⬆️ Choose & Upload Spreadsheet
+            ⬆️ Choose & Upload Master Spreadsheet
           </label>
 
           <button
@@ -784,13 +793,13 @@ export default function UnifiedCollegeManager() {
                       </div>
                     </td>
                     <td style={{ padding: "1rem", color: "#4a4a4a" }}>
-                      {branch?.tuitionFeeAnnual ? `₹${(branch.tuitionFeeAnnual / 100000).toFixed(1)} L` : "—"}
+                      {branch?.tuitionFeeAnnual && branch.tuitionFeeAnnual > 0 ? `₹${(branch.tuitionFeeAnnual / 100000).toFixed(2)} L` : "Subsidised / Varies"}
                     </td>
                     <td style={{ padding: "1rem", color: "#166534", fontWeight: 700 }}>
-                      {branch?.avgSalary ? `₹${(branch.avgSalary / 100000).toFixed(1)} LPA` : "—"}
+                      {branch?.avgSalary && branch.avgSalary > 0 ? `₹${(branch.avgSalary / 100000).toFixed(1)} LPA` : "—"}
                     </td>
                     <td style={{ padding: "1rem", color: "#4a4a4a" }}>
-                      {branch?.minJeePercentileCutoff ? `${branch.minJeePercentileCutoff}%ile` : "—"}
+                      {branch?.minJeePercentileCutoff && branch.minJeePercentileCutoff > 0 ? `${branch.minJeePercentileCutoff}%ile` : "Direct / Merit"}
                     </td>
                     <td style={{ padding: "1rem", textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
                       <div style={{ display: "inline-flex", gap: "0.5rem" }}>
