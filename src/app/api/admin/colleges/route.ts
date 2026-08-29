@@ -41,6 +41,74 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+
+    // Handle Bulk Array of Colleges from Client-Side Parser
+    if (Array.isArray(body.colleges) && body.colleges.length > 0) {
+      let saved = 0;
+      for (const item of body.colleges) {
+        if (!item.name) continue;
+        const name = String(item.name).trim();
+        const slug = slugify(name);
+
+        try {
+          const college = await prisma.college.upsert({
+            where: { slug },
+            update: {
+              name,
+              state: String(item.state || "India").trim(),
+              city: String(item.city || "City").trim(),
+              website: item.website ? String(item.website).trim() : null,
+              officialApplyUrl: item.officialApplyUrl ? String(item.officialApplyUrl).trim() : (item.website || "https://collegematch.in"),
+              placementScore: parseFloat(item.placementScore) || 8.5,
+              collegeLifeScore: parseFloat(item.collegeLifeScore) || 8.0,
+              curriculumScore: parseFloat(item.curriculumScore) || 8.0,
+              isPartner: Boolean(item.isPartner),
+            },
+            create: {
+              name,
+              slug,
+              state: String(item.state || "India").trim(),
+              city: String(item.city || "City").trim(),
+              website: item.website ? String(item.website).trim() : null,
+              officialApplyUrl: item.officialApplyUrl ? String(item.officialApplyUrl).trim() : (item.website || "https://collegematch.in"),
+              placementScore: parseFloat(item.placementScore) || 8.5,
+              collegeLifeScore: parseFloat(item.collegeLifeScore) || 8.0,
+              curriculumScore: parseFloat(item.curriculumScore) || 8.0,
+              isPartner: Boolean(item.isPartner),
+            },
+          });
+
+          // Upsert default branch for college
+          const branchCode = String(item.branchCode || "CSE").toUpperCase().trim();
+          try {
+            await prisma.collegeBranch.deleteMany({ where: { collegeId: college.id, branchCode } });
+            await prisma.collegeBranch.create({
+              data: {
+                collegeId: college.id,
+                branchCode,
+                branchName: item.branchName || "Computer Science & Engineering",
+                tuitionFeeAnnual: parseFloat(item.tuitionFeeAnnual) || 200000,
+                hostelFeeAnnual: parseFloat(item.hostelFeeAnnual) || 100000,
+                seatCapacity: 120,
+                avgSalary: parseFloat(item.avgSalary) || 850000,
+                medianSalary: parseFloat(item.avgSalary) || 850000,
+                highestSalary: parseFloat(item.highestSalary) || 3500000,
+                minJeePercentileCutoff: parseFloat(item.minJeePercentileCutoff) || 85.0,
+                minClass12Cutoff: 75.0,
+                branchStrengthScore: 8.5,
+                placementPercentage: parseFloat(item.placementPercentage) || 90.0,
+              },
+            });
+          } catch {}
+
+          saved++;
+        } catch (cErr) {
+          console.warn("College bulk save warning:", cErr);
+        }
+      }
+      return NextResponse.json({ success: true, count: saved });
+    }
+
     const {
       name, state, city, officialApplyUrl, website,
       logoUrl, coverImageUrl, brochureUrl,
