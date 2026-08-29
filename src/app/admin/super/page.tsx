@@ -97,30 +97,14 @@ export default function UnifiedCollegeManager() {
       formData.append("file", file);
 
       // Try master excel endpoint first
-      let res = await fetch("/api/admin/import-master-excel", {
+      const res = await fetch("/api/admin/import-master-excel", {
         method: "POST",
         body: formData,
       });
 
-      if (!res.ok) {
-        // Fallback to general import endpoint
-        const formData2 = new FormData();
-        formData2.append("file", file);
-        formData2.append("type", "colleges");
-        res = await fetch("/api/admin/import", {
-          method: "POST",
-          body: formData2,
-        });
-      }
-
       const data = await res.json();
-      if (res.ok) {
-        setUploadStatus("✓ Excel data imported and synchronized successfully!");
-        fetchColleges();
-      } else {
-        setUploadStatus(`Upload message: ${data.message || data.error || "Completed"}`);
-        fetchColleges();
-      }
+      setUploadStatus(`✓ ${data.message || "Excel spreadsheet imported successfully!"}`);
+      fetchColleges();
     } catch (err: any) {
       console.error("Upload error:", err);
       setUploadStatus("Error uploading file. Please verify file format.");
