@@ -114,7 +114,7 @@ export default function UnifiedCollegeManager() {
   // Load from local storage or server
   const fetchColleges = useCallback(async () => {
     try {
-      const local = localStorage.getItem("cm_admin_colleges_v2");
+      const local = localStorage.getItem("cm_admin_colleges_v3");
       if (local) {
         const parsed = JSON.parse(local);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -128,7 +128,7 @@ export default function UnifiedCollegeManager() {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           setColleges(data);
-          localStorage.setItem("cm_admin_colleges_v2", JSON.stringify(data));
+          localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(data));
         }
       }
     } catch {}
@@ -138,7 +138,7 @@ export default function UnifiedCollegeManager() {
     fetchColleges();
   }, [fetchColleges]);
 
-  // Master Excel / CSV Ingestion Engine
+  // Master Excel Ingestion Engine (Uses Excel's Own Sheet Names & Category Columns)
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -154,120 +154,123 @@ export default function UnifiedCollegeManager() {
         return;
       }
 
-      // Check if multi-sheet (Colleges + Branches) or single-sheet
-      const sheetNamesLower = wb.SheetNames.map((s) => s.toLowerCase());
-      const collegeSheetIdx = sheetNamesLower.findIndex((s) => s.includes("college") || s.includes("institute") || s.includes("data"));
-      const branchSheetIdx = sheetNamesLower.findIndex((s) => s.includes("branch") || s.includes("cutoff") || s.includes("course"));
-
-      let rawColleges: any[] = [];
-      let rawBranches: any[] = [];
-
-      if (collegeSheetIdx !== -1) {
-        rawColleges = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[collegeSheetIdx]]);
-      } else {
-        rawColleges = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-      }
-
-      if (branchSheetIdx !== -1 && branchSheetIdx !== collegeSheetIdx) {
-        rawBranches = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[branchSheetIdx]]);
-      }
-
-      const newGenKeywords = ["scaler", "masters' union", "masters union", "flame", "woxsen", "newton", "plaksha", "mesa", "avantika", "ai", "new-gen", "newgen"];
-
       const parsedList: College[] = [];
 
-      for (let i = 0; i < rawColleges.length; i++) {
-        const row = rawColleges[i];
-        let name = String(getVal(row, ["name", "collegename", "college", "institute", "university"])).trim();
-        if (!name || name.length < 2) continue;
+      // Check all sheets in Excel
+      for (const sheetName of wb.SheetNames) {
+        const sheetNameLower = sheetName.toLowerCase().trim();
+        
+        // Skip branch/scholarship metadata sheets from direct college creation
+        if (sheetNameLower.includes("branch") || sheetNameLower.includes("scholarship") || sheetNameLower.includes("pathway")) {
+          continue;
+        }
 
-        const nameLower = name.toLowerCase();
-        const isNewGenDetected = newGenKeywords.some((k) => nameLower.includes(k)) || Boolean(getVal(row, ["isnewgen", "newgen", "new_gen", "type"]));
+        // Determine if sheet itself defines the category (e.g. "New-Gen Colleges" vs "Generic")
+        let sheetIsNewGen = false;
+        if (sheetNameLower.includes("new") || sheetNameLower.includes("ai") || sheetNameLower.includes("tech-first") || sheetNameLower.includes("modern")) {
+          sheetIsNewGen = true;
+        }
 
-        // Look up corresponding branch in branch sheet or parse from same row
-        let branchInfo = rawBranches.find((b) => {
-          const bName = String(getVal(b, ["collegename", "college", "name"])).toLowerCase().trim();
-          return bName === nameLower || nameLower.includes(bName) || bName.includes(nameLower);
-        }) || row;
+        const rawRows: any[] = XLSX.utils.sheet_to_json(wb.Sheets[sheetName]);
+        if (!rawRows || rawRows.length === 0) continue;
 
-        const state = String(getVal(row, ["state", "region", "location_state"], "India")).trim();
-        const city = String(getVal(row, ["city", "location", "location_city"], "City")).trim();
-        const website = String(getVal(row, ["website", "url", "link"], "")).trim() || null;
-        const officialApplyUrl = String(getVal(row, ["officialapplyurl", "applyurl", "admission_link"], website || "https://collegematch.in")).trim();
+        for (let i = 0; i < rawRows.length; i++) {
+          const row = rawRows[i];
+          let name = String(getVal(row, ["name", "collegename", "college", "institute", "university"])).trim();
+          if (!name || name.length < 2) continue;
 
-        // Exact Quality Scores (0-10)
-        const placementScore = clamp(num(getVal(row, ["placementscore", "placement_score", "placement"], 8.5), 8.5), 0, 10);
-        const collegeLifeScore = clamp(num(getVal(row, ["collegelifescore", "college_life", "campus_life", "campus"], 8.0), 8.0), 0, 10);
-        const curriculumScore = clamp(num(getVal(row, ["curriculumscore", "curriculum", "academics"], 8.0), 8.0), 0, 10);
-        const infraRating = clamp(num(getVal(row, ["infra_rating", "infra", "infrastructure"], 8.5), 8.5), 0, 10);
-        const startupEcosystem = clamp(num(getVal(row, ["startup_ecosystem", "startup", "entrepreneurship"], 8.0), 8.0), 0, 10);
-        const sportsExtracurricular = clamp(num(getVal(row, ["sports & extracurriculum", "sports", "extracurricular"], 8.0), 8.0), 0, 10);
-        const internationalExposure = clamp(num(getVal(row, ["international_exposure", "global_exposure", "exchange"], 7.5), 7.5), 0, 10);
-        const rank = num(getVal(row, ["rank", "nirf", "nirf_ranking"], i + 1), i + 1);
+          // Determine category from row's own category/type column, or fall back to sheet name
+          const categoryColVal = String(getVal(row, ["category", "type", "section", "isnewgen", "is_new_gen", "collegetype", "college_type"], "")).toLowerCase();
+          let isNewGen = sheetIsNewGen;
+          if (categoryColVal) {
+            if (categoryColVal.includes("new") || categoryColVal.includes("ai") || categoryColVal.includes("tech") || categoryColVal === "1" || categoryColVal === "true") {
+              isNewGen = true;
+            } else if (categoryColVal.includes("generic") || categoryColVal.includes("traditional") || categoryColVal.includes("classic") || categoryColVal === "0" || categoryColVal === "false") {
+              isNewGen = false;
+            }
+          }
 
-        // Branch & Financials
-        let tuitionFeeAnnual = num(getVal(branchInfo, ["tuitionfeeannual", "tuition", "annual_fee", "fee", "fees"], 250000), 250000);
-        if (tuitionFeeAnnual > 0 && tuitionFeeAnnual < 100) tuitionFeeAnnual = tuitionFeeAnnual * 100000;
+          const state = String(getVal(row, ["state", "region", "location_state"], "India")).trim();
+          const city = String(getVal(row, ["city", "location", "location_city"], "City")).trim();
+          const website = String(getVal(row, ["website", "url", "link"], "")).trim() || null;
+          const officialApplyUrl = String(getVal(row, ["officialapplyurl", "applyurl", "admission_link"], website || "https://collegematch.in")).trim();
 
-        let hostelFeeAnnual = num(getVal(branchInfo, ["hostelfeeannual", "hostel", "hostel_fee"], 100000), 100000);
-        if (hostelFeeAnnual > 0 && hostelFeeAnnual < 50) hostelFeeAnnual = hostelFeeAnnual * 100000;
+          // Scores (0-10)
+          const placementScore = clamp(num(getVal(row, ["placementscore", "placement_score", "placement"], 8.5), 8.5), 0, 10);
+          const collegeLifeScore = clamp(num(getVal(row, ["collegelifescore", "college_life", "campus_life", "campus"], 8.0), 8.0), 0, 10);
+          const curriculumScore = clamp(num(getVal(row, ["curriculumscore", "curriculum", "academics"], 8.0), 8.0), 0, 10);
+          const infraRating = clamp(num(getVal(row, ["infra_rating", "infra", "infrastructure"], 8.5), 8.5), 0, 10);
+          const startupEcosystem = clamp(num(getVal(row, ["startup_ecosystem", "startup", "entrepreneurship"], 8.0), 8.0), 0, 10);
+          const sportsExtracurricular = clamp(num(getVal(row, ["sports & extracurriculum", "sports", "extracurricular"], 8.0), 8.0), 0, 10);
+          const internationalExposure = clamp(num(getVal(row, ["international_exposure", "global_exposure", "exchange"], 7.5), 7.5), 0, 10);
+          const rank = num(getVal(row, ["rank", "nirf", "nirf_ranking"], i + 1), i + 1);
 
-        let avgSalary = num(getVal(branchInfo, ["avgsalary", "avg_salary", "avg_ctc", "salary", "ctc", "package"], 900000), 900000);
-        if (avgSalary > 0 && avgSalary < 100) avgSalary = avgSalary * 100000;
+          // Fees & Cutoffs
+          let tuitionFeeAnnual = num(getVal(row, ["tuitionfeeannual", "tuition", "annual_fee", "fee", "fees"], 250000), 250000);
+          if (tuitionFeeAnnual > 0 && tuitionFeeAnnual < 100) tuitionFeeAnnual = tuitionFeeAnnual * 100000;
 
-        let medianSalary = num(getVal(branchInfo, ["mediansalary", "median_salary", "median_ctc"], avgSalary * 0.9), avgSalary * 0.9);
-        if (medianSalary > 0 && medianSalary < 100) medianSalary = medianSalary * 100000;
+          let hostelFeeAnnual = num(getVal(row, ["hostelfeeannual", "hostel", "hostel_fee"], 100000), 100000);
+          if (hostelFeeAnnual > 0 && hostelFeeAnnual < 50) hostelFeeAnnual = hostelFeeAnnual * 100000;
 
-        let highestSalary = num(getVal(branchInfo, ["highestsalary", "highest_salary", "max_package", "highest_package"], avgSalary * 3), avgSalary * 3);
-        if (highestSalary > 0 && highestSalary < 100) highestSalary = highestSalary * 100000;
+          let avgSalary = num(getVal(row, ["avgsalary", "avg_salary", "avg_ctc", "salary", "ctc", "package"], 900000), 900000);
+          if (avgSalary > 0 && avgSalary < 100) avgSalary = avgSalary * 100000;
 
-        const minJeePercentileCutoff = clamp(num(getVal(branchInfo, ["equivalent jeepercentilecutoff", "minjeepercentilecutoff", "jeecutoff", "cutoff", "percentile"], 85.0), 85.0), 0, 100);
-        const minClass12Cutoff = clamp(num(getVal(branchInfo, ["minclass12cutoff", "class12cutoff", "board_cutoff"], 75.0), 75.0), 0, 100);
-        const placementPercentage = clamp(num(getVal(branchInfo, ["placementpercentage", "placement_percentage", "placement_rate"], 90.0), 90.0), 0, 100);
+          let medianSalary = num(getVal(row, ["mediansalary", "median_salary", "median_ctc"], avgSalary * 0.9), avgSalary * 0.9);
+          if (medianSalary > 0 && medianSalary < 100) medianSalary = medianSalary * 100000;
 
-        parsedList.push({
-          id: `col_${rank}_${Date.now()}_${i}`,
-          name,
-          slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
-          rank,
-          state,
-          city,
-          website,
-          officialApplyUrl,
-          isPartner: Boolean(getVal(row, ["ispartner", "partner", "featured"], false)),
-          isNewGen: isNewGenDetected,
-          placementScore,
-          collegeLifeScore,
-          curriculumScore,
-          infraRating,
-          startupEcosystem,
-          sportsExtracurricular,
-          internationalExposure,
-          branches: [
-            {
-              branchCode: String(getVal(branchInfo, ["branchcode", "branch"], "CSE")).toUpperCase().trim(),
-              branchName: "Computer Science & Engineering",
-              tuitionFeeAnnual,
-              hostelFeeAnnual,
-              avgSalary,
-              medianSalary,
-              highestSalary,
-              minJeePercentileCutoff,
-              minClass12Cutoff,
-              placementPercentage,
-            },
-          ],
-        });
+          let highestSalary = num(getVal(row, ["highestsalary", "highest_salary", "max_package", "highest_package"], avgSalary * 3), avgSalary * 3);
+          if (highestSalary > 0 && highestSalary < 100) highestSalary = highestSalary * 100000;
+
+          const minJeePercentileCutoff = clamp(num(getVal(row, ["equivalent jeepercentilecutoff", "minjeepercentilecutoff", "jeecutoff", "cutoff", "percentile"], 85.0), 85.0), 0, 100);
+          const minClass12Cutoff = clamp(num(getVal(row, ["minclass12cutoff", "class12cutoff", "board_cutoff"], 75.0), 75.0), 0, 100);
+          const placementPercentage = clamp(num(getVal(row, ["placementpercentage", "placement_percentage", "placement_rate"], 90.0), 90.0), 0, 100);
+
+          parsedList.push({
+            id: `col_${rank}_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+            name,
+            slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
+            rank,
+            state,
+            city,
+            website,
+            officialApplyUrl,
+            isPartner: Boolean(getVal(row, ["ispartner", "partner", "featured"], false)),
+            isNewGen,
+            placementScore,
+            collegeLifeScore,
+            curriculumScore,
+            infraRating,
+            startupEcosystem,
+            sportsExtracurricular,
+            internationalExposure,
+            branches: [
+              {
+                branchCode: String(getVal(row, ["branchcode", "branch"], "CSE")).toUpperCase().trim(),
+                branchName: "Computer Science & Engineering",
+                tuitionFeeAnnual,
+                hostelFeeAnnual,
+                avgSalary,
+                medianSalary,
+                highestSalary,
+                minJeePercentileCutoff,
+                minClass12Cutoff,
+                placementPercentage,
+              },
+            ],
+          });
+        }
       }
 
       if (parsedList.length === 0) {
-        setUploadStatus("Error: Could not extract college rows. Please verify file column names.");
+        setUploadStatus("Error: Could not extract college rows. Please check spreadsheet columns.");
         return;
       }
 
       setColleges(parsedList);
-      localStorage.setItem("cm_admin_colleges_v2", JSON.stringify(parsedList));
-      setUploadStatus(`✓ Successfully imported ${parsedList.length} colleges (${parsedList.filter((c) => !c.isNewGen).length} Generic + ${parsedList.filter((c) => c.isNewGen).length} New-Gen AI)!`);
+      localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(parsedList));
+      const genC = parsedList.filter((c) => !c.isNewGen).length;
+      const newC = parsedList.filter((c) => c.isNewGen).length;
+      setUploadStatus(`✓ Successfully imported ${parsedList.length} colleges (${genC} Generic + ${newC} New-Gen AI) exactly as categorized in your Excel!`);
 
       // Sync backend
       try {
@@ -283,6 +286,26 @@ export default function UnifiedCollegeManager() {
     } finally {
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
+  };
+
+  // Delete / Remove a College
+  const handleDeleteCollege = async (collegeId: string, collegeName: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const confirmed = window.confirm(`Are you sure you want to remove "${collegeName}" from the database?`);
+    if (!confirmed) return;
+
+    const remaining = colleges.filter((c) => c.id !== collegeId);
+    setColleges(remaining);
+    localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(remaining));
+
+    if (selectedCollege && selectedCollege.id === collegeId) {
+      setSelectedCollege(null);
+      setEditForm(null);
+    }
+
+    try {
+      await fetch(`/api/admin/colleges?id=${collegeId}`, { method: "DELETE" });
+    } catch {}
   };
 
   // Open Full College Profile & Edit View
@@ -331,7 +354,6 @@ export default function UnifiedCollegeManager() {
     e.preventDefault();
     if (!selectedCollege || !editForm) return;
 
-    // Strict validation
     const validatedName = editForm.name.trim();
     if (!validatedName) {
       alert("College name cannot be empty.");
@@ -373,11 +395,11 @@ export default function UnifiedCollegeManager() {
 
     const updatedList = colleges.map((c) => (c.id === selectedCollege.id ? validated : c));
     setColleges(updatedList);
-    localStorage.setItem("cm_admin_colleges_v2", JSON.stringify(updatedList));
+    localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(updatedList));
     setSelectedCollege(null);
     setEditForm(null);
 
-    // Sync to backend
+    // Sync backend
     try {
       fetch("/api/admin/colleges", {
         method: "POST",
@@ -407,6 +429,7 @@ export default function UnifiedCollegeManager() {
     const collegeRows = colleges.map((c) => ({
       rank: c.rank || 50,
       name: c.name,
+      category: c.isNewGen ? "New-Gen AI" : "Generic",
       placementScore: c.placementScore,
       collegeLifeScore: c.collegeLifeScore,
       curriculumScore: c.curriculumScore,
@@ -415,7 +438,6 @@ export default function UnifiedCollegeManager() {
       international_exposure: c.internationalExposure || 7.5,
       startup_ecosystem: c.startupEcosystem || 8.0,
       isPartner: c.isPartner,
-      isNewGen: c.isNewGen,
       state: c.state,
       city: c.city,
       website: c.website || "",
@@ -466,7 +488,7 @@ export default function UnifiedCollegeManager() {
             College Data Manager
           </h1>
           <p style={{ color: "#4a4a4a", fontSize: "0.95rem", margin: "0.3rem 0 0" }}>
-            Manage Traditional Universities and New-Gen / AI Institutes. Click any college to view & edit complete details.
+            Upload your Excel sheet (Generic & New-Gen AI separated). Click any college to inspect details or remove.
           </p>
         </div>
 
@@ -504,12 +526,12 @@ export default function UnifiedCollegeManager() {
           boxShadow: "0 4px 20px rgba(15, 45, 82, 0.04)",
         }}
       >
-        <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>📊</div>
+        <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>📁</div>
         <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#0F2D52", margin: "0 0 0.5rem" }}>
-          Upload Master Spreadsheet (.xlsx / .xls / .csv)
+          Upload College Spreadsheet (.xlsx / .xls / .csv)
         </h3>
         <p style={{ color: "#666", fontSize: "0.9rem", maxWidth: "600px", margin: "0 auto 1.5rem" }}>
-          Upload your Excel file containing Colleges, Cutoffs, Scores (Placement, Campus Life, NIRF, Infrastructure), and Fees.
+          Uploads automatically respect your spreadsheet&apos;s sheet names and Category columns to sort Generic vs New-Gen AI colleges.
         </p>
 
         <div style={{ display: "flex", justifyContent: "center", gap: "1rem", flexWrap: "wrap", alignItems: "center" }}>
@@ -537,7 +559,7 @@ export default function UnifiedCollegeManager() {
               boxShadow: "0 4px 14px rgba(15, 45, 82, 0.25)",
             }}
           >
-            📁 Choose & Upload Master Spreadsheet
+            ⬆️ Choose & Upload Spreadsheet
           </label>
 
           <button
@@ -632,7 +654,7 @@ export default function UnifiedCollegeManager() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", flexWrap: "wrap", gap: "1rem" }}>
           <div>
             <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#0F2D52", margin: 0 }}>
-              {activeTab === "ALL" ? "All Colleges" : activeTab === "GENERIC" ? "Generic Engineering Universities" : "New-Gen & AI Institutes"} ({filtered.length} Displayed)
+              {activeTab === "ALL" ? "All Colleges" : activeTab === "GENERIC" ? "Generic Engineering Universities" : "New-Gen & AI Institutes"} ({filtered.length} Total)
             </h3>
             <span style={{ fontSize: "0.85rem", color: "#8c8c8c" }}>
               Click any row to open the complete details & quality scores inspector.
@@ -667,7 +689,7 @@ export default function UnifiedCollegeManager() {
                 <th style={{ padding: "0.85rem 1rem" }}>Tuition / Yr</th>
                 <th style={{ padding: "0.85rem 1rem" }}>Avg Package</th>
                 <th style={{ padding: "0.85rem 1rem" }}>JEE Cutoff</th>
-                <th style={{ padding: "0.85rem 1rem", textAlign: "center" }}>Action</th>
+                <th style={{ padding: "0.85rem 1rem", textAlign: "center" }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -724,21 +746,39 @@ export default function UnifiedCollegeManager() {
                       {branch?.minJeePercentileCutoff ? `${branch.minJeePercentileCutoff}%ile` : "—"}
                     </td>
                     <td style={{ padding: "1rem", textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
-                      <button
-                        onClick={() => handleOpenDetails(col)}
-                        style={{
-                          padding: "0.4rem 0.9rem",
-                          background: "#FFFAF0",
-                          color: "#0F2D52",
-                          border: "1.5px solid #C4A484",
-                          borderRadius: "6px",
-                          fontWeight: 700,
-                          cursor: "pointer",
-                          fontSize: "0.85rem",
-                        }}
-                      >
-                        ✏️ Details & Edit
-                      </button>
+                      <div style={{ display: "inline-flex", gap: "0.5rem" }}>
+                        <button
+                          onClick={() => handleOpenDetails(col)}
+                          style={{
+                            padding: "0.4rem 0.75rem",
+                            background: "#FFFAF0",
+                            color: "#0F2D52",
+                            border: "1.5px solid #C4A484",
+                            borderRadius: "6px",
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            fontSize: "0.85rem",
+                          }}
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                          onClick={(e) => handleDeleteCollege(col.id, col.name, e)}
+                          style={{
+                            padding: "0.4rem 0.65rem",
+                            background: "#fef2f2",
+                            color: "#b91c1c",
+                            border: "1px solid #fca5a5",
+                            borderRadius: "6px",
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            fontSize: "0.85rem",
+                          }}
+                          title="Delete college"
+                        >
+                          🗑️
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -1061,36 +1101,57 @@ export default function UnifiedCollegeManager() {
               </div>
 
               {/* Actions */}
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", borderTop: "1px solid #eee", paddingTop: "1.25rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #eee", paddingTop: "1.25rem", flexWrap: "wrap", gap: "1rem" }}>
                 <button
                   type="button"
-                  onClick={() => { setSelectedCollege(null); setEditForm(null); }}
+                  onClick={() => handleDeleteCollege(selectedCollege.id, selectedCollege.name)}
                   style={{
-                    padding: "0.7rem 1.5rem",
-                    background: "#f1f1f1",
-                    border: "none",
+                    padding: "0.65rem 1.25rem",
+                    background: "#fef2f2",
+                    color: "#b91c1c",
+                    border: "1.5px solid #fca5a5",
                     borderRadius: "8px",
                     fontWeight: 700,
                     cursor: "pointer",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.4rem",
                   }}
                 >
-                  Cancel
+                  🗑️ Delete This College
                 </button>
-                <button
-                  type="submit"
-                  style={{
-                    padding: "0.7rem 2rem",
-                    background: "#0F2D52",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontWeight: 800,
-                    cursor: "pointer",
-                    fontSize: "0.95rem",
-                  }}
-                >
-                  💾 Save & Update College
-                </button>
+
+                <div style={{ display: "flex", gap: "1rem" }}>
+                  <button
+                    type="button"
+                    onClick={() => { setSelectedCollege(null); setEditForm(null); }}
+                    style={{
+                      padding: "0.7rem 1.5rem",
+                      background: "#f1f1f1",
+                      border: "none",
+                      borderRadius: "8px",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    style={{
+                      padding: "0.7rem 2rem",
+                      background: "#0F2D52",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "8px",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                      fontSize: "0.95rem",
+                    }}
+                  >
+                    💾 Save & Update College
+                  </button>
+                </div>
               </div>
             </form>
           </div>
