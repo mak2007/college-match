@@ -4,119 +4,159 @@
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  user-select: none;
-  margin-left: 0.35rem;
+  cursor: pointer;
+  margin: 0 0.5rem;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center center;
+  z-index: 5;
 }
 
-/* Outer halo / ambient glow ring */
+/* Hover effect: Smoothly enlarges on mouse hover */
+.badgeWrapper:hover {
+  transform: scale(1.22) translateY(-2px);
+}
+
+/* Outer translucent halo ring matching exact screenshot */
 .outerGlowRing {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 2.5px;
+  padding: 4px;
   border-radius: 9999px;
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.35) 0%, rgba(217, 70, 239, 0.45) 100%);
-  box-shadow: 0 0 16px rgba(217, 70, 239, 0.35), 0 0 6px rgba(99, 102, 241, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(220, 150, 255, 0.22);
+  border: 1.5px solid rgba(225, 160, 255, 0.55);
+  box-shadow: 0 0 18px rgba(217, 70, 239, 0.45), 0 0 8px rgba(99, 102, 241, 0.3);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  transition: all 0.35s ease;
 }
 
-/* Inner vibrant gradient pill */
+.badgeWrapper:hover .outerGlowRing {
+  background: rgba(220, 150, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 30px rgba(217, 70, 239, 0.8), 0 0 14px rgba(99, 102, 241, 0.6);
+}
+
+/* Inner vibrant gradient pill matching exact blue-to-purple-to-magenta */
 .innerPill {
   display: inline-flex;
   align-items: center;
-  gap: 0.42rem;
-  background: linear-gradient(90deg, #3b82f6 0%, #6366f1 35%, #a855f7 70%, #d946ef 100%);
+  gap: 0.35rem;
+  background: linear-gradient(90deg, #2b5cf6 0%, #6836f5 42%, #af15eb 78%, #dc18dd 100%);
   color: #ffffff;
   border-radius: 9999px;
-  padding: 0.28rem 0.85rem;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 2px 8px rgba(168, 85, 247, 0.3);
+  padding: 0.28rem 0.82rem;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.65), 0 3px 10px rgba(175, 21, 235, 0.35);
+  transition: all 0.35s ease;
+}
+
+.badgeWrapper:hover .innerPill {
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.9), 0 4px 14px rgba(175, 21, 235, 0.55);
 }
 
 .badgeText {
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 750;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: #ffffff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
 }
 
-/* Sparkle Icons */
+/* Sparkle Icons inside pill */
 .sparkleIconGroup {
   display: inline-flex;
   align-items: center;
   position: relative;
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
+  margin-right: 0.1rem;
 }
 
 .mainSparkleSvg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   fill: #ffffff;
-  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.8));
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
+  transition: transform 0.35s ease;
+}
+
+.badgeWrapper:hover .mainSparkleSvg {
+  transform: rotate(15deg) scale(1.15);
 }
 
 .miniSparkleSvg {
   position: absolute;
   top: -2px;
   right: -2px;
-  width: 7px;
-  height: 7px;
+  width: 6.5px;
+  height: 6.5px;
   fill: #ffffff;
 }
 
-/* Ambient Floating Sparkle Stars outside */
+/* Ambient Floating Sparkle Stars outside the halo */
 .sparkle {
   position: absolute;
   pointer-events: none;
-  font-size: 9px;
+  font-size: 10px;
   line-height: 1;
   color: #c084fc;
-  text-shadow: 0 0 6px rgba(192, 132, 252, 0.8);
-  opacity: 0.85;
+  text-shadow: 0 0 8px rgba(192, 132, 252, 0.9);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .sparkleTopLeft {
   top: -6px;
   left: -6px;
-  font-size: 8px;
+  font-size: 9px;
+  color: #d8b4fe;
 }
 
 .sparkleBottomLeft {
-  bottom: -7px;
-  left: -8px;
-  font-size: 13px;
-  color: #a855f7;
+  bottom: -8px;
+  left: -9px;
+  font-size: 14px;
+  color: #c084fc;
 }
 
 .sparkleBottomRight {
-  bottom: -5px;
+  bottom: -6px;
   right: -6px;
-  font-size: 9px;
+  font-size: 10px;
+  color: #f0abfc;
+}
+
+.badgeWrapper:hover .sparkleTopLeft {
+  transform: translate(-3px, -3px) scale(1.3);
+}
+
+.badgeWrapper:hover .sparkleBottomLeft {
+  transform: translate(-4px, 3px) scale(1.3);
+}
+
+.badgeWrapper:hover .sparkleBottomRight {
+  transform: translate(3px, 3px) scale(1.3);
 }
 
 /* Sizing options */
 .sm .innerPill {
-  padding: 0.18rem 0.6rem;
+  padding: 0.22rem 0.72rem;
 }
 .sm .badgeText {
-  font-size: 0.7rem;
+  font-size: 0.76rem;
 }
 .sm .mainSparkleSvg {
-  width: 11px;
-  height: 11px;
+  width: 12px;
+  height: 12px;
 }
 
 .lg .innerPill {
-  padding: 0.38rem 1.1rem;
+  padding: 0.35rem 1.05rem;
 }
 .lg .badgeText {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
 }
 .lg .mainSparkleSvg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
 }
