@@ -449,23 +449,41 @@ export default function Predictor() {
         return (
           <div className={styles.questionGroup}>
             <h2 className={styles.questionTitle}>Tuition & Hostel Budget</h2>
-            <p className={styles.questionSubtitle}>Set your maximum budget constraint (covers 4 years tuition + hostel)</p>
+            <p className={styles.questionSubtitle}>Set your maximum budget constraint or allow any budget</p>
 
-            <div className={styles.sliderContainer}>
-              <div className={styles.sliderLabel}>
-                <span>Max 4-Year Budget Limit</span>
-                <span style={{ color: "var(--brand-blue)" }}>₹{(budgetLimit / 100000).toFixed(1)} Lakhs</span>
-              </div>
-              <input
-                type="range"
-                min="500000"
-                max="3000000"
-                step="50000"
-                className={styles.sliderInput}
-                value={budgetLimit}
-                onChange={(e) => setBudgetLimit(Number(e.target.value))}
-              />
+            <div style={{ marginBottom: "1.5rem", background: "white", padding: "1.25rem", borderRadius: "12px", border: "1.5px solid #e5e3dc" }}>
+              <label style={{ display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer", fontSize: "1.05rem", fontWeight: 700, color: "#0F2D52" }}>
+                <input
+                  type="checkbox"
+                  checked={!isBudgetConstraint}
+                  onChange={(e) => setIsBudgetConstraint(!e.target.checked)}
+                  style={{ width: "1.3rem", height: "1.3rem", cursor: "pointer" }}
+                />
+                <span>🔓 No Budget Limit / Any Budget (Include colleges across all fee tiers)</span>
+              </label>
             </div>
+
+            {isBudgetConstraint ? (
+              <div className={styles.sliderContainer}>
+                <div className={styles.sliderLabel}>
+                  <span>Max 4-Year Budget Limit</span>
+                  <span style={{ color: "var(--brand-blue)" }}>₹{(budgetLimit / 100000).toFixed(1)} Lakhs</span>
+                </div>
+                <input
+                  type="range"
+                  min="500000"
+                  max="3500000"
+                  step="50000"
+                  className={styles.sliderInput}
+                  value={budgetLimit}
+                  onChange={(e) => setBudgetLimit(Number(e.target.value))}
+                />
+              </div>
+            ) : (
+              <div style={{ padding: "1rem", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: "10px", color: "#166534", fontSize: "0.95rem", fontWeight: 600 }}>
+                ✓ Budget filter disabled. High-value private universities, top AI tech institutes, and government colleges will all be recommended.
+              </div>
+            )}
           </div>
         );
       case 6:

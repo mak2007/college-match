@@ -554,17 +554,15 @@ export function generateRecommendations(
     let budgetPenaltyVal = 0;
     const appliedPenalties: AppliedModifier[] = [];
 
-    if (config.budgetPenalty.active && student.isBudgetConstraint && student.budgetLimit) {
+    if (config.budgetPenalty.active && student.isBudgetConstraint && student.budgetLimit && student.budgetLimit > 0) {
       const limit = student.budgetLimit;
-      const multiplier = config.budgetPenalty.thresholdMultiplier;
+      const multiplier = config.budgetPenalty.thresholdMultiplier || 1.5;
 
-      if (total4YrCost > multiplier * limit) {
-        continue;
-      } else if (total4YrCost > limit) {
-        const range = (multiplier - 1.0) * limit;
+      if (total4YrCost > limit) {
+        const range = Math.max(1, (multiplier - 1.0) * limit);
         budgetPenaltyVal =
-          Math.pow((total4YrCost - limit) / range, config.budgetPenalty.exponent) *
-          config.budgetPenalty.basePenaltyWeight;
+          Math.pow(Math.min(multiplier * limit, total4YrCost - limit) / range, config.budgetPenalty.exponent || 2.0) *
+          (config.budgetPenalty.basePenaltyWeight || 30.0);
         appliedPenalties.push({
           id: "budget_overrun",
           type: "PENALTY",
@@ -575,14 +573,6 @@ export function generateRecommendations(
     }
 
     // --- STAGE 3: ACADEMIC FIT (admission probability via sigmoid curve) ---
-    // Class 12 is eligibility only — if below cutoff, exclude entirely
-    const c12Eligible =
-      !student.class12Percentage || !c.minClass12Cutoff
-        ? true
-        : student.class12Percentage >= c.minClass12Cutoff;
-
-    if (!c12Eligible) continue;
-
     // Calculate admission probability using sigmoid curve
     const admissionCalc = calculateAdmissionProbability(
       student.jeePercentile,
@@ -594,12 +584,19 @@ export function generateRecommendations(
     let badgeText = "Good Fit";
 
     if (admissionCalc.probability !== null) {
-      // Apply excludeLimit filter: if sigmoid prob is extremely low, skip
-      if (config.academicCompetitiveness.active && admissionCalc.category === "Out of Reach") {
-        continue; // Filter out colleges with < 10% admission chance
+      if (admissionCalc.category === "Out of Reach") {
+        category = "Dream";
+        badgeText = "Aspirational / Reach";
+        appliedPenalties.push({
+          id: "academic_reach",
+          type: "PENALTY",
+          value: 20.0,
+          reason: `JEE cutoff (${c.minJeePercentileCutoff}%ile) is higher than current score`,
+        });
+      } else {
+        category = admissionCalc.category as "Dream" | "Target" | "Safe" | "Out of Reach";
+        badgeText = admissionBadgeText(admissionCalc.category, admissionCalc.probability);
       }
-      category = admissionCalc.category as "Dream" | "Target" | "Safe" | "Out of Reach";
-      badgeText = admissionBadgeText(admissionCalc.category, admissionCalc.probability);
     }
 
     // Compute JEE gap for display purposes

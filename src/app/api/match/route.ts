@@ -129,8 +129,58 @@ export async function POST(request: Request) {
     const dbConfig = await prisma.systemConfig.findUnique({ where: { key: "matching_rules" } });
     let config: ScoringConfig = dbConfig ? JSON.parse(dbConfig.value) : getDefaultConfig();
 
-    const dbBranches = await prisma.collegeBranch.findMany({ include: { college: true } });
-    let candidates: CollegeCandidate[] = dbBranches.map(mapCandidate);
+    let candidates: CollegeCandidate[] = [];
+    try {
+      const dbBranches = await prisma.collegeBranch.findMany({ include: { college: true } });
+      if (dbBranches && dbBranches.length > 0) {
+        candidates = dbBranches.map(mapCandidate);
+      }
+    } catch {}
+
+    if (candidates.length === 0) {
+      const baseData = require("@/lib/base-colleges.json");
+      candidates = (baseData as any[]).flatMap((col: any) =>
+        (col.branches || []).map((b: any) => ({
+          id: col.id,
+          name: col.name,
+          slug: col.slug,
+          state: col.state,
+          city: col.city,
+          logoUrl: null,
+          coverImageUrl: null,
+          brochureUrl: null,
+          officialApplyUrl: col.officialApplyUrl,
+          website: col.website,
+          isPartner: Boolean(col.isPartner),
+          isNewGen: Boolean(col.isNewGen),
+          commissionRate: 0,
+          placementScore: col.placementScore || 8.5,
+          collegeLifeScore: col.collegeLifeScore || 8.0,
+          curriculumScore: col.curriculumScore || 8.0,
+          metadata: JSON.stringify({
+            rank: col.rank,
+            infra_rating: col.infraRating,
+            startup_ecosystem: col.startupEcosystem,
+            sports_extracurricular: col.sportsExtracurricular,
+            international_exposure: col.internationalExposure,
+          }),
+          branchId: `${col.id}_${b.branchCode}`,
+          branchName: b.branchName || "Computer Science & Engineering",
+          branchCode: b.branchCode || "CSE",
+          tuitionFeeAnnual: b.tuitionFeeAnnual || 0,
+          hostelFeeAnnual: b.hostelFeeAnnual || 0,
+          seatCapacity: 120,
+          avgSalary: b.avgSalary || null,
+          medianSalary: b.medianSalary || null,
+          highestSalary: b.highestSalary || null,
+          minJeePercentileCutoff: b.minJeePercentileCutoff || null,
+          minClass12Cutoff: b.minClass12Cutoff || null,
+          branchStrengthScore: 8.5,
+          placementPercentage: b.placementPercentage || null,
+          branchMetadata: null,
+        }))
+      );
+    }
 
     if (preferredBranches && preferredBranches.length > 0) {
       const targetBranches = preferredBranches.map((b: string) => normalizeBranchCode(b));
@@ -202,8 +252,58 @@ export async function GET(request: Request) {
     const dbConfig = await prisma.systemConfig.findUnique({ where: { key: "matching_rules" } });
     let config: ScoringConfig = dbConfig ? JSON.parse(dbConfig.value) : getDefaultConfig();
 
-    const dbBranches = await prisma.collegeBranch.findMany({ include: { college: true } });
-    let candidates: CollegeCandidate[] = dbBranches.map(mapCandidate);
+    let candidates: CollegeCandidate[] = [];
+    try {
+      const dbBranches = await prisma.collegeBranch.findMany({ include: { college: true } });
+      if (dbBranches && dbBranches.length > 0) {
+        candidates = dbBranches.map(mapCandidate);
+      }
+    } catch {}
+
+    if (candidates.length === 0) {
+      const baseData = require("@/lib/base-colleges.json");
+      candidates = (baseData as any[]).flatMap((col: any) =>
+        (col.branches || []).map((b: any) => ({
+          id: col.id,
+          name: col.name,
+          slug: col.slug,
+          state: col.state,
+          city: col.city,
+          logoUrl: null,
+          coverImageUrl: null,
+          brochureUrl: null,
+          officialApplyUrl: col.officialApplyUrl,
+          website: col.website,
+          isPartner: Boolean(col.isPartner),
+          isNewGen: Boolean(col.isNewGen),
+          commissionRate: 0,
+          placementScore: col.placementScore || 8.5,
+          collegeLifeScore: col.collegeLifeScore || 8.0,
+          curriculumScore: col.curriculumScore || 8.0,
+          metadata: JSON.stringify({
+            rank: col.rank,
+            infra_rating: col.infraRating,
+            startup_ecosystem: col.startupEcosystem,
+            sports_extracurricular: col.sportsExtracurricular,
+            international_exposure: col.internationalExposure,
+          }),
+          branchId: `${col.id}_${b.branchCode}`,
+          branchName: b.branchName || "Computer Science & Engineering",
+          branchCode: b.branchCode || "CSE",
+          tuitionFeeAnnual: b.tuitionFeeAnnual || 0,
+          hostelFeeAnnual: b.hostelFeeAnnual || 0,
+          seatCapacity: 120,
+          avgSalary: b.avgSalary || null,
+          medianSalary: b.medianSalary || null,
+          highestSalary: b.highestSalary || null,
+          minJeePercentileCutoff: b.minJeePercentileCutoff || null,
+          minClass12Cutoff: b.minClass12Cutoff || null,
+          branchStrengthScore: 8.5,
+          placementPercentage: b.placementPercentage || null,
+          branchMetadata: null,
+        }))
+      );
+    }
 
     if (preferredBranches.length > 0) {
       const targetBranches = preferredBranches.map((b: string) => b.toUpperCase());
