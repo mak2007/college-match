@@ -492,10 +492,10 @@ export default function ResultsClient({
                 let reasonsList: string[] = [];
                 try { reasonsList = JSON.parse(rec.reasons); } catch { reasonsList = [String(rec.reasons)]; }
 
-                const total4YrCost = (branch.tuitionFeeAnnual + branch.hostelFeeAnnual) * 4;
-                const bucketClass = rec.category === "Dream" ? styles.badgeDream
-                  : rec.category === "Safe" ? styles.badgeSafe
-                  : rec.category === "Out of Reach" ? styles.badgeDream
+                const bucketClass = rec.category === "Dream" || (rec.category as string) === "Out of Reach"
+                  ? styles.badgeDream
+                  : rec.category === "Safe"
+                  ? styles.badgeSafe
                   : styles.badgeTarget;
                 const applyRedirectUrl = `/api/leads/apply?student_id=${student.id}&college_id=${rec.college.id}&branch_code=${rec.branchCode}`;
 
