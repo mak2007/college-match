@@ -271,8 +271,17 @@ export default function ResultsClient({
 
   const [categoryTab, setCategoryTab] = useState<"all" | "generic" | "new_gen">("all");
 
-  const genericList = useMemo(() => filtered.filter((r) => !r.college?.isNewGen), [filtered]);
-  const newGenList = useMemo(() => filtered.filter((r) => Boolean(r.college?.isNewGen)), [filtered]);
+  const genericList = useMemo(() => {
+    return filtered
+      .filter((r) => !r.college?.isNewGen)
+      .sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
+  }, [filtered]);
+
+  const newGenList = useMemo(() => {
+    return filtered
+      .filter((r) => Boolean(r.college?.isNewGen))
+      .sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
+  }, [filtered]);
 
   const renderCard = (rec: any, idx: number, isNewGenCard = false) => {
     const branch = rec.college?.branches?.find((b: any) => b.branchCode === rec.branchCode) ||
