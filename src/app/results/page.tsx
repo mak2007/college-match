@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/db";
-import Link from "next/link"; // wait, let's keep the exact link import
+import Link from "next/link";
 import ResultsClient from "./ResultsClient";
 import { generateRecommendations } from "@/lib/recommendation";
+
+export const dynamic = "force-dynamic";
 
 interface ResultsProps {
   searchParams: Promise<{ student_id?: string }>;
@@ -17,23 +19,44 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
         <div style={{ maxWidth: "500px", background: "white", border: "1px solid #e6e4dc", borderRadius: "16px", padding: "2.5rem", textAlign: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}>
           <h2 style={{ color: "#0F2D52" }}>No recommendations found</h2>
           <p style={{ color: "#4a4a4a", margin: "1rem 0" }}>
-            It looks like you haven&apos;t filled out the preference wizard yet.
+            It looks like you haven&apos;t filled out the preference quiz yet.
           </p>
-          <Link href="/wizard" className="btn btn-primary">
-            Start Preference Wizard
+          <Link href="/predict" className="btn btn-primary">
+            Start Predictor Quiz
           </Link>
         </div>
       </div>
     );
   }
 
-  const student = await prisma.student.findUnique({
-    where: { id: studentId },
-    include: {
-      locations: true,
-      priorities: { orderBy: { rankOrder: "asc" } },
-    },
-  });
+  let student: any = null;
+  let dbRecommendations: any[] = [];
+
+  try {
+    student = await prisma.student.findUnique({
+      where: { id: studentId },
+      include: {
+        locations: true,
+        priorities: { orderBy: { rankOrder: "asc" } },
+      },
+    });
+
+    if (student) {
+      dbRecommendations = await prisma.recommendation.findMany({
+        where: { studentId },
+        orderBy: { rankPosition: "asc" },
+        include: {
+          college: {
+            include: {
+              branches: true,
+            },
+          },
+        },
+      });
+    }
+  } catch (err) {
+    console.error("ResultsPage DB fetch error:", err);
+  }
 
   if (!student) {
     return (
@@ -43,25 +66,13 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
           <p style={{ color: "#4a4a4a", margin: "1rem 0" }}>
             The student ID provided is invalid or has been removed.
           </p>
-          <Link href="/wizard" className="btn btn-primary">
-            Restart Wizard
+          <Link href="/predict" className="btn btn-primary">
+            Restart Quiz
           </Link>
         </div>
       </div>
     );
   }
-
-  const dbRecommendations = await prisma.recommendation.findMany({
-    where: { studentId },
-    orderBy: { rankPosition: "asc" },
-    include: {
-      college: {
-        include: {
-          branches: true,
-        },
-      },
-    },
-  });
 
   // Calculate score breakdowns dynamically
   let recommendationsWithBreakdown = dbRecommendations as any;
@@ -99,7 +110,7 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
     };
 
     const candidates = dbRecommendations.map((rec) => {
-      const branch = rec.college.branches.find((b) => b.branchCode === rec.branchCode);
+      const branch = rec.college.branches.find((b: any) => b.branchCode === rec.branchCode);
       if (!branch) return null;
       return {
         id: rec.college.id,
@@ -143,8 +154,8 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
       budgetLimit: student.budgetLimit,
       isBudgetConstraint: student.isBudgetConstraint,
       restrictLocation: student.restrictLocation,
-      preferredLocations: student.locations.map((l) => ({ state: l.state, city: l.city })),
-      priorities: student.priorities.map((p) => ({ criteria: p.criteria.toLowerCase(), rankOrder: p.rankOrder })),
+      preferredLocations: student.locations.map((l: any) => ({ state: l.state, city: l.city })),
+      priorities: student.priorities.map((p: any) => ({ criteria: p.criteria.toLowerCase(), rankOrder: p.rankOrder })),
       preferredBranches: dbRecommendations.map((r) => r.branchCode),
       careerGoal: student.careerGoal || "NOT_SURE",
     };
@@ -182,8 +193,8 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
         isBudgetConstraint: student.isBudgetConstraint,
         restrictLocation: student.restrictLocation,
         careerGoal: student.careerGoal || "NOT_SURE",
-        locations: student.locations.map((l) => ({ state: l.state, city: l.city })),
-        priorities: student.priorities.map((p) => ({ criteria: p.criteria, rankOrder: p.rankOrder })),
+        locations: student.locations.map((l: any) => ({ state: l.state, city: l.city })),
+        priorities: student.priorities.map((p: any) => ({ criteria: p.criteria, rankOrder: p.rankOrder })),
       }}
       recommendations={recommendationsWithBreakdown}
     />

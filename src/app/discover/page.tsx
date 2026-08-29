@@ -1,19 +1,26 @@
 import { prisma } from "@/lib/db";
-import Link from "next/link";
 import styles from "./discovery.module.css";
 import DiscoveryClient from "./DiscoveryClient";
 import Navbar from "@/components/Navbar";
 
-// Server Component: fetches data once from PostgreSQL (Supabase)
+export const dynamic = "force-dynamic";
+
+// Server Component: fetches data dynamically at request time with fallback
 export default async function DiscoverPage() {
-  const colleges = await prisma.college.findMany({
-    include: {
-      branches: true,
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
+  let colleges: any[] = [];
+  try {
+    colleges = await prisma.college.findMany({
+      include: {
+        branches: true,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+  } catch (error) {
+    console.error("DiscoverPage build/fetch fallback:", error);
+    colleges = [];
+  }
 
   return (
     <div className={styles.wrapper}>
