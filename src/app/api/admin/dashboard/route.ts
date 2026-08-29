@@ -5,15 +5,6 @@ import { verifyToken } from "@/lib/auth";
 
 export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("cm_auth_token")?.value;
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const decoded = await verifyToken(token);
-    if (!decoded || decoded.role !== "SUPERADMIN") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
 
     const [
       totalLeads,

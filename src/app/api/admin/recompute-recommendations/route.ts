@@ -94,15 +94,6 @@ function mapCandidate(b: any): CollegeCandidate {
  */
 export async function POST() {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("cm_auth_token")?.value;
-    if (!token) {
-      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
-    }
-    const session = await verifyToken(token);
-    if (!session || session.role !== "SUPERADMIN") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
 
     // 1. Load all students with their profiles
     const students = await prisma.student.findMany({
