@@ -5,21 +5,31 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./navbar.module.css";
 
-const AsteriskIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    width="20"
-    height="20"
-    stroke="currentColor"
-    strokeWidth="3.5"
-    strokeLinecap="round"
-    fill="none"
-    style={{ color: "#C4A484" }}
-  >
-    <line x1="12" y1="4" x2="12" y2="20" />
-    <line x1="4" y1="12" x2="20" y2="12" />
-    <line x1="6.34" y1="6.34" x2="17.66" y2="17.66" />
-    <line x1="17.66" y1="6.34" x2="6.34" y2="17.66" />
+const KollegioLogoIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 2L28 8.9282V23.0718L16 30L4 23.0718V8.9282L16 2Z" fill="url(#kollegio_grad_1)" />
+    <path d="M16 2L28 8.9282L16 16L4 8.9282L16 2Z" fill="url(#kollegio_grad_top)" />
+    <path d="M16 16L28 8.9282V23.0718L16 30V16Z" fill="url(#kollegio_grad_right)" />
+    <path d="M16 16V30L4 23.0718V8.9282L16 16Z" fill="url(#kollegio_grad_left)" />
+    <path d="M16 8L22 11.5L16 15L10 11.5L16 8Z" fill="#ffffff" fillOpacity="0.35" />
+    <defs>
+      <linearGradient id="kollegio_grad_1" x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#6366F1" />
+        <stop offset="1" stopColor="#4338CA" />
+      </linearGradient>
+      <linearGradient id="kollegio_grad_top" x1="4" y1="2" x2="28" y2="16" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#818CF8" />
+        <stop offset="1" stopColor="#6366F1" />
+      </linearGradient>
+      <linearGradient id="kollegio_grad_right" x1="16" y1="8" x2="28" y2="30" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#4F46E5" />
+        <stop offset="1" stopColor="#3730A3" />
+      </linearGradient>
+      <linearGradient id="kollegio_grad_left" x1="4" y1="8" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#6366F1" />
+        <stop offset="1" stopColor="#4F46E5" />
+      </linearGradient>
+    </defs>
   </svg>
 );
 
@@ -27,6 +37,7 @@ const STUDENT_LINKS = [
   { href: "/discover", icon: "🔍", title: "Discover Colleges", desc: "Search & filter by placements, ROI, fees" },
   { href: "/predict", icon: "🎯", title: "College Predictor", desc: "Get personalized match scores" },
   { href: "/rankings", icon: "📊", title: "College Rankings", desc: "Compare by ROI, placements, curriculum" },
+  { href: "/compare", icon: "📄", title: "Compare Colleges", desc: "Compare colleges side-by-side" },
 ];
 
 export default function Navbar() {
@@ -52,9 +63,9 @@ export default function Navbar() {
     setDropdownOpen(false);
   }, [pathname]);
 
-  const isStudentRoute = ["/discover", "/predict", "/rankings"].some((r) =>
+  const isStudentRoute = ["/discover", "/predict", "/rankings", "/compare"].some((r) =>
     pathname.startsWith(r)
-  );
+  ) || pathname === "/";
 
   return (
     <>
@@ -62,8 +73,8 @@ export default function Navbar() {
         <div className={styles.navContainer}>
           {/* Left: Logo */}
           <Link href="/" className={styles.logoLink}>
-            <AsteriskIcon />
-            <span>kollegio</span>
+            <KollegioLogoIcon />
+            <span className={styles.brandName}>Kollegio</span>
           </Link>
 
           {/* Center: Navigation */}
@@ -71,9 +82,8 @@ export default function Navbar() {
             {/* For Students dropdown */}
             <div className={styles.dropdownWrapper} ref={dropdownRef}>
               <button
-                className={styles.dropdownTrigger}
+                className={`${styles.dropdownTrigger} ${isStudentRoute ? styles.navActiveWithUnderline : ""}`}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                style={isStudentRoute ? { color: "#0F2D52" } : undefined}
               >
                 For Students
                 <span className={`${styles.chevron} ${dropdownOpen ? styles.chevronOpen : ""}`}>
@@ -106,7 +116,7 @@ export default function Navbar() {
             <Link
               href="/for-colleges"
               className={`${styles.navLink} ${
-                pathname === "/for-colleges" ? styles.navLinkActive : ""
+                pathname === "/for-colleges" ? styles.navActiveWithUnderline : ""
               }`}
             >
               For Colleges
@@ -116,7 +126,7 @@ export default function Navbar() {
           {/* Right: Actions */}
           <div className={styles.rightActions}>
             <Link href="/predict" className={styles.signUpBtn}>
-              Find My Match <span style={{ fontSize: "0.85rem" }}>→</span>
+              Find My Match <span style={{ fontSize: "0.95rem" }}>→</span>
             </Link>
           </div>
 

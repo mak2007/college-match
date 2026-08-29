@@ -5,132 +5,248 @@ import Navbar from "@/components/Navbar";
 export default function Home() {
   return (
     <div className={styles.wrapper}>
+      {/* Ambient background 3D glass spheres & glowing orbs */}
+      <div className={styles.ambientBackground}>
+        <div className={`${styles.orb} ${styles.orb1}`} />
+        <div className={`${styles.orb} ${styles.orb2}`} />
+        <div className={`${styles.orb} ${styles.orb3}`} />
+        <div className={`${styles.orb} ${styles.orb4}`} />
+        <div className={styles.subtleOrbitalLine} />
+      </div>
+
       <Navbar />
 
-      {/* Hero Section */}
-      <main style={{ flex: 1 }}>
-        <section className={styles.hero}>
-          {/* Floating background lights */}
-          <div className={styles.floatingCircles}>
-            <div className={`${styles.circle} ${styles.circle1}`} />
-            <div className={`${styles.circle} ${styles.circle2}`} />
-            <div className={`${styles.circle} ${styles.circle3}`} />
-          </div>
-          
-          <div className={styles.heroContent}>
-            <div className={styles.badge}>Data-backed college selection engine</div>
-            <h1 className={styles.title}>
-              Your one-stop solution for all things college apps
-            </h1>
-            <p className={styles.subtitle}>
-              Get matched. Score scholarships. Ace essays. Get admission offers.
-            </p>
-            <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", justifyContent: "center" }}>
-              <Link href="/predict" className={styles.ctaBtn}>
-                Get My Matches <span style={{ fontSize: "1.1rem" }}>→</span>
-              </Link>
-              <Link href="/discover" className={styles.ctaBtn} style={{ backgroundColor: "transparent", color: "#ffffff", border: "2px solid #ffffff" }}>
-                Explore Colleges
-              </Link>
+      <main className={styles.mainContainer}>
+        {/* ─── HERO SECTION: ASYMMETRIC SPLIT ─── */}
+        <section className={styles.heroSection}>
+          <div className={styles.heroGrid}>
+            {/* ── LEFT COLUMN: HEADLINE & ACTIONS ── */}
+            <div className={styles.heroLeft}>
+              {/* Built for your future badge */}
+              <div className={styles.heroPill}>
+                <span className={styles.starIcon}>★</span>
+                <span>BUILT FOR YOUR FUTURE</span>
+              </div>
+
+              {/* Main Editorial Headline */}
+              <h1 className={styles.heroHeadline}>
+                Don’t just find<br />
+                a college,<br />
+                <span className={styles.gradientText}>
+                  find your place.
+                  <svg
+                    className={styles.doodleUnderline}
+                    viewBox="0 0 180 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4 16C50 6 120 7 172 17"
+                      stroke="#4F46E5"
+                      strokeWidth="3.5"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M162 5L170 10M174 3L175 9"
+                      stroke="#6366F1"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </span>
+              </h1>
+
+              {/* Supporting Copy */}
+              <p className={styles.heroDescription}>
+                Discover colleges that match your goals and ambitions.<br className={styles.hideOnMobile} />
+                Find the people, opportunities and experiences<br className={styles.hideOnMobile} />
+                that shape who you’re meant to become.
+              </p>
+
+              {/* Action Buttons */}
+              <div className={styles.heroBtnsRow}>
+                <Link href="/predict" className={styles.primaryHeroBtn}>
+                  <span>Find My Match</span>
+                  <span className={styles.btnArrow}>→</span>
+                </Link>
+                <Link href="/discover" className={styles.secondaryHeroBtn}>
+                  <span>Explore Colleges</span>
+                  <span className={styles.playIconBox}>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="6 3 20 12 6 21 6 3" />
+                    </svg>
+                  </span>
+                </Link>
+              </div>
+
+              {/* Dot matrix decorative pattern */}
+              <div className={styles.dotMatrix} aria-hidden="true">
+                {[...Array(18)].map((_, i) => (
+                  <span key={i} className={styles.dot} />
+                ))}
+              </div>
+            </div>
+
+            {/* ── RIGHT COLUMN: ASPIRATIONAL CAMPUS PHOTOGRAPHY & FLOATING PANEL ── */}
+            <div className={styles.heroRight}>
+              <div className={styles.campusCardWrapper}>
+                {/* Large elegant rounded campus frame */}
+                <div className={styles.campusImageFrame}>
+                  <img
+                    src="/bits-pilani-campus.jpg"
+                    alt="Iconic Premier Indian University Campus"
+                    className={styles.campusImage}
+                  />
+                  <div className={styles.campusGlowOverlay} />
+                </div>
+
+                {/* Overlapping Floating Glass Dashboard Panel */}
+                <div className={styles.floatingBenefitsPanel}>
+                  {/* Benefit 1 */}
+                  <div className={styles.benefitItem}>
+                    <div className={`${styles.benefitIconBox} ${styles.iconTarget}`}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="6" />
+                        <circle cx="12" cy="12" r="2" />
+                      </svg>
+                    </div>
+                    <div className={styles.benefitText}>
+                      <h4 className={styles.benefitTitle}>Get matched.</h4>
+                      <p className={styles.benefitSubtitle}>Find colleges that fit your goals.</p>
+                    </div>
+                  </div>
+
+                  {/* Benefit 2 */}
+                  <div className={styles.benefitItem}>
+                    <div className={`${styles.benefitIconBox} ${styles.iconTrophy}`}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                        <path d="M4 22h16" />
+                        <path d="M10 14.66V17c0 .55-.45 1-1 1H7v2h10v-2h-2c-.55 0-1-.45-1-1v-2.34" />
+                        <path d="M18 4H6v7a6 6 0 0 0 12 0V4Z" />
+                      </svg>
+                    </div>
+                    <div className={styles.benefitText}>
+                      <h4 className={styles.benefitTitle}>Score scholarships.</h4>
+                      <p className={styles.benefitSubtitle}>Find and win scholarships that you deserve.</p>
+                    </div>
+                  </div>
+
+                  {/* Benefit 3 */}
+                  <div className={styles.benefitItem}>
+                    <div className={`${styles.benefitIconBox} ${styles.iconDoc}`}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        <polyline points="10 9 9 9 8 9" />
+                      </svg>
+                    </div>
+                    <div className={styles.benefitText}>
+                      <h4 className={styles.benefitTitle}>Get admission offers.</h4>
+                      <p className={styles.benefitSubtitle}>Receive offers from colleges that want you.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Tilted Peeking Cards Section */}
-        <section className={styles.peekingCardsContainer}>
-          <Link href="/discover" className={styles.peekingCard}>
-            <div className={styles.cardIconWrapper}>🔍</div>
-            <div className={styles.cardMeta}>
-              <h4 className={styles.cardTitle}>Discover Colleges</h4>
-              <p className={styles.cardText}>Filter by Placements & ROI</p>
-            </div>
-          </Link>
-          
-          <Link href="/predict" className={styles.peekingCard}>
-            <div className={styles.cardIconWrapper}>🏆</div>
-            <div className={styles.cardMeta}>
-              <h4 className={styles.cardTitle}>Predictor Quiz</h4>
-              <p className={styles.cardText}>Admissions Competitiveness</p>
-            </div>
-          </Link>
-          
-          <Link href="/rankings" className={styles.peekingCard}>
-            <div className={styles.cardIconWrapper}>📊</div>
-            <div className={styles.cardMeta}>
-              <h4 className={styles.cardTitle}>Colleges Rankings</h4>
-              <p className={styles.cardText}>ROI Flagship Analysis</p>
-            </div>
-          </Link>
-          
-          <Link href="/compare" className={styles.peekingCard}>
-            <div className={styles.cardIconWrapper}>📄</div>
-            <div className={styles.cardMeta}>
-              <h4 className={styles.cardTitle}>Compare Colleges</h4>
-              <p className={styles.cardText}>Compare Side-by-Side</p>
-            </div>
-          </Link>
-        </section>
+        {/* ─── 4 PREMIUM FEATURE CARDS (BELOW HERO) ─── */}
+        <section className={styles.featureCardsSection}>
+          <div className={styles.featureCardsGrid}>
+            {/* Card 1: Discover Colleges */}
+            <Link href="/discover" className={styles.featureCard}>
+              <div className={`${styles.featureCardIcon} ${styles.iconColorSearch}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </div>
+              <div className={styles.featureCardMeta}>
+                <h3 className={styles.featureCardTitle}>Discover Colleges</h3>
+                <p className={styles.featureCardDesc}>Filter by Placements & ROI</p>
+              </div>
+              <div className={styles.cardArrowCircle}>
+                <span>→</span>
+              </div>
+            </Link>
 
-        {/* Features Grid */}
-        <section className={styles.featuresSection}>
-          <h2 className={styles.sectionTitle}>Why fit matters more than rank</h2>
-          <div className={styles.featuresGrid}>
-            <div className={styles.featureCard}>
-              <div className={styles.featureIcon}>💼</div>
-              <h3 className={styles.featureTitle}>Placement Quality</h3>
-              <p className={styles.featureText}>
-                Look beyond highest packages. Filter by branch-specific averages, median packages, and actual placement rates.
-              </p>
-            </div>
-            
-            <div className={styles.featureCard}>
-              <div className={styles.featureIcon}>🎓</div>
-              <h3 className={styles.featureTitle}>Branch Specific Strength</h3>
-              <p className={styles.featureText}>
-                A college might be famous overall, but weak in CSE or ECE. We weigh departments and branches individually.
-              </p>
-            </div>
+            {/* Card 2: Predictor Quiz */}
+            <Link href="/predict" className={styles.featureCard}>
+              <div className={`${styles.featureCardIcon} ${styles.iconColorTrophy}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                  <path d="M4 22h16" />
+                  <path d="M10 14.66V17c0 .55-.45 1-1 1H7v2h10v-2h-2c-.55 0-1-.45-1-1v-2.34" />
+                  <path d="M18 4H6v7a6 6 0 0 0 12 0V4Z" />
+                </svg>
+              </div>
+              <div className={styles.featureCardMeta}>
+                <h3 className={styles.featureCardTitle}>Predictor Quiz</h3>
+                <p className={styles.featureCardDesc}>Admissions Competitiveness</p>
+              </div>
+              <div className={styles.cardArrowCircle}>
+                <span>→</span>
+              </div>
+            </Link>
 
-            <div className={styles.featureCard}>
-              <div className={styles.featureIcon}>🎪</div>
-              <h3 className={styles.featureTitle}>Campus Life & Crowd</h3>
-              <p className={styles.featureText}>
-                Explore real college life indicators. Rate campus size, activities, student crowd demographics, and hostel infrastructure.
-              </p>
-            </div>
+            {/* Card 3: Colleges Rankings */}
+            <Link href="/rankings" className={styles.featureCard}>
+              <div className={`${styles.featureCardIcon} ${styles.iconColorChart}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+              </div>
+              <div className={styles.featureCardMeta}>
+                <h3 className={styles.featureCardTitle}>Colleges Rankings</h3>
+                <p className={styles.featureCardDesc}>ROI Flagship Analysis</p>
+              </div>
+              <div className={styles.cardArrowCircle}>
+                <span>→</span>
+              </div>
+            </Link>
 
-            <div className={styles.featureCard}>
-              <div className={styles.featureIcon}>💰</div>
-              <h3 className={styles.featureTitle}>Soft Budget Cutoffs</h3>
-              <p className={styles.featureText}>
-                Exceeding budget by 10% for a much higher return? Our algorithm applies a smart penalty instead of filtering out.
-              </p>
-            </div>
-
-            <div className={styles.featureCard}>
-              <div className={styles.featureIcon}>📝</div>
-              <h3 className={styles.featureTitle}>Competitive Fit</h3>
-              <p className={styles.featureText}>
-                We calculate admission probability (Safe, Target, Reach) based on historical cutoffs of JEE percentiles and 12th marks.
-              </p>
-            </div>
-
-            <div className={styles.featureCard}>
-              <div className={styles.featureIcon}>✨</div>
-              <h3 className={styles.featureTitle}>Weight-Priority Sort</h3>
-              <p className={styles.featureText}>
-                Rank what you care about (e.g. ROI first, branch second). Our engine shifts results based on your priority weights.
-              </p>
-            </div>
+            {/* Card 4: Compare Colleges */}
+            <Link href="/compare" className={styles.featureCard}>
+              <div className={`${styles.featureCardIcon} ${styles.iconColorCompare}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10 9 9 9 8 9" />
+                </svg>
+              </div>
+              <div className={styles.featureCardMeta}>
+                <h3 className={styles.featureCardTitle}>Compare Colleges</h3>
+                <p className={styles.featureCardDesc}>Compare Side-by-Side</p>
+              </div>
+              <div className={styles.cardArrowCircle}>
+                <span>→</span>
+              </div>
+            </Link>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
+      {/* Clean minimal footer */}
       <footer className={styles.footer}>
         <div className={styles.footerContainer}>
-          <p className={styles.copyText}>© 2026 kollegio. All rights reserved.</p>
-          <p className={styles.footerNote}>Made for solo B.Tech founders validating private admissions</p>
+          <p className={styles.copyText}>© 2026 Kollegio. All rights reserved.</p>
+          <div className={styles.footerLinks}>
+            <Link href="/discover">Discover</Link>
+            <Link href="/predict">Predictor</Link>
+            <Link href="/rankings">Rankings</Link>
+            <Link href="/for-colleges">For Colleges</Link>
+          </div>
         </div>
       </footer>
     </div>
