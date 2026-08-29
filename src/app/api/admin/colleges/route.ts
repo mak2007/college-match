@@ -44,11 +44,27 @@ export async function POST(request: Request) {
 
     // Handle Bulk Array of Colleges from Client-Side Parser
     if (Array.isArray(body.colleges) && body.colleges.length > 0) {
+      // If replace flag is set, wipe old records so there are 0 duplicates
+      if (body.replace) {
+        try {
+          await prisma.collegeBranch.deleteMany({});
+          await prisma.admissionPathway.deleteMany({});
+          await prisma.scholarship.deleteMany({});
+          await prisma.college.deleteMany({});
+        } catch (delErr) {
+          console.warn("Wipe old colleges warning:", delErr);
+        }
+      }
+
       let saved = 0;
+      const seenSlugs = new Set<string>();
+
       for (const item of body.colleges) {
         if (!item.name) continue;
         const name = String(item.name).trim();
         const slug = slugify(name);
+        if (seenSlugs.has(slug)) continue;
+        seenSlugs.add(slug);
 
         try {
           const college = await prisma.college.upsert({

@@ -261,23 +261,33 @@ export default function UnifiedCollegeManager() {
         }
       }
 
-      if (parsedList.length === 0) {
+      // 1. Deduplicate by unique name/slug to prevent any internal duplicate rows
+      const uniqueCollegesMap = new Map<string, College>();
+      parsedList.forEach((c) => {
+        if (!uniqueCollegesMap.has(c.slug)) {
+          uniqueCollegesMap.set(c.slug, c);
+        }
+      });
+      const freshCollegesList = Array.from(uniqueCollegesMap.values());
+
+      if (freshCollegesList.length === 0) {
         setUploadStatus("Error: Could not extract college rows. Please check spreadsheet columns.");
         return;
       }
 
-      setColleges(parsedList);
-      localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(parsedList));
-      const genC = parsedList.filter((c) => !c.isNewGen).length;
-      const newC = parsedList.filter((c) => c.isNewGen).length;
-      setUploadStatus(`✓ Successfully imported ${parsedList.length} colleges (${genC} Generic + ${newC} New-Gen AI) exactly as categorized in your Excel!`);
+      // 2. Completely replace local state & cache
+      setColleges(freshCollegesList);
+      localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(freshCollegesList));
+      const genC = freshCollegesList.filter((c) => !c.isNewGen).length;
+      const newC = freshCollegesList.filter((c) => c.isNewGen).length;
+      setUploadStatus(`✓ Successfully replaced database with ${freshCollegesList.length} colleges (${genC} Generic + ${newC} New-Gen AI)! All previous entries overwritten with 0 duplicates.`);
 
-      // Sync backend
+      // 3. Sync to backend with replace flag to wipe previous DB records
       try {
         await fetch("/api/admin/colleges", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ colleges: parsedList }),
+          body: JSON.stringify({ replace: true, colleges: freshCollegesList }),
         });
       } catch {}
     } catch (err: any) {
