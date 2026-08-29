@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth-context";
+import { usePathname } from "next/navigation";
 import styles from "./layout.module.css";
 
 export default function SuperadminLayout({
@@ -11,143 +9,48 @@ export default function SuperadminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading, logout, refreshSession, setLastVisitedPath } = useAuth();
   const pathname = usePathname();
-  const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Track last visited path for refresh preservation
-  useEffect(() => {
-    if (mounted && !loading && pathname) {
-      setLastVisitedPath(pathname);
-    }
-  }, [pathname, mounted, loading, setLastVisitedPath]);
-
-  // Refresh session on mount if user exists
-  useEffect(() => {
-    if (mounted && !loading && user) {
-      // Auto-refresh token if needed
-      refreshSession();
-    }
-  }, [mounted, loading, user, refreshSession]);
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (mounted && !loading && (!user || user.role !== "SUPERADMIN")) {
-      const currentPath = window.location.pathname + window.location.search;
-      router.replace(`/admin/login?redirect=${encodeURIComponent(currentPath)}`);
-    }
-  }, [mounted, loading, user, router]);
-
-  const handleLogout = async () => {
-    await logout();
-    router.push("/admin/login");
-  };
-
-  if (!mounted || loading) {
-    return (
-      <div className={styles.layoutContainer}>
-        <aside className={styles.sidebar}>
-          <div className={styles.sidebarBrand}>
-            <div className={styles.logo}>CollegeMatch</div>
-            <span className={styles.adminTag}>Superadmin</span>
-          </div>
-          <nav className={styles.nav}>
-            <div className={styles.navLink} style={{ opacity: 0.5 }}>Loading...</div>
-          </nav>
-        </aside>
-        <main className={styles.mainContent}>
-          <div className={styles.loadingOverlay}>Loading dashboard...</div>
-        </main>
-      </div>
-    );
-  }
-
-  if (!user || user.role !== "SUPERADMIN") {
-    return (
-      <div className={styles.layoutContainer}>
-        <main className={styles.mainContent}>
-          <div className="glass-card text-center" style={{ margin: "5rem auto", maxWidth: "500px" }}>
-            <h2>Access Denied</h2>
-            <p style={{ color: "var(--text-secondary)", margin: "1rem 0" }}>
-              Super Admin access required. Redirecting to login...
-            </p>
-            <Link href="/admin/login" className="btn btn-primary">Go to Login</Link>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  const email = user.email;
 
   return (
     <div className={styles.layoutContainer}>
-      {/* Sidebar */}
+      {/* Clean Minimal Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.sidebarBrand}>
           <Link href="/admin/super" className={styles.logo}>
             CollegeMatch
           </Link>
-          <span className={styles.adminTag}>Superadmin</span>
+          <span className={styles.adminTag}>Admin Portal</span>
         </div>
 
         <nav className={styles.nav}>
           <Link
             href="/admin/super"
-            className={`${styles.navLink} ${pathname === "/admin/super" ? styles.navLinkActive : ""}`}
+            className={`${styles.navLink} ${pathname === "/admin/super" || pathname === "/admin/super/colleges" ? styles.navLinkActive : ""}`}
           >
-            <span className={styles.navIcon}>📊</span> Dashboard Overview
-          </Link>
-          <Link
-            href="/admin/super/colleges"
-            className={`${styles.navLink} ${pathname === "/admin/super/colleges" ? styles.navLinkActive : ""}`}
-          >
-            <span className={styles.navIcon}>🏫</span> Colleges Registry
-          </Link>
-          <Link
-            href="/admin/super/import"
-            className={`${styles.navLink} ${pathname === "/admin/super/import" ? styles.navLinkActive : ""}`}
-          >
-            <span className={styles.navIcon}>📥</span> Bulk Import
+            <span className={styles.navIcon}>🏫</span> Colleges & Excel Ingest
           </Link>
           <Link
             href="/admin/super/config"
             className={`${styles.navLink} ${pathname === "/admin/super/config" ? styles.navLinkActive : ""}`}
           >
-            <span className={styles.navIcon}>⚙️</span> Scoring Config
+            <span className={styles.navIcon}>⚙️</span> Scoring Rules
           </Link>
           <Link
-            href="/admin/super/leads"
-            className={`${styles.navLink} ${pathname === "/admin/super/leads" ? styles.navLinkActive : ""}`}
+            href="/discover"
+            target="_blank"
+            className={styles.navLink}
           >
-            <span className={styles.navIcon}>📋</span> Leads Pipeline
-          </Link>
-          <Link
-            href="/admin/super/commissions"
-            className={`${styles.navLink} ${pathname === "/admin/super/commissions" ? styles.navLinkActive : ""}`}
-          >
-            <span className={styles.navIcon}>💰</span> Commission Billing
-          </Link>
-          <Link
-            href="/admin/super/scholarships"
-            className={`${styles.navLink} ${pathname === "/admin/super/scholarships" ? styles.navLinkActive : ""}`}
-          >
-            <span className={styles.navIcon}>🎓</span> Scholarships
+            <span className={styles.navIcon}>🔍</span> View Live App ↗
           </Link>
         </nav>
 
         <div className={styles.sidebarFooter}>
-          <div className={styles.adminEmail} title={email}>
-            {email}
+          <div className={styles.adminEmail}>
+            admin@collegematch.in
           </div>
-          <button onClick={handleLogout} className={styles.logoutBtn}>
-            Logout
-          </button>
+          <Link href="/" className={styles.logoutBtn} style={{ textAlign: "center", textDecoration: "none", display: "block" }}>
+            Exit to Home
+          </Link>
         </div>
       </aside>
 
