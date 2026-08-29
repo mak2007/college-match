@@ -6,11 +6,31 @@ import path from "path";
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
 function createPrismaClient(): PrismaClient {
-  let dbPath = path.join(process.cwd(), "dev.db");
-  if (!fs.existsSync(dbPath)) {
-    dbPath = path.resolve("./dev.db");
+  let sourceDbPath = path.join(process.cwd(), "dev.db");
+  if (!fs.existsSync(sourceDbPath)) {
+    sourceDbPath = path.resolve("./dev.db");
   }
-  const adapter = new PrismaBetterSqlite3({ url: `file:${dbPath}` });
+
+  // On Vercel Serverless / AWS Lambda, /var/task is strictly read-only (EROFS).
+  // Copy dev.db to /tmp/dev.db where SQLite has full read/write & WAL journal access.
+  let targetDbPath = sourceDbPath;
+  if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NODE_ENV === "production") {
+    const tmpDbPath = path.join(process.platform === "win32" ? process.cwd() : "/tmp", "dev.db");
+    if (tmpDbPath !== sourceDbPath) {
+      try {
+        if (fs.existsSync(sourceDbPath) && !fs.existsSync(tmpDbPath)) {
+          fs.copyFileSync(sourceDbPath, tmpDbPath);
+        }
+        if (fs.existsSync(tmpDbPath)) {
+          targetDbPath = tmpDbPath;
+        }
+      } catch (e) {
+        console.warn("Could not copy dev.db to /tmp:", e);
+      }
+    }
+  }
+
+  const adapter = new PrismaBetterSqlite3({ url: `file:${targetDbPath}` });
   return new PrismaClient({ adapter });
 }
 
