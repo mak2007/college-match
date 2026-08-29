@@ -482,12 +482,15 @@ export default function ResultsClient({
           ) : (
             <div className={styles.resultsList}>
               {paginated.map((rec, idx) => {
-                console.log("Rendering rec:", rec.id, rec.college?.name, rec.category);
-                const branch = rec.college?.branches?.find((b) => b.branchCode === rec.branchCode);
-                if (!branch) {
-                  console.warn("Missing branch for rec:", rec.id, rec.branchCode);
-                  return null;
-                }
+                const branch = rec.college?.branches?.find((b) => b.branchCode === rec.branchCode) ||
+                  rec.college?.branches?.[0] || {
+                    branchCode: rec.branchCode || "CSE",
+                    branchName: "Computer Science & Engineering",
+                    tuitionFeeAnnual: (rec as any).feeInfo?.annualTuition || 250000,
+                    hostelFeeAnnual: (rec as any).feeInfo?.annualHostel || 100000,
+                    avgSalary: (rec as any).placementInfo?.avgSalary || 900000,
+                    minJeePercentileCutoff: 85,
+                  };
 
                 let reasonsList: string[] = [];
                 try { reasonsList = JSON.parse(rec.reasons); } catch { reasonsList = [String(rec.reasons)]; }

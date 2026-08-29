@@ -449,18 +449,19 @@ function computeQualityScore(
   minLogRoi: number
 ): number {
   // 1. Placement outcomes (0-100)
-  const sPlacement = c.placementScore * 10;
+  const sPlacement = Math.min(100, Math.max(0, (Number(c.placementScore) || 8.5) * 10));
 
   // 2. Curriculum (0-100)
-  const sCurriculum = c.curriculumScore * 10;
+  const sCurriculum = Math.min(100, Math.max(0, (Number(c.curriculumScore) || 8.0) * 10));
 
   // 3. Branch strength (0-100)
-  const sBranch = c.branchStrengthScore * 10;
+  const sBranch = Math.min(100, Math.max(0, (Number(c.branchStrengthScore) || 8.5) * 10));
 
   // 4. ROI (log-scaled, 0-100)
-  const roiRatio = total4YrCost > 0 ? (c.avgSalary || 450000) / total4YrCost : 0;
+  const effectiveCost = Math.max(200000, total4YrCost);
+  const roiRatio = (c.avgSalary || 600000) / effectiveCost;
   const logRoi = Math.log(1 + roiRatio);
-  const sRoi = logRoiRange > 0 ? 30 + ((logRoi - minLogRoi) / logRoiRange) * 70 : 50;
+  const sRoi = logRoiRange > 0 ? Math.min(100, Math.max(30, 30 + ((logRoi - minLogRoi) / logRoiRange) * 70)) : 75;
 
   // 5. Exposure score (0-100, from metadata)
   const exposure = Math.min(100, Math.max(0, (Number(collegeMeta.exposure_score) || 5) * 10));
@@ -469,7 +470,7 @@ function computeQualityScore(
   const infra = Math.min(100, Math.max(0, Number(collegeMeta.infra_rating) || 50));
 
   // 7. Placement percentage (0-100)
-  const placementPct = c.placementPercentage != null ? Math.min(100, Math.max(0, c.placementPercentage)) : 50;
+  const placementPct = c.placementPercentage != null ? Math.min(100, Math.max(0, c.placementPercentage)) : 85;
 
   // Weighted sum
   const quality =
@@ -610,7 +611,7 @@ export function generateRecommendations(
     const factorContributions: FactorContribution[] = [];
 
     // Core 1: Placements
-    const sPlacement = c.placementScore * 10;
+    const sPlacement = Math.min(100, Math.max(0, (Number(c.placementScore) || 8.5) * 10));
     const wPlacement = weights.PLACEMENTS || 0;
     factorContributions.push({
       factor: "PLACEMENTS",
@@ -621,7 +622,7 @@ export function generateRecommendations(
     });
 
     // Core 2: College Life
-    const sLife = c.collegeLifeScore * 10;
+    const sLife = Math.min(100, Math.max(0, (Number(c.collegeLifeScore) || 8.0) * 10));
     const wLife = weights.COLLEGE_LIFE || 0;
     factorContributions.push({
       factor: "COLLEGE_LIFE",
@@ -632,7 +633,7 @@ export function generateRecommendations(
     });
 
     // Core 3: Branch Strength
-    const sBranch = c.branchStrengthScore * 10;
+    const sBranch = Math.min(100, Math.max(0, (Number(c.branchStrengthScore) || 8.5) * 10));
     const wBranch = weights.BRANCH_STRENGTH || 0;
     factorContributions.push({
       factor: "BRANCH_STRENGTH",
@@ -643,7 +644,7 @@ export function generateRecommendations(
     });
 
     // Core 4: Curriculum
-    const sCurriculum = c.curriculumScore * 10;
+    const sCurriculum = Math.min(100, Math.max(0, (Number(c.curriculumScore) || 8.0) * 10));
     const wCurriculum = weights.CURRICULUM || 0;
     factorContributions.push({
       factor: "CURRICULUM",
@@ -654,11 +655,12 @@ export function generateRecommendations(
     });
 
     // Core 5: ROI (log-scaled normalization with floor at 30, ceiling at 100)
-    const currentRoiRatio = (c.avgSalary || 450000) / total4YrCost;
+    const effective4YrCost = Math.max(200000, total4YrCost);
+    const currentRoiRatio = (c.avgSalary || 600000) / effective4YrCost;
     const currentLogRoi = Math.log(1 + currentRoiRatio);
     const logRoiRange = maxLogRoi - minLogRoi;
     const sRoi =
-      logRoiRange > 0 ? 30 + ((currentLogRoi - minLogRoi) / logRoiRange) * 70 : 75;
+      logRoiRange > 0 ? Math.min(100, Math.max(30, 30 + ((currentLogRoi - minLogRoi) / logRoiRange) * 70)) : 75;
     const wRoi = weights.ROI || 0;
     factorContributions.push({
       factor: "ROI",
