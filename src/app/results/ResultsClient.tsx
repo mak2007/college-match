@@ -568,7 +568,7 @@ export default function ResultsClient({
                 defaultValue=""
               >
                 <option value="" disabled>+ Add State Filter</option>
-                {POPULAR_STATES.map((state) => (
+                {INDIAN_STATES.map((state) => (
                   <option key={state} value={state}>{state}</option>
                 ))}
               </select>
