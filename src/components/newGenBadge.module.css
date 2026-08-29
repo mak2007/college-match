@@ -1,0 +1,122 @@
+.badgeWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  user-select: none;
+  margin-left: 0.35rem;
+}
+
+/* Outer halo / ambient glow ring */
+.outerGlowRing {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.35) 0%, rgba(217, 70, 239, 0.45) 100%);
+  box-shadow: 0 0 16px rgba(217, 70, 239, 0.35), 0 0 6px rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Inner vibrant gradient pill */
+.innerPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  background: linear-gradient(90deg, #3b82f6 0%, #6366f1 35%, #a855f7 70%, #d946ef 100%);
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 0.28rem 0.85rem;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 2px 8px rgba(168, 85, 247, 0.3);
+}
+
+.badgeText {
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+}
+
+/* Sparkle Icons */
+.sparkleIconGroup {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.mainSparkleSvg {
+  width: 14px;
+  height: 14px;
+  fill: #ffffff;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.8));
+}
+
+.miniSparkleSvg {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 7px;
+  height: 7px;
+  fill: #ffffff;
+}
+
+/* Ambient Floating Sparkle Stars outside */
+.sparkle {
+  position: absolute;
+  pointer-events: none;
+  font-size: 9px;
+  line-height: 1;
+  color: #c084fc;
+  text-shadow: 0 0 6px rgba(192, 132, 252, 0.8);
+  opacity: 0.85;
+}
+
+.sparkleTopLeft {
+  top: -6px;
+  left: -6px;
+  font-size: 8px;
+}
+
+.sparkleBottomLeft {
+  bottom: -7px;
+  left: -8px;
+  font-size: 13px;
+  color: #a855f7;
+}
+
+.sparkleBottomRight {
+  bottom: -5px;
+  right: -6px;
+  font-size: 9px;
+}
+
+/* Sizing options */
+.sm .innerPill {
+  padding: 0.18rem 0.6rem;
+}
+.sm .badgeText {
+  font-size: 0.7rem;
+}
+.sm .mainSparkleSvg {
+  width: 11px;
+  height: 11px;
+}
+
+.lg .innerPill {
+  padding: 0.38rem 1.1rem;
+}
+.lg .badgeText {
+  font-size: 0.88rem;
+}
+.lg .mainSparkleSvg {
+  width: 16px;
+  height: 16px;
+}

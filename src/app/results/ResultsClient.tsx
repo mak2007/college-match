@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import styles from "./results.module.css";
 import Navbar from "@/components/Navbar";
+import NewGenBadge from "@/components/NewGenBadge";
 import { BRANCH_OPTIONS, normalizeBranchCode } from "@/lib/branches";
 import baseCollegesData from "@/lib/base-colleges.json";
 
@@ -318,11 +319,7 @@ export default function ResultsClient({
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <h2 className={styles.collegeName}>{rec.college.name}</h2>
-                {rec.college.isNewGen && (
-                  <span style={{ background: "#4f46e5", color: "#fcfbfe", padding: "0.15rem 0.5rem", borderRadius: "12px", fontSize: "0.7rem", fontWeight: 700 }}>
-                    🚀 New-Gen AI
-                  </span>
-                )}
+                {rec.college.isNewGen && <NewGenBadge size="sm" />}
               </div>
               <p className={styles.collegeLocation}>{rec.college.city}, {rec.college.state}</p>
             </div>
@@ -779,11 +776,7 @@ export default function ResultsClient({
                               <div>
                                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                                   <h2 className={styles.collegeName}>{col.name}</h2>
-                                  {col.isNewGen && (
-                                    <span style={{ background: "#4f46e5", color: "#fcfbfe", padding: "0.15rem 0.5rem", borderRadius: "12px", fontSize: "0.7rem", fontWeight: 700 }}>
-                                      🚀 New-Gen AI
-                                    </span>
-                                  )}
+                                  {col.isNewGen && <NewGenBadge size="sm" />}
                                 </div>
                                 <p className={styles.collegeLocation}>{col.city}, {col.state}</p>
                               </div>
