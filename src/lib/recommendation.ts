@@ -256,6 +256,65 @@ const DEFAULT_EXTRA_DIMENSIONS: Record<CareerGoalType, CareerGoalExtraDimension[
   NOT_SURE: [],
 };
 
+/**
+ * Pure mathematical scoring model based on 5 ranked categories and 1 career goal
+ */
+export interface CollegeScoreInput {
+  C_Placement: number;
+  C_Academics: number;
+  C_CampusLife: number;
+  C_Startup: number;
+  C_Extra: number;
+}
+
+export type PriorityCategory = "C_Placement" | "C_Academics" | "C_CampusLife" | "C_Startup" | "C_Extra";
+export type CareerGoalChoice = "Get Placed" | "Start a Startup" | "Higher Studies" | "Not Sure Yet" | "PLACEMENT" | "STARTUP" | "HIGHER_STUDIES" | "NOT_SURE";
+
+export function calculateCollegeScore(
+  college: CollegeScoreInput,
+  userRankedCategories: PriorityCategory[],
+  careerGoal: CareerGoalChoice
+): { Base_Score: number; Goal_Bonus: number; Final_Score: number } {
+  // Rank weights (0.333, 0.266, 0.200, 0.133, 0.066)
+  const weights = [0.333, 0.266, 0.200, 0.133, 0.066];
+
+  let Base_Score = 0;
+  userRankedCategories.slice(0, 5).forEach((cat, index) => {
+    const score = college[cat] || 0;
+    const w = weights[index] || 0;
+    Base_Score += score * w;
+  });
+
+  // Target Category Edge Bonus
+  let targetCategoryScore = (college.C_Placement + college.C_Academics + college.C_CampusLife + college.C_Startup + college.C_Extra) / 5;
+
+  const normalizedGoal = careerGoal.toUpperCase();
+  if (normalizedGoal === "GET PLACED" || normalizedGoal === "PLACEMENT") {
+    targetCategoryScore = college.C_Placement;
+  } else if (normalizedGoal === "START A STARTUP" || normalizedGoal === "STARTUP") {
+    targetCategoryScore = college.C_Startup;
+  } else if (normalizedGoal === "HIGHER STUDIES" || normalizedGoal === "HIGHER_STUDIES") {
+    targetCategoryScore = college.C_Academics;
+  }
+
+  let Goal_Bonus = 0;
+  if (targetCategoryScore >= 90) {
+    Goal_Bonus = 5;
+  } else if (targetCategoryScore >= 80) {
+    Goal_Bonus = 2.5;
+  } else {
+    Goal_Bonus = 0;
+  }
+
+  const Final_Score = Math.min(100, Math.round((Base_Score + Goal_Bonus) * 10) / 10);
+
+  return {
+    Base_Score: Math.round(Base_Score * 10) / 10,
+    Goal_Bonus,
+    Final_Score,
+  };
+}
+
 // 1. Normalize weights to sum to 1.0
 function normalizeWeights(weights: Record<string, number>): Record<string, number> {
   const total = Object.values(weights).reduce((a, b) => a + b, 0);
@@ -607,166 +666,99 @@ export function generateRecommendations(
         : null;
     const bestGap = jeeGap;
 
-    // --- STAGE 4: FACTOR SUB-SCORES (0-100) & CONTRIBUTIONS ---
+    // ==========================================
+    // 1. THE 5 VARIABLES (College Data: 0 - 100)
+    // ==========================================
+    const C_Placement = Math.min(100, Math.max(0, (Number(c.placementScore) || 8.5) * 10));
+    const C_Academics = Math.min(100, Math.max(0, (Number(c.curriculumScore) || 8.0) * 10));
+    const C_CampusLife = Math.min(100, Math.max(0, (Number(c.collegeLifeScore) || 8.0) * 10));
+
+    let startupVal = Number(collegeMeta.startup_ecosystem) || 8.0;
+    if (startupVal <= 10) startupVal *= 10;
+    const C_Startup = Math.min(100, Math.max(0, startupVal));
+
+    let extraVal = Number(collegeMeta.sports_extracurricular || collegeMeta.infra_rating) || 8.0;
+    if (extraVal <= 10) extraVal *= 10;
+    const C_Extra = Math.min(100, Math.max(0, extraVal));
+
+    const categoryMap: Record<string, { label: string; score: number }> = {
+      PLACEMENTS: { label: "Placements & Salaries", score: C_Placement },
+      CURRICULUM: { label: "Modern Course Standards (Academics)", score: C_Academics },
+      CAMPUS_LIFE: { label: "Campus Life & Crowd", score: C_CampusLife },
+      RESEARCH: { label: "Startup Ecosystem", score: C_Startup },
+      EXTRACURRICULARS: { label: "Extracurricular Activities and Sports", score: C_Extra },
+    };
+
+    // ==========================================
+    // 2. THE BASE MATH: RANK-SUM METHOD
+    // ==========================================
+    const RANK_WEIGHTS = [0.333, 0.266, 0.200, 0.133, 0.066];
+    const sortedPriorities = [...(student.priorities || [])].sort((a, b) => a.rankOrder - b.rankOrder);
+    const defaultPriorityKeys = ["PLACEMENTS", "CURRICULUM", "CAMPUS_LIFE", "RESEARCH", "EXTRACURRICULARS"];
+
+    let baseScoreVal = 0;
     const factorContributions: FactorContribution[] = [];
 
-    // Core 1: Placements
-    const sPlacement = Math.min(100, Math.max(0, (Number(c.placementScore) || 8.5) * 10));
-    const wPlacement = weights.PLACEMENTS || 0;
-    factorContributions.push({
-      factor: "PLACEMENTS",
-      label: "Placement outcomes",
-      score: Math.round(sPlacement),
-      weight: Math.round(wPlacement * 100) / 100,
-      contribution: Math.round(sPlacement * wPlacement * 10) / 10,
-    });
-
-    // Core 2: College Life
-    const sLife = Math.min(100, Math.max(0, (Number(c.collegeLifeScore) || 8.0) * 10));
-    const wLife = weights.COLLEGE_LIFE || 0;
-    factorContributions.push({
-      factor: "COLLEGE_LIFE",
-      label: "Campus life & hostels",
-      score: Math.round(sLife),
-      weight: Math.round(wLife * 100) / 100,
-      contribution: Math.round(sLife * wLife * 10) / 10,
-    });
-
-    // Core 3: Branch Strength
-    const sBranch = Math.min(100, Math.max(0, (Number(c.branchStrengthScore) || 8.5) * 10));
-    const wBranch = weights.BRANCH_STRENGTH || 0;
-    factorContributions.push({
-      factor: "BRANCH_STRENGTH",
-      label: `${c.branchCode} department strength`,
-      score: Math.round(sBranch),
-      weight: Math.round(wBranch * 100) / 100,
-      contribution: Math.round(sBranch * wBranch * 10) / 10,
-    });
-
-    // Core 4: Curriculum
-    const sCurriculum = Math.min(100, Math.max(0, (Number(c.curriculumScore) || 8.0) * 10));
-    const wCurriculum = weights.CURRICULUM || 0;
-    factorContributions.push({
-      factor: "CURRICULUM",
-      label: "Curriculum & Faculty standards",
-      score: Math.round(sCurriculum),
-      weight: Math.round(wCurriculum * 100) / 100,
-      contribution: Math.round(sCurriculum * wCurriculum * 10) / 10,
-    });
-
-    // Core 5: ROI (log-scaled normalization with floor at 30, ceiling at 100)
-    const effective4YrCost = Math.max(200000, total4YrCost);
-    const currentRoiRatio = (c.avgSalary || 600000) / effective4YrCost;
-    const currentLogRoi = Math.log(1 + currentRoiRatio);
-    const logRoiRange = maxLogRoi - minLogRoi;
-    const sRoi =
-      logRoiRange > 0 ? Math.min(100, Math.max(30, 30 + ((currentLogRoi - minLogRoi) / logRoiRange) * 70)) : 75;
-    const wRoi = weights.ROI || 0;
-    factorContributions.push({
-      factor: "ROI",
-      label: "Return on Investment (ROI)",
-      score: Math.round(sRoi),
-      weight: Math.round(wRoi * 100) / 100,
-      contribution: Math.round(sRoi * wRoi * 10) / 10,
-    });
-
-    // Custom Attributes Calculation
-    config.customScoringAttributes.forEach((attr) => {
-      const rawVal =
-        collegeMeta[attr.key] !== undefined ? collegeMeta[attr.key] : attr.defaultValue;
-      const score = Math.min(100, Math.max(0, Number(rawVal)));
-      const weight = weights[attr.key.toUpperCase()] || 0;
+    for (let pIdx = 0; pIdx < 5; pIdx++) {
+      const priorityObj = sortedPriorities[pIdx];
+      const key = priorityObj ? priorityObj.criteria.toUpperCase() : defaultPriorityKeys[pIdx];
+      const cat = categoryMap[key] || categoryMap[defaultPriorityKeys[pIdx]];
+      const weight = RANK_WEIGHTS[pIdx];
+      const contribution = cat.score * weight;
+      baseScoreVal += contribution;
 
       factorContributions.push({
-        factor: attr.key.toUpperCase(),
-        label: attr.label,
-        score: Math.round(score),
-        weight: Math.round(weight * 100) / 100,
-        contribution: Math.round(score * weight * 10) / 10,
+        factor: key,
+        label: cat.label,
+        score: Math.round(cat.score),
+        weight: weight,
+        contribution: Math.round(contribution * 10) / 10,
       });
-    });
-
-    // Career Goal Extra Dimensions Calculation
-    extras.forEach((extra) => {
-      let rawScore = 0;
-
-      if (extra.computation === "placement_percentage" && c.placementPercentage != null) {
-        rawScore = Math.min(100, Math.max(0, c.placementPercentage));
-      } else if (extra.computation === "highest_salary" && c.highestSalary != null) {
-        rawScore = Math.min(100, Math.max(0, (c.highestSalary / 5000000) * 100));
-      } else if (extra.metadataKey && extra.source === "college_metadata") {
-        let valNum = Number(collegeMeta[extra.metadataKey]) || 0;
-        if (valNum > 0 && valNum <= 10) {
-          valNum = valNum * 10;
-        }
-        rawScore = Math.min(100, Math.max(0, valNum));
-      } else if (extra.metadataKey && extra.source === "branch_metadata") {
-        let valNum = Number(branchMeta[extra.metadataKey]) || 0;
-        if (valNum > 0 && valNum <= 10) {
-          valNum = valNum * 10;
-        }
-        rawScore = Math.min(100, Math.max(0, valNum));
-      }
-
-      const weight = weights[extra.key] || 0;
-      factorContributions.push({
-        factor: extra.key,
-        label: extra.label,
-        score: Math.round(rawScore),
-        weight: Math.round(weight * 100) / 100,
-        contribution: Math.round(rawScore * weight * 10) / 10,
-      });
-    });
-
-    // Base Score = Sum of all contributions
-    const baseScoreVal = factorContributions.reduce((sum, item) => sum + item.contribution, 0);
-
-    // --- STAGE 5: BONUSES ---
-    const appliedBonuses: AppliedModifier[] = [];
-    let bonusSum = 0;
-
-    // Career Goal Modifiers: Provide a +5.0 bonus if the college excels in the student's chosen career focus.
-    const goalUpper = student.careerGoal?.toUpperCase();
-    if (goalUpper === "PLACEMENT") {
-      if (c.placementScore > 8.0) {
-        bonusSum += 5.0;
-        appliedBonuses.push({
-          id: "career_placement_focus",
-          type: "BONUS",
-          value: 5.0,
-          reason: "Matches your career goal: Excellent placements (Placement Score > 8.0)"
-        });
-      }
-    } else if (goalUpper === "STARTUP") {
-      const startupEco = collegeMeta.startup_ecosystem ? Number(collegeMeta.startup_ecosystem) : 7.0;
-      const scoreScale = startupEco <= 10 ? startupEco : startupEco / 10;
-      if (scoreScale > 8.0) {
-        bonusSum += 5.0;
-        appliedBonuses.push({
-          id: "career_startup_focus",
-          type: "BONUS",
-          value: 5.0,
-          reason: "Matches your career goal: Strong entrepreneurship & startup ecosystem (Startup Score > 8.0)"
-        });
-      }
-    } else if (goalUpper === "HIGHER_STUDIES") {
-      const researchOut = collegeMeta.research_output ? Number(collegeMeta.research_output) : 7.0;
-      const scoreScale = researchOut <= 10 ? researchOut : researchOut / 10;
-      if (scoreScale > 8.0) {
-        bonusSum += 5.0;
-        appliedBonuses.push({
-          id: "career_research_focus",
-          type: "BONUS",
-          value: 5.0,
-          reason: "Matches your career goal: High academic research output & publications (Research Score > 8.0)"
-        });
-      }
     }
 
-    // Final score = base + bonuses - budget penalty ONLY (no academic penalty)
-    const totalPenalty = budgetPenaltyVal;
-    const rawFinalScore = baseScoreVal + bonusSum - totalPenalty;
-    const finalScoreVal = Math.max(0, Math.min(100, rawFinalScore));
+    baseScoreVal = Math.round(baseScoreVal * 10) / 10;
+
+    // ==========================================
+    // 3. THE BONUS MATH: TARGET CATEGORY EDGE
+    // ==========================================
+    let targetScore = (C_Placement + C_Academics + C_CampusLife + C_Startup + C_Extra) / 5;
+    let targetCategoryLabel = "Overall 5-Category Average";
+
+    const goal = (student.careerGoal || "NOT_SURE").toUpperCase();
+    if (goal === "PLACEMENT" || goal === "GET PLACED") {
+      targetScore = C_Placement;
+      targetCategoryLabel = "Placements (C_Placement)";
+    } else if (goal === "STARTUP" || goal === "START A STARTUP") {
+      targetScore = C_Startup;
+      targetCategoryLabel = "Startup Ecosystem (C_Startup)";
+    } else if (goal === "HIGHER_STUDIES" || goal === "HIGHER STUDIES") {
+      targetScore = C_Academics;
+      targetCategoryLabel = "Academics & Curriculum (C_Academics)";
+    }
+
+    let goalBonus = 0;
+    if (targetScore >= 90) {
+      goalBonus = 5;
+    } else if (targetScore >= 80) {
+      goalBonus = 2.5;
+    } else {
+      goalBonus = 0;
+    }
+
+    const appliedBonuses: AppliedModifier[] = [];
+    if (goalBonus > 0) {
+      appliedBonuses.push({
+        id: "target_category_edge",
+        type: "BONUS",
+        value: goalBonus,
+        reason: `Target Category Edge: ${targetCategoryLabel} score of ${Math.round(targetScore)}/100 grants +${goalBonus} bonus points`,
+      });
+    }
+
+    // ==========================================
+    // 4. FINAL CALCULATION
+    // ==========================================
+    const finalScoreVal = Math.min(100, Math.max(0, Math.round((baseScoreVal + goalBonus - budgetPenaltyVal) * 10) / 10));
 
     // Generate explainability text highlights
     const keyReasons: string[] = [];
