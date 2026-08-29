@@ -23,25 +23,24 @@ function AdminLoginContent() {
     setLoading(true);
 
     try {
-      // Use auth context login to set user state globally
-      await login(email, password);
-
-      // Determine target URL
-      const res = await fetch("/api/auth/me", { credentials: "include" });
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        credentials: "include",
+      });
       const data = await res.json();
-      const role = data?.user?.role;
-      const targetUrl = redirectUrl || (role === "SUPERADMIN" ? "/admin/super" : role === "COLLEGE_ADMIN" ? "/admin/college" : null);
-
-      if (!targetUrl) {
-        throw new Error("Unauthorized role");
+      if (!res.ok) {
+        throw new Error(data.error || "Invalid email or password");
       }
 
-      setLastVisitedPath(targetUrl);
+      const role = data.role;
+      const targetUrl = redirectUrl || (role === "SUPERADMIN" ? "/admin/super" : role === "COLLEGE_ADMIN" ? "/admin/college" : "/dashboard/student");
+
       if (typeof window !== "undefined") {
         sessionStorage.setItem("cm_last_path", targetUrl);
+        window.location.href = targetUrl;
       }
-
-      router.push(targetUrl);
     } catch (err: any) {
       console.error("Login client error:", err);
       setError(err.message || "Invalid email or password");
