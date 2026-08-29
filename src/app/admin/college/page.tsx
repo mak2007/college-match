@@ -1,37 +1,60 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
-import Link from "next/link";
 import { verifyToken } from "@/lib/auth";
 import LeadsTable from "./LeadsTable";
 import LogoutButton from "@/components/LogoutButton";
 import styles from "./college.module.css";
 
-export default async function CollegeAdminDashboard() {
-  // 1. Retrieve user details (middleware already guarantees authentication)
-  const cookieStore = await cookies();
-  const token = cookieStore.get("cm_auth_token")?.value;
+export const dynamic = "force-dynamic";
 
-  const decoded = token ? await verifyToken(token) : null;
-  const collegeId = decoded?.collegeId;
+export default async function CollegeAdminDashboard() {
+  // 1. Retrieve user details
+  let decoded: any = null;
+  let collegeId: string | null = null;
+
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("cm_auth_token")?.value;
+    decoded = token ? await verifyToken(token) : null;
+    collegeId = decoded?.collegeId || null;
+  } catch (err) {
+    console.error("Auth token parse error:", err);
+  }
 
   if (!decoded || !collegeId) {
     return (
       <div className={styles.wrapper}>
         <div className="container" style={{ padding: "3rem 1.5rem" }}>
-          <h2>Loading Partner Portal...</h2>
+          <h2>Partner Portal Login Required</h2>
         </div>
       </div>
     );
   }
 
   // 2. Fetch College and Leads details
-  const college = await prisma.college.findUnique({
-    where: { id: collegeId },
-    include: {
-      branches: true,
-    },
-  });
+  let college: any = null;
+  let leads: any[] = [];
+
+  try {
+    college = await prisma.college.findUnique({
+      where: { id: collegeId },
+      include: {
+        branches: true,
+      },
+    });
+
+    if (college) {
+      leads = await prisma.lead.findMany({
+        where: { collegeId },
+        orderBy: { referredAt: "desc" },
+        include: {
+          student: true,
+        },
+      });
+    }
+  } catch (err) {
+    console.error("College admin fetch error:", err);
+  }
 
   if (!college) {
     return (
@@ -48,14 +71,6 @@ export default async function CollegeAdminDashboard() {
       </div>
     );
   }
-
-  const leads = await prisma.lead.findMany({
-    where: { collegeId },
-    orderBy: { referredAt: "desc" },
-    include: {
-      student: true,
-    },
-  });
 
   return (
     <div className={styles.wrapper}>

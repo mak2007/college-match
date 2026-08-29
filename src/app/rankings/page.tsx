@@ -1,15 +1,22 @@
 import { prisma } from "@/lib/db";
-import Link from "next/link";
 import styles from "./rankings.module.css";
 import RankingsClient from "./RankingsClient";
 import Navbar from "@/components/Navbar";
 
+export const dynamic = "force-dynamic";
+
 export default async function RankingsPage() {
-  const colleges = await prisma.college.findMany({
-    include: {
-      branches: true,
-    },
-  });
+  let colleges: any[] = [];
+  try {
+    colleges = await prisma.college.findMany({
+      include: {
+        branches: true,
+      },
+    });
+  } catch (error) {
+    console.error("RankingsPage fetch fallback:", error);
+    colleges = [];
+  }
 
   return (
     <div className={styles.wrapper}>
