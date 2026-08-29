@@ -3,9 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import * as XLSX from "xlsx";
 
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
-
 interface Branch {
   id?: string;
   branchCode: string;
