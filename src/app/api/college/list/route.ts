@@ -18,9 +18,6 @@ export async function GET() {
     return NextResponse.json(colleges);
   } catch (error: any) {
     console.error("Colleges List API Error:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error", details: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json([]);
   }
 }

@@ -27,7 +27,7 @@ export async function GET(request: Request) {
     return NextResponse.json(branches);
   } catch (error: any) {
     console.error("GET Branches Error:", error);
-    return NextResponse.json({ error: "Internal Server Error", details: error.message }, { status: 500 });
+    return NextResponse.json([]);
   }
 }
 
