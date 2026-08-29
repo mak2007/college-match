@@ -33,26 +33,39 @@ export default function Home() {
                 Don’t just find<br />
                 a college,<br />
                 <span className={styles.gradientText}>
-                  find your place.
-                  <svg
-                    className={styles.doodleUnderline}
-                    viewBox="0 0 180 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M4 16C50 6 120 7 172 17"
-                      stroke="#4F46E5"
-                      strokeWidth="3.5"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M162 5L170 10M174 3L175 9"
-                      stroke="#6366F1"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
+                  find your{" "}
+                  <span className={styles.placeHighlight}>
+                    place.
+                    {/* Curved swoosh underline strictly under the word "place." */}
+                    <svg
+                      className={styles.placeUnderlineSvg}
+                      viewBox="0 0 140 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      preserveAspectRatio="none"
+                    >
+                      <path
+                        d="M3 8C40 15 100 14 137 6"
+                        stroke="#6366F1"
+                        strokeWidth="3.5"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    {/* Radiant sparkle ticks at top-right of "place." */}
+                    <svg
+                      className={styles.sparkleTicksSvg}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5 19L11 12M15 5L16 13M3 9L9 9"
+                        stroke="#6366F1"
+                        strokeWidth="2.6"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </span>
                 </span>
               </h1>
 
