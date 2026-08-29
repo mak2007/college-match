@@ -269,6 +269,140 @@ export default function ResultsClient({
     return counts;
   }, [enriched]);
 
+  const [categoryTab, setCategoryTab] = useState<"all" | "generic" | "new_gen">("all");
+
+  const genericList = useMemo(() => filtered.filter((r) => !r.college?.isNewGen), [filtered]);
+  const newGenList = useMemo(() => filtered.filter((r) => Boolean(r.college?.isNewGen)), [filtered]);
+
+  const renderCard = (rec: any, idx: number, isNewGenCard = false) => {
+    const branch = rec.college?.branches?.find((b: any) => b.branchCode === rec.branchCode) ||
+      rec.college?.branches?.[0] || {
+        branchCode: rec.branchCode || "CSE",
+        branchName: "Computer Science & Engineering",
+        tuitionFeeAnnual: (rec as any).feeInfo?.annualTuition || 250000,
+        hostelFeeAnnual: (rec as any).feeInfo?.annualHostel || 100000,
+        avgSalary: (rec as any).placementInfo?.avgSalary || 900000,
+        minJeePercentileCutoff: 85,
+      };
+
+    let reasonsList: string[] = [];
+    try { reasonsList = JSON.parse(rec.reasons); } catch { reasonsList = [String(rec.reasons)]; }
+
+    const bucketClass = rec.category === "Dream" || (rec.category as string) === "Out of Reach"
+      ? styles.badgeDream
+      : rec.category === "Safe"
+      ? styles.badgeSafe
+      : styles.badgeTarget;
+    const applyRedirectUrl = `/api/leads/apply?student_id=${student.id}&college_id=${rec.college.id}&branch_code=${rec.branchCode}`;
+
+    return (
+      <div key={rec.id} className={styles.collegeCard} style={isNewGenCard ? { borderColor: "#C4A484", background: "#fcfbf9" } : {}}>
+        <div className={styles.cardHeader}>
+          <div className={styles.collegeMeta}>
+            <span className={styles.rankBadge}>#{idx + 1}</span>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <h2 className={styles.collegeName}>{rec.college.name}</h2>
+                {rec.college.isNewGen && (
+                  <span style={{ background: "#0F2D52", color: "#FFFAF0", padding: "0.15rem 0.5rem", borderRadius: "12px", fontSize: "0.7rem", fontWeight: 700 }}>
+                    🚀 New-Gen AI
+                  </span>
+                )}
+              </div>
+              <p className={styles.collegeLocation}>{rec.college.city}, {rec.college.state}</p>
+            </div>
+          </div>
+          <div className={styles.scoresRow}>
+            <div className={styles.scoreBlock}>
+              <div className={styles.scoreLabel}>Match</div>
+              <div className={styles.scoreVal}>{Number(rec.matchScore).toFixed(0)}%</div>
+            </div>
+            <div className={styles.scoreBlock}>
+              <div className={styles.scoreLabel}>Admission</div>
+              <div className={styles.scoreValSmall}>{rec.admissionProb}%</div>
+            </div>
+            <div className={styles.bucketBadgeWrapper}>
+              <span className={`${styles.bucketBadge} ${bucketClass}`}>{rec.category}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.branchBox}>
+          <span className={styles.branchBadge}>{branch.branchCode}</span>
+          <span className={styles.branchTitle}>{branch.branchName}</span>
+        </div>
+
+        {rec.scoreBreakdown && (
+          <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+            <button
+              onClick={() => toggleBreakdown(rec.id)}
+              className="btn"
+              style={{
+                background: "transparent",
+                color: "#0F2D52",
+                border: "1px solid #e5e3dc",
+                padding: "0.4rem 0.8rem",
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                borderRadius: "6px",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem"
+              }}
+            >
+              {expandedBreakdowns[rec.id] ? "Hide Calculation Breakdown ▴" : "Show Calculation Breakdown ▾"}
+            </button>
+            
+            {expandedBreakdowns[rec.id] && (
+              <div className={styles.scoreBreakdownContainer}>
+                <div className={styles.breakdownHeader}>
+                  <span>🧮 Score Calculation Breakdown</span>
+                </div>
+                <div className={styles.breakdownGrid}>
+                  {rec.scoreBreakdown.factorContributions?.map((contrib: any) => (
+                    <div key={contrib.factor} className={styles.breakdownRow}>
+                      <span className={styles.factorName}>{contrib.label}</span>
+                      <span className={styles.factorValue}>
+                        Score: <strong>{contrib.score}</strong> × Wt: <strong>{contrib.weight.toFixed(3)}</strong> = <strong>+{contrib.contribution.toFixed(1)}</strong>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                
+                {rec.scoreBreakdown.appliedBonuses?.length > 0 && (
+                  <div className={styles.modifiersSection}>
+                    <div className={styles.modifierTitle}>🎁 Applied Bonuses:</div>
+                    {rec.scoreBreakdown.appliedBonuses.map((bonus: any, bidx: number) => (
+                      <div key={bidx} className={styles.modifierRow}>
+                        <span className={styles.bonusBadge}>+{bonus.value}</span>
+                        <span className={styles.modifierReason}>{bonus.reason}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className={styles.cardFooter}>
+          <div className={styles.reasonsList}>
+            {reasonsList.map((reason, ri) => (
+              <div key={ri} className={styles.reasonItem}>{reason}</div>
+            ))}
+          </div>
+          <div className={styles.actionBtn}>
+            <a href={applyRedirectUrl} target="_blank" rel="noopener noreferrer"
+              className="btn btn-primary" style={{ padding: "0.75rem 1.5rem", fontSize: "0.95rem" }}>
+              Apply Official Link
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.wrapper}>
       <header className={styles.header}>
@@ -355,7 +489,7 @@ export default function ResultsClient({
                   className={styles.sidebarInput} />
               </div>
               <div className={styles.inputRow}>
-                <label>Class 12 % (Eligibility)</label>
+                <label>Class 12 %</label>
                 <input type="number" min="0" max="100" step="0.1"
                   value={quizAnswers.class12Percentage ?? ""}
                   onChange={(e) => updateQuiz({ class12Percentage: e.target.value ? Number(e.target.value) : null })}
@@ -365,93 +499,112 @@ export default function ResultsClient({
 
             {/* BUDGET */}
             <div className={styles.sidebarSection}>
-              <h3 className={styles.sidebarSectionTitle}>Budget (4-Year Total)</h3>
-              <label className={styles.checkLabel} style={{ marginBottom: "0.5rem" }}>
-                <input type="checkbox" checked={quizAnswers.isBudgetConstraint}
-                  onChange={(e) => updateQuiz({ isBudgetConstraint: e.target.checked })} />
-                <span>Enable budget limit</span>
-              </label>
+              <h3 className={styles.sidebarSectionTitle}>Budget Limit</h3>
+              <div className={styles.checkboxGroup} style={{ marginBottom: "0.75rem" }}>
+                <label className={styles.checkLabel}>
+                  <input
+                    type="checkbox"
+                    checked={!quizAnswers.isBudgetConstraint}
+                    onChange={(e) => updateQuiz({ isBudgetConstraint: !e.target.checked })}
+                  />
+                  <span style={{ fontWeight: 600, color: "#0F2D52" }}>🔓 Any Budget (No Limit)</span>
+                </label>
+              </div>
+
               {quizAnswers.isBudgetConstraint && (
-                <div className={styles.inputRow}>
-                  <label>Max Budget</label>
-                  <input type="number" min="0" step="100000"
-                    value={quizAnswers.budgetLimit ?? ""}
-                    onChange={(e) => updateQuiz({ budgetLimit: e.target.value ? Number(e.target.value) : null })}
-                    className={styles.sidebarInput}
-                    placeholder="e.g. 800000" />
-                </div>
-              )}
-            </div>
-
-            {/* BRANCHES — hidden in V1 (CSE only) */}
-            {BRANCH_OPTIONS.length > 1 && (
-              <div className={styles.sidebarSection}>
-                <h3 className={styles.sidebarSectionTitle}>Branches</h3>
-                <div className={styles.checkboxGroup}>
-                  {BRANCH_OPTIONS.map((b) => (
-                    <label key={b.code} className={styles.checkLabel}>
-                      <input type="checkbox"
-                        checked={quizAnswers.preferredBranches.some(
-                          (pb) => normalizeBranchCode(pb) === normalizeBranchCode(b.code)
-                        )}
-                        onChange={() => toggleBranch(b.code)} />
-                      <span>{b.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* PRIORITIES */}
-            <div className={styles.sidebarSection}>
-              <h3 className={styles.sidebarSectionTitle}>Priorities (drag to reorder)</h3>
-              <div className={styles.priorityList}>
-                {quizAnswers.priorities.map((p, idx) => (
-                  <div key={p.criteria} className={styles.priorityItem}>
-                    <span className={styles.priorityRank}>{idx + 1}</span>
-                    <span className={styles.priorityName}>{PRIORITY_LABELS[p.criteria.toUpperCase()] || p.criteria}</span>
-                    <div className={styles.priorityArrows}>
-                      <button onClick={() => movePriority(idx, -1)} disabled={idx === 0} className={styles.arrowBtn}>&#9650;</button>
-                      <button onClick={() => movePriority(idx, 1)} disabled={idx === quizAnswers.priorities.length - 1} className={styles.arrowBtn}>&#9660;</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* LOCATION */}
-            <div className={styles.sidebarSection}>
-              <h3 className={styles.sidebarSectionTitle}>Location Preference</h3>
-              <label className={styles.checkLabel} style={{ marginBottom: "0.5rem" }}>
-                <input type="checkbox" checked={quizAnswers.restrictLocation}
-                  onChange={(e) => updateQuiz({ restrictLocation: e.target.checked })} />
-                <span>Restrict to preferred states</span>
-              </label>
-              {quizAnswers.restrictLocation && (
                 <>
-                  <select className={styles.sidebarSelect}
-                    onChange={(e) => { addLocation(e.target.value); e.target.value = ""; }}>
-                    <option value="">Add a state...</option>
-                    {INDIAN_STATES.filter((s) => !quizAnswers.selectedLocations.some((l) => l.state === s)).map((s) => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                  <div className={styles.tagList}>
-                    {quizAnswers.selectedLocations.map((loc, idx) => (
-                      <span key={idx} className={styles.tag}>
-                        {loc.state}
-                        <button onClick={() => removeLocation(idx)} className={styles.tagRemove}>&times;</button>
-                      </span>
-                    ))}
+                  <div className={styles.budgetDisplay}>
+                    {quizAnswers.budgetLimit ? `₹${(quizAnswers.budgetLimit / 100000).toFixed(1)} Lakhs` : "No limit"}
                   </div>
+                  <input type="range" min="400000" max="4000000" step="100000"
+                    value={quizAnswers.budgetLimit || 1500000}
+                    onChange={(e) => updateQuiz({ budgetLimit: Number(e.target.value), isBudgetConstraint: true })}
+                    className={styles.budgetSlider} />
                 </>
               )}
             </div>
 
-            {/* COLLEGE TYPE */}
+            {/* PREFERRED BRANCHES */}
             <div className={styles.sidebarSection}>
-              <h3 className={styles.sidebarSectionTitle}>College Type</h3>
-              <p className={styles.sidebarHint}>All colleges are shown. Filter by New Gen in results.</p>
+              <h3 className={styles.sidebarSectionTitle}>Engineering Branches</h3>
+              <div className={styles.checkboxGroup}>
+                {BRANCH_OPTIONS.map((b) => {
+                  const isChecked = quizAnswers.preferredBranches.some(
+                    (pb) => normalizeBranchCode(pb) === normalizeBranchCode(b.code)
+                  );
+                  return (
+                    <label key={b.code} className={styles.checkLabel}>
+                      <input type="checkbox" checked={isChecked}
+                        onChange={() => toggleBranch(b.code)} />
+                      <span>{b.label}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* PREFERRED LOCATIONS */}
+            <div className={styles.sidebarSection}>
+              <h3 className={styles.sidebarSectionTitle}>Locations</h3>
+              <div className={styles.checkboxGroup} style={{ marginBottom: "0.75rem" }}>
+                <label className={styles.checkLabel}>
+                  <input
+                    type="checkbox"
+                    checked={quizAnswers.restrictLocation}
+                    onChange={(e) => updateQuiz({ restrictLocation: e.target.checked })}
+                  />
+                  <span style={{ fontWeight: 600 }}>Restrict to selected states</span>
+                </label>
+              </div>
+
+              <select
+                className={styles.sidebarSelect}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    addLocation(e.target.value);
+                    e.target.value = "";
+                  }
+                }}
+                defaultValue=""
+              >
+                <option value="" disabled>+ Add State Filter</option>
+                {POPULAR_STATES.map((state) => (
+                  <option key={state} value={state}>{state}</option>
+                ))}
+              </select>
+
+              {quizAnswers.selectedLocations.length > 0 && (
+                <div className={styles.tagsContainer}>
+                  {quizAnswers.selectedLocations.map((loc, idx) => (
+                    <span key={idx} className={styles.tag}>
+                      {loc.state}
+                      <button onClick={() => removeLocation(idx)} className={styles.tagRemove}>×</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* PRIORITIES REORDER */}
+            <div className={styles.sidebarSection}>
+              <h3 className={styles.sidebarSectionTitle}>Priorities Ranking</h3>
+              <p style={{ fontSize: "0.75rem", color: "#8c8c8c", marginBottom: "0.5rem" }}>
+                Rank 1 gets 33.3% weight, Rank 5 gets 6.6% weight
+              </p>
+              <div className={styles.priorityList}>
+                {quizAnswers.priorities.map((p, idx) => (
+                  <div key={p.criteria} className={styles.priorityItem}>
+                    <span className={styles.priorityRank}>#{idx + 1}</span>
+                    <span className={styles.priorityName}>{PRIORITY_LABELS[p.criteria] || p.criteria}</span>
+                    <div className={styles.priorityBtns}>
+                      <button disabled={idx === 0} onClick={() => movePriority(idx, -1)}
+                        className={styles.reorderBtn}>▲</button>
+                      <button disabled={idx === quizAnswers.priorities.length - 1}
+                        onClick={() => movePriority(idx, 1)} className={styles.reorderBtn}>▼</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </aside>
@@ -468,6 +621,31 @@ export default function ResultsClient({
                   : "No Limit"}
               </strong>
             </p>
+
+            {/* ─── CATEGORY TABS ─── */}
+            <div className={styles.categoryTabsWrapper}>
+              <button
+                className={`${styles.categoryTab} ${categoryTab === "all" ? styles.categoryTabActive : ""}`}
+                onClick={() => setCategoryTab("all")}
+              >
+                <span>🌐 All Matches</span>
+                <span className={styles.categoryCountBadge}>{filtered.length}</span>
+              </button>
+              <button
+                className={`${styles.categoryTab} ${categoryTab === "new_gen" ? styles.categoryTabActive : ""}`}
+                onClick={() => setCategoryTab("new_gen")}
+              >
+                <span>🚀 Next-Gen AI & Tech</span>
+                <span className={styles.categoryCountBadge}>{newGenList.length}</span>
+              </button>
+              <button
+                className={`${styles.categoryTab} ${categoryTab === "generic" ? styles.categoryTabActive : ""}`}
+                onClick={() => setCategoryTab("generic")}
+              >
+                <span>🏫 Generic Colleges</span>
+                <span className={styles.categoryCountBadge}>{genericList.length}</span>
+              </button>
+            </div>
           </div>
 
           {filtered.length === 0 ? (
@@ -476,140 +654,52 @@ export default function ResultsClient({
               <p>Try adjusting your filters or preferences in the sidebar.</p>
             </div>
           ) : (
-            <div className={styles.resultsList}>
-              {paginated.map((rec, idx) => {
-                const branch = rec.college?.branches?.find((b) => b.branchCode === rec.branchCode) ||
-                  rec.college?.branches?.[0] || {
-                    branchCode: rec.branchCode || "CSE",
-                    branchName: "Computer Science & Engineering",
-                    tuitionFeeAnnual: (rec as any).feeInfo?.annualTuition || 250000,
-                    hostelFeeAnnual: (rec as any).feeInfo?.annualHostel || 100000,
-                    avgSalary: (rec as any).placementInfo?.avgSalary || 900000,
-                    minJeePercentileCutoff: 85,
-                  };
-
-                let reasonsList: string[] = [];
-                try { reasonsList = JSON.parse(rec.reasons); } catch { reasonsList = [String(rec.reasons)]; }
-
-                const bucketClass = rec.category === "Dream" || (rec.category as string) === "Out of Reach"
-                  ? styles.badgeDream
-                  : rec.category === "Safe"
-                  ? styles.badgeSafe
-                  : styles.badgeTarget;
-                const applyRedirectUrl = `/api/leads/apply?student_id=${student.id}&college_id=${rec.college.id}&branch_code=${rec.branchCode}`;
-
-                return (
-                  <div key={rec.id} className={styles.collegeCard}>
-                    <div className={styles.cardHeader}>
-                      <div className={styles.collegeMeta}>
-                        <span className={styles.rankBadge}>#{(currentPage - 1) * pageSize + idx + 1}</span>
-                        <div>
-                          <h2 className={styles.collegeName}>{rec.college.name}</h2>
-                          <p className={styles.collegeLocation}>{rec.college.city}, {rec.college.state}</p>
-                        </div>
-                      </div>
-                      <div className={styles.scoresRow}>
-                        <div className={styles.scoreBlock}>
-                          <div className={styles.scoreLabel}>Match</div>
-                          <div className={styles.scoreVal}>{Number(rec.matchScore).toFixed(0)}%</div>
-                        </div>
-                        <div className={styles.scoreBlock}>
-                          <div className={styles.scoreLabel}>Admission</div>
-                          <div className={styles.scoreValSmall}>{rec.admissionProb}%</div>
-                        </div>
-                        <div className={styles.bucketBadgeWrapper}>
-                          <span className={`${styles.bucketBadge} ${bucketClass}`}>{rec.category}</span>
-                        </div>
-                      </div>
+            <div className={styles.separateBoxesContainer}>
+              {/* ─── 1. NEXT-GEN AI COLLEGES BOX ─── */}
+              {(categoryTab === "all" || categoryTab === "new_gen") && newGenList.length > 0 && (
+                <div className={styles.newGenSectionBox}>
+                  <div className={styles.sectionHeader}>
+                    <div className={styles.sectionHeaderLeft}>
+                      <h2 className={styles.sectionTitle}>
+                        🚀 Next-Gen AI & Modern Tech Institutes
+                      </h2>
+                      <p className={styles.sectionSubtitle}>
+                        Colleges offering practical project-first curriculum, Gen AI labs, industry mentorship, and modern tech pedagogy.
+                      </p>
                     </div>
-
-                    <div className={styles.branchBox}>
-                      <span className={styles.branchBadge}>{branch.branchCode}</span>
-                      <span className={styles.branchTitle}>{branch.branchName}</span>
-                    </div>
-
-                    {rec.scoreBreakdown && (
-                      <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-                        <button
-                          onClick={() => toggleBreakdown(rec.id)}
-                          className="btn"
-                          style={{
-                            background: "transparent",
-                            color: "#0F2D52",
-                            border: "1px solid #e5e3dc",
-                            padding: "0.4rem 0.8rem",
-                            fontSize: "0.8rem",
-                            fontWeight: 600,
-                            borderRadius: "6px",
-                            cursor: "pointer",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "0.4rem"
-                          }}
-                        >
-                          {expandedBreakdowns[rec.id] ? "Hide Calculation Breakdown ▴" : "Show Calculation Breakdown ▾"}
-                        </button>
-                        
-                        {expandedBreakdowns[rec.id] && (
-                          <div className={styles.scoreBreakdownContainer}>
-                            <div className={styles.breakdownHeader}>
-                              <span>🧮 Score Calculation Breakdown</span>
-                            </div>
-                            <div className={styles.breakdownGrid}>
-                              {rec.scoreBreakdown.factorContributions?.map((contrib) => (
-                                <div key={contrib.factor} className={styles.breakdownRow}>
-                                  <span className={styles.factorName}>{contrib.label}</span>
-                                  <span className={styles.factorValue}>
-                                    Score: <strong>{contrib.score}</strong> × Wt: <strong>{contrib.weight.toFixed(2)}</strong> = <strong>+{contrib.contribution.toFixed(1)}</strong>
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                            
-                            {rec.scoreBreakdown.appliedBonuses?.length > 0 && (
-                              <div className={styles.modifiersSection}>
-                                <div className={styles.modifierTitle}>🎁 Applied Bonuses:</div>
-                                {rec.scoreBreakdown.appliedBonuses.map((bonus, idx) => (
-                                  <div key={idx} className={styles.modifierRow}>
-                                    <span className={styles.bonusBadge}>+{bonus.value}</span>
-                                    <span className={styles.modifierReason}>{bonus.reason}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            
-                            {rec.scoreBreakdown.appliedPenalties?.length > 0 && (
-                              <div className={styles.modifiersSection}>
-                                <div className={styles.modifierTitle}>⚠️ Applied Penalties:</div>
-                                {rec.scoreBreakdown.appliedPenalties.map((penalty, idx) => (
-                                  <div key={idx} className={styles.modifierRow}>
-                                    <span className={styles.penaltyBadge}>-{penalty.value}</span>
-                                    <span className={styles.modifierReason}>{penalty.reason}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    <div className={styles.cardFooter}>
-                      <div className={styles.reasonsList}>
-                        {reasonsList.map((reason, ri) => (
-                          <div key={ri} className={styles.reasonItem}>{reason}</div>
-                        ))}
-                      </div>
-                      <div className={styles.actionBtn}>
-                        <a href={applyRedirectUrl} target="_blank" rel="noopener noreferrer"
-                          className="btn btn-primary" style={{ padding: "0.75rem 1.5rem", fontSize: "0.95rem" }}>
-                          Apply Official Link
-                        </a>
-                      </div>
-                    </div>
+                    <span className={styles.newGenHighlightBadge}>
+                      ✨ {newGenList.length} AI Institutes
+                    </span>
                   </div>
-                );
-              })}
+
+                  <div className={styles.resultsList}>
+                    {newGenList.map((rec, idx) => renderCard(rec, idx, true))}
+                  </div>
+                </div>
+              )}
+
+              {/* ─── 2. GENERIC / TRADITIONAL COLLEGES BOX ─── */}
+              {(categoryTab === "all" || categoryTab === "generic") && genericList.length > 0 && (
+                <div className={styles.categorySectionBox}>
+                  <div className={styles.sectionHeader}>
+                    <div className={styles.sectionHeaderLeft}>
+                      <h2 className={styles.sectionTitle}>
+                        🏫 Generic & Traditional Engineering Colleges
+                      </h2>
+                      <p className={styles.sectionSubtitle}>
+                        Established universities and institutes ranked by your academic cutoffs, NIRF standing, and placement records.
+                      </p>
+                    </div>
+                    <span style={{ background: "#f4eee2", color: "#0F2D52", padding: "0.35rem 0.85rem", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700 }}>
+                      {genericList.length} Colleges
+                    </span>
+                  </div>
+
+                  <div className={styles.resultsList}>
+                    {genericList.map((rec, idx) => renderCard(rec, idx, false))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

@@ -794,3 +794,135 @@
 .pageInfo strong {
   color: #0F2D52;
 }
+
+/* ─── Category Tabs & Dedicated Section Boxes ─── */
+.categoryTabsWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0 2rem 0;
+  flex-wrap: wrap;
+}
+
+.categoryTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 30px;
+  background: #ffffff;
+  border: 1.5px solid #e5e3dc;
+  color: #4a4a4a;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(15, 45, 82, 0.04);
+}
+
+.categoryTab:hover {
+  border-color: #0F2D52;
+  color: #0F2D52;
+  transform: translateY(-1px);
+}
+
+.categoryTabActive {
+  background: #0F2D52;
+  border-color: #0F2D52;
+  color: #FFFAF0 !important;
+  box-shadow: 0 4px 14px rgba(15, 45, 82, 0.2);
+}
+
+.categoryCountBadge {
+  background: rgba(15, 45, 82, 0.08);
+  color: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 12px;
+}
+
+.categoryTabActive .categoryCountBadge {
+  background: rgba(255, 250, 240, 0.25);
+  color: #FFFAF0;
+}
+
+.separateBoxesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.categorySectionBox {
+  background: #ffffff;
+  border: 1px solid #e5e3dc;
+  border-radius: 20px;
+  padding: 1.75rem;
+  box-shadow: 0 4px 20px rgba(15, 45, 82, 0.04);
+}
+
+.newGenSectionBox {
+  background: linear-gradient(180deg, #fdfbf7 0%, #ffffff 100%);
+  border: 2px solid #C4A484;
+  border-radius: 20px;
+  padding: 2rem 1.75rem;
+  box-shadow: 0 8px 30px rgba(196, 164, 132, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.newGenSectionBox::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #0F2D52 0%, #C4A484 50%, #0F2D52 100%);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0ede6;
+}
+
+.sectionHeaderLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sectionTitle {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0F2D52;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.sectionSubtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.newGenHighlightBadge {
+  background: linear-gradient(135deg, #0F2D52 0%, #1e40af 100%);
+  color: #FFFAF0;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 2px 8px rgba(15, 45, 82, 0.2);
+}
+
