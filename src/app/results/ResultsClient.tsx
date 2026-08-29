@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import styles from "./results.module.css";
 import { BRANCH_OPTIONS, normalizeBranchCode } from "@/lib/branches";
+import baseCollegesData from "@/lib/base-colleges.json";
 
 interface Recommendation {
   id: string;
@@ -270,6 +271,10 @@ export default function ResultsClient({
   }, [enriched]);
 
   const [categoryTab, setCategoryTab] = useState<"all" | "generic" | "new_gen">("all");
+
+  const fixedMasterRanking = useMemo(() => {
+    return [...(baseCollegesData as any[])].sort((a, b) => (a.rank || 999) - (b.rank || 999));
+  }, []);
 
   const genericList = useMemo(() => {
     return filtered
@@ -745,7 +750,7 @@ export default function ResultsClient({
                 </div>
               )}
 
-              {/* ─── 2. GENERIC OVERALL RANKING SECTION ─── */}
+              {/* ─── 2. GENERIC OVERALL RANKING SECTION (FIXED RIGID MASTER LIST) ─── */}
               {(categoryTab === "all" || categoryTab === "generic") && (
                 <div className={styles.categorySectionBox}>
                   <div className={styles.sectionHeader}>
@@ -754,23 +759,94 @@ export default function ResultsClient({
                         🏫 2. Generic Overall Ranking
                       </h2>
                       <p className={styles.sectionSubtitle}>
-                        All traditional engineering colleges ranked strictly from highest match score down to lowest.
+                        Fixed master ranking of all {fixedMasterRanking.length} colleges in India (including New-Gen institutes), strictly sorted from Rank #1 to #{fixedMasterRanking.length} unaffected by quiz inputs.
                       </p>
                     </div>
                     <span style={{ background: "#f4eee2", color: "#0F2D52", padding: "0.35rem 0.85rem", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700 }}>
-                      {genericList.length} Generic Colleges
+                      {fixedMasterRanking.length} Colleges (Fixed Master Ranking)
                     </span>
                   </div>
 
-                  {genericList.length === 0 ? (
-                    <div style={{ padding: "1.5rem", textAlign: "center", color: "#8c8c8c", fontStyle: "italic" }}>
-                      No Generic Colleges match your active filters.
-                    </div>
-                  ) : (
-                    <div className={styles.resultsList}>
-                      {genericList.map((rec, idx) => renderCard(rec, idx, false))}
-                    </div>
-                  )}
+                  <div className={styles.resultsList}>
+                    {fixedMasterRanking.map((col: any) => {
+                      const branch = col.branches?.[0] || {
+                        branchCode: "CSE",
+                        branchName: "Computer Science & Engineering",
+                        tuitionFeeAnnual: 250000,
+                        hostelFeeAnnual: 100000,
+                        avgSalary: 900000,
+                        minJeePercentileCutoff: 85,
+                      };
+
+                      return (
+                        <div key={col.id || col.slug} className={styles.collegeCard}>
+                          <div className={styles.cardHeader}>
+                            <div className={styles.collegeMeta}>
+                              <span className={styles.rankBadge}>#{col.rank || 1}</span>
+                              <div>
+                                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                                  <h2 className={styles.collegeName}>{col.name}</h2>
+                                  {col.isNewGen && (
+                                    <span style={{ background: "#0F2D52", color: "#FFFAF0", padding: "0.15rem 0.5rem", borderRadius: "12px", fontSize: "0.7rem", fontWeight: 700 }}>
+                                      🚀 New-Gen AI
+                                    </span>
+                                  )}
+                                </div>
+                                <p className={styles.collegeLocation}>{col.city}, {col.state}</p>
+                              </div>
+                            </div>
+                            <div className={styles.scoresRow}>
+                              <div className={styles.scoreBlock}>
+                                <div className={styles.scoreLabel}>Placement</div>
+                                <div className={styles.scoreVal}>{col.placementScore}/10</div>
+                              </div>
+                              <div className={styles.scoreBlock}>
+                                <div className={styles.scoreLabel}>Academics</div>
+                                <div className={styles.scoreValSmall}>{col.curriculumScore}/10</div>
+                              </div>
+                              <div className={styles.scoreBlock}>
+                                <div className={styles.scoreLabel}>Campus</div>
+                                <div className={styles.scoreValSmall}>{col.collegeLifeScore}/10</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className={styles.branchBox}>
+                            <span className={styles.branchBadge}>{branch.branchCode || "CSE"}</span>
+                            <span className={styles.branchTitle}>{branch.branchName || "Computer Science & Engineering"}</span>
+                            {branch.avgSalary > 0 && (
+                              <span style={{ marginLeft: "auto", fontSize: "0.85rem", fontWeight: 600, color: "#0F2D52" }}>
+                                Avg: ₹{(branch.avgSalary / 100000).toFixed(1)} LPA
+                              </span>
+                            )}
+                          </div>
+
+                          <div className={styles.cardFooter}>
+                            <div className={styles.reasonsList}>
+                              <div className={styles.reasonItem}>Fixed Master Ranking: Rank #{col.rank} in India</div>
+                              {branch.minJeePercentileCutoff > 0 && (
+                                <div className={styles.reasonItem}>JEE Equivalent Cutoff: {branch.minJeePercentileCutoff}%ile</div>
+                              )}
+                              {branch.tuitionFeeAnnual > 0 && (
+                                <div className={styles.reasonItem}>Tuition: ₹{(branch.tuitionFeeAnnual / 100000).toFixed(1)}L/yr</div>
+                              )}
+                            </div>
+                            <div className={styles.actionBtn}>
+                              <a
+                                href={col.officialApplyUrl || col.website || "https://collegematch.in"}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn btn-primary"
+                                style={{ padding: "0.75rem 1.5rem", fontSize: "0.95rem" }}
+                              >
+                                Apply Official Link
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </div>
