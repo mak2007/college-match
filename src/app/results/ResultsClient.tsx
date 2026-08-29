@@ -248,7 +248,7 @@ export default function ResultsClient({
 
     return [...result].sort((a, b) => {
       if (sortMode === "admission_chance") return b.admissionProb - a.admissionProb;
-      return (a.rankPosition || 0) - (b.rankPosition || 0) || (b.matchScore || 0) - (a.matchScore || 0);
+      return (b.matchScore || 0) - (a.matchScore || 0);
     });
   }, [enriched, sortMode, admissionFilter]);
 
@@ -667,6 +667,20 @@ export default function ResultsClient({
               {/* ─── 0. ALL MATCHES / COMBINED TOP RECOMMENDATIONS ─── */}
               {categoryTab === "all" && (
                 <div style={{ marginBottom: "2.5rem" }}>
+                  <div className={styles.sectionHeader} style={{ marginBottom: "1rem" }}>
+                    <div className={styles.sectionHeaderLeft}>
+                      <h2 className={styles.sectionTitle}>
+                        🏆 Top Overall Recommendations
+                      </h2>
+                      <p className={styles.sectionSubtitle}>
+                        All colleges ranked together by your personalized match score (highest to lowest).
+                      </p>
+                    </div>
+                    <span style={{ background: "#0F2D52", color: "#FFFAF0", padding: "0.35rem 0.85rem", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700 }}>
+                      {filtered.length} Total Matches
+                    </span>
+                  </div>
+
                   <div className={styles.resultsList}>
                     {paginated.map((rec, idx) => renderCard(rec, (currentPage - 1) * pageSize + idx, Boolean(rec.college?.isNewGen)))}
                   </div>
