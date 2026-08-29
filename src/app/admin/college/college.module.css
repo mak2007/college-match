@@ -45,8 +45,8 @@
   font-weight: 600;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
-  background-color: rgba(196, 164, 132, 0.08);
-  border: 1px solid rgba(196, 164, 132, 0.2);
+  background-color: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
   transition: all 0.2s ease;
 }
 
@@ -147,9 +147,9 @@
 }
 
 .branchCodeBadge {
-  background-color: rgba(15, 45, 82, 0.08);
+  background-color: rgba(79, 70, 229, 0.08);
   color: var(--primary-color);
-  border: 1px solid rgba(15, 45, 82, 0.15);
+  border: 1px solid rgba(79, 70, 229, 0.15);
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
   font-size: 0.75rem;

@@ -441,7 +441,7 @@ export default function LiveMatcher() {
             </div>
 
             {matches.length === 0 ? (
-              <div style={{ background: "white", border: "1px solid #e6e4dc", borderRadius: "16px", padding: "4rem 2rem", textAlign: "center" }}>
+              <div style={{ background: "white", border: "1px solid #e2e8f0", borderRadius: "16px", padding: "4rem 2rem", textAlign: "center" }}>
                 <h3>No Colleges Match Your Filters</h3>
                 <p style={{ color: "var(--text-secondary)", marginTop: "1rem" }}>
                   Try relaxing your budget, adding more locations, or selecting other preferred branches.

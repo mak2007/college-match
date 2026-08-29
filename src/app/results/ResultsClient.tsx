@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import styles from "./results.module.css";
+import Navbar from "@/components/Navbar";
 import { BRANCH_OPTIONS, normalizeBranchCode } from "@/lib/branches";
 import baseCollegesData from "@/lib/base-colleges.json";
 
@@ -310,7 +311,7 @@ export default function ResultsClient({
     const applyRedirectUrl = `/api/leads/apply?student_id=${student.id}&college_id=${rec.college.id}&branch_code=${rec.branchCode}`;
 
     return (
-      <div key={rec.id} className={styles.collegeCard} style={isNewGenCard ? { borderColor: "#C4A484", background: "#fcfbf9" } : {}}>
+      <div key={rec.id} className={styles.collegeCard} style={isNewGenCard ? { borderColor: "#8b5cf6", background: "#fcfbf9" } : {}}>
         <div className={styles.cardHeader}>
           <div className={styles.collegeMeta}>
             <span className={styles.rankBadge}>#{idx + 1}</span>
@@ -318,7 +319,7 @@ export default function ResultsClient({
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <h2 className={styles.collegeName}>{rec.college.name}</h2>
                 {rec.college.isNewGen && (
-                  <span style={{ background: "#0F2D52", color: "#FFFAF0", padding: "0.15rem 0.5rem", borderRadius: "12px", fontSize: "0.7rem", fontWeight: 700 }}>
+                  <span style={{ background: "#4f46e5", color: "#fcfbfe", padding: "0.15rem 0.5rem", borderRadius: "12px", fontSize: "0.7rem", fontWeight: 700 }}>
                     🚀 New-Gen AI
                   </span>
                 )}
@@ -353,8 +354,8 @@ export default function ResultsClient({
               className="btn"
               style={{
                 background: "transparent",
-                color: "#0F2D52",
-                border: "1px solid #e5e3dc",
+                color: "#4f46e5",
+                border: "1px solid #e2e8f0",
                 padding: "0.4rem 0.8rem",
                 fontSize: "0.8rem",
                 fontWeight: 600,
@@ -419,15 +420,7 @@ export default function ResultsClient({
 
   return (
     <div className={styles.wrapper}>
-      <header className={styles.header}>
-        <div className="container flex-center" style={{ justifyContent: "space-between", height: "70px" }}>
-          <Link href="/" className={styles.logo}>CollegeMatch</Link>
-          <div className={styles.headerRight}>
-            {isRegenerating && <span className={styles.regeneratingBadge}>Updating...</span>}
-            <div className={styles.studentBadge}>{student.name}</div>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       <div className={styles.layout}>
         {/* ─── SIDEBAR ──────────────────────────────────── */}
@@ -521,7 +514,7 @@ export default function ResultsClient({
                     checked={!quizAnswers.isBudgetConstraint}
                     onChange={(e) => updateQuiz({ isBudgetConstraint: !e.target.checked })}
                   />
-                  <span style={{ fontWeight: 600, color: "#0F2D52" }}>🔓 Any Budget (No Limit)</span>
+                  <span style={{ fontWeight: 600, color: "#4f46e5" }}>🔓 Any Budget (No Limit)</span>
                 </label>
               </div>
 
@@ -602,7 +595,7 @@ export default function ResultsClient({
             {/* PRIORITIES REORDER */}
             <div className={styles.sidebarSection}>
               <h3 className={styles.sidebarSectionTitle}>Priorities Ranking</h3>
-              <p style={{ fontSize: "0.75rem", color: "#8c8c8c", marginBottom: "0.5rem" }}>
+              <p style={{ fontSize: "0.75rem", color: "#64748b", marginBottom: "0.5rem" }}>
                 Rank 1 gets 33.3% weight, Rank 5 gets 6.6% weight
               </p>
               <div className={styles.priorityList}>
@@ -681,7 +674,7 @@ export default function ResultsClient({
                         All colleges ranked together by your personalized match score (highest to lowest).
                       </p>
                     </div>
-                    <span style={{ background: "#0F2D52", color: "#FFFAF0", padding: "0.35rem 0.85rem", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700 }}>
+                    <span style={{ background: "#4f46e5", color: "#fcfbfe", padding: "0.35rem 0.85rem", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700 }}>
                       {filtered.length} Total Matches
                     </span>
                   </div>
@@ -739,7 +732,7 @@ export default function ResultsClient({
                   </div>
 
                   {newGenList.length === 0 ? (
-                    <div style={{ padding: "1.5rem", textAlign: "center", color: "#8c8c8c", fontStyle: "italic" }}>
+                    <div style={{ padding: "1.5rem", textAlign: "center", color: "#64748b", fontStyle: "italic" }}>
                       No New-Gen Colleges match your active filters.
                     </div>
                   ) : (
@@ -762,7 +755,7 @@ export default function ResultsClient({
                         National overall ranking of top engineering colleges in India ranked from #1 to #{fixedMasterRanking.length}.
                       </p>
                     </div>
-                    <span style={{ background: "#f4eee2", color: "#0F2D52", padding: "0.35rem 0.85rem", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700 }}>
+                    <span style={{ background: "#f5f3ff", color: "#4f46e5", padding: "0.35rem 0.85rem", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700 }}>
                       {fixedMasterRanking.length} Colleges
                     </span>
                   </div>
@@ -787,7 +780,7 @@ export default function ResultsClient({
                                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                                   <h2 className={styles.collegeName}>{col.name}</h2>
                                   {col.isNewGen && (
-                                    <span style={{ background: "#0F2D52", color: "#FFFAF0", padding: "0.15rem 0.5rem", borderRadius: "12px", fontSize: "0.7rem", fontWeight: 700 }}>
+                                    <span style={{ background: "#4f46e5", color: "#fcfbfe", padding: "0.15rem 0.5rem", borderRadius: "12px", fontSize: "0.7rem", fontWeight: 700 }}>
                                       🚀 New-Gen AI
                                     </span>
                                   )}
@@ -815,7 +808,7 @@ export default function ResultsClient({
                             <span className={styles.branchBadge}>{branch.branchCode || "CSE"}</span>
                             <span className={styles.branchTitle}>{branch.branchName || "Computer Science & Engineering"}</span>
                             {branch.avgSalary > 0 && (
-                              <span style={{ marginLeft: "auto", fontSize: "0.85rem", fontWeight: 600, color: "#0F2D52" }}>
+                              <span style={{ marginLeft: "auto", fontSize: "0.85rem", fontWeight: 600, color: "#4f46e5" }}>
                                 Avg: ₹{(branch.avgSalary / 100000).toFixed(1)} LPA
                               </span>
                             )}

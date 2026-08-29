@@ -14,7 +14,7 @@ const AsteriskIcon = () => (
     strokeWidth="3.5"
     strokeLinecap="round"
     fill="none"
-    style={{ color: "#C4A484" }}
+    style={{ color: "#8b5cf6" }}
   >
     <line x1="12" y1="4" x2="12" y2="20" />
     <line x1="4" y1="12" x2="20" y2="12" />
@@ -144,7 +144,7 @@ export default function StudentLogin() {
         <div className={styles.wrapper}>
           <div className={styles.container}>
             <div className={styles.card} style={{ textAlign: "center" }}>
-              <h2 style={{ color: "#0F2D52", marginBottom: "0.5rem" }}>Loading...</h2>
+              <h2 style={{ color: "#4f46e5", marginBottom: "0.5rem" }}>Loading...</h2>
             </div>
           </div>
         </div>

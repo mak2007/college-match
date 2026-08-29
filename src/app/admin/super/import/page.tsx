@@ -360,7 +360,7 @@ export default function ImportPage() {
             onClick={() => window.open("/api/admin/export?type=all", "_blank")}
             style={{
               padding: "0.45rem 0.9rem",
-              background: "#0F2D52",
+              background: "#4f46e5",
               color: "white",
               border: "none",
               borderRadius: "8px",

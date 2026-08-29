@@ -21,7 +21,7 @@
 /* Sidebar Filters */
 .sidebar {
   background-color: #ffffff;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
   border-radius: 16px;
   padding: 1.5rem;
   height: fit-content;
@@ -34,7 +34,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid #e5e3dc;
+  border-bottom: 1px solid #e2e8f0;
   padding-bottom: 0.75rem;
 }
 
@@ -99,14 +99,14 @@
   width: 16px;
   height: 16px;
   border-radius: 4px;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
   accent-color: #0d5c3a;
 }
 
 .selectInput {
   width: 100%;
   padding: 0.6rem;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 0.9rem;
   color: #556052;
@@ -157,7 +157,7 @@
   width: 100%;
   height: 52px;
   padding: 0 1.25rem 0 3.25rem;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
   border-radius: 9999px;
   font-size: 1rem;
   color: #0c2e1b;
@@ -184,7 +184,7 @@
 .mobileFilterToggle {
   display: none;
   background-color: #ffffff;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
   padding: 0.6rem 1.25rem;
   border-radius: 9999px;
   font-size: 0.9rem;
@@ -213,7 +213,7 @@
 
 .sortSelect {
   padding: 0.5rem 1rem;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 700;
@@ -234,7 +234,7 @@
   font-size: 0.9rem;
   color: #556052;
   font-weight: 600;
-  border-top: 1px solid #e5e3dc;
+  border-top: 1px solid #e2e8f0;
   padding-top: 0.75rem;
 }
 
@@ -247,7 +247,7 @@
 
 .collegeCard {
   background-color: #ffffff;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
   border-radius: 16px;
   padding: 1.75rem;
   display: flex;
@@ -260,7 +260,7 @@
 .collegeCard:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 30px rgba(12, 46, 27, 0.06);
-  border-color: #c5c3bc;
+  border-color: #e2e8f0;
 }
 
 .cardTop {
@@ -280,7 +280,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
 }
 
 .logoImage {
@@ -288,7 +288,7 @@
   height: 48px;
   border-radius: 8px;
   object-fit: cover;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
 }
 
 .cardHeaderInfo {
@@ -358,8 +358,8 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
-  border-top: 1px solid #e5e3dc;
-  border-bottom: 1px solid #e5e3dc;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
   padding: 1rem 0;
   margin-bottom: 1.25rem;
 }
@@ -409,7 +409,7 @@
   font-weight: 600;
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
 }
 
 .cardFooter {
@@ -432,7 +432,7 @@
 .viewBtn {
   background-color: #ffffff;
   color: #0c2e1b;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
 }
 
 .viewBtn:hover {

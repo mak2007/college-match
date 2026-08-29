@@ -40,7 +40,7 @@
   gap: 0.75rem;
   overflow-x: auto;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e5e3dc;
+  border-bottom: 1px solid #e2e8f0;
   scrollbar-width: none; /* Hide scrollbar for clean look */
 }
 
@@ -50,7 +50,7 @@
 
 .tabBtn {
   background-color: #ffffff;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
   padding: 0.65rem 1.25rem;
   font-size: 0.9rem;
   font-weight: 700;
@@ -110,7 +110,7 @@
 /* Ranking Card */
 .rankingCard {
   background-color: #ffffff;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
   border-radius: 16px;
   padding: 1.75rem;
   display: flex;
@@ -124,7 +124,7 @@
 .rankingCard:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 30px rgba(12, 46, 27, 0.06);
-  border-color: #c5c3bc;
+  border-color: #e2e8f0;
 }
 
 .cardTop {
@@ -157,7 +157,7 @@
 .rankNormal {
   background-color: #f4f3ed;
   color: #556052;
-  border: 1px solid #e5e3dc;
+  border: 1px solid #e2e8f0;
 }
 
 .collegeMeta {

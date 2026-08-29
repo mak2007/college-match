@@ -61,7 +61,7 @@
 .uploadZone:hover,
 .uploadZoneDragOver {
   border-color: var(--primary-color);
-  background: rgba(15, 45, 82, 0.03);
+  background: rgba(79, 70, 229, 0.03);
 }
 
 .uploadIcon {
@@ -102,7 +102,7 @@
 }
 
 .templateBtn:hover {
-  background: rgba(15, 45, 82, 0.05);
+  background: rgba(79, 70, 229, 0.05);
 }
 
 .previewSection {
@@ -127,7 +127,7 @@
   font-weight: 600;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
-  background: rgba(15, 45, 82, 0.1);
+  background: rgba(79, 70, 229, 0.1);
   color: var(--primary-color);
 }
 
@@ -164,7 +164,7 @@
 }
 
 .dataRow:hover .dataCell {
-  background: rgba(15, 45, 82, 0.02);
+  background: rgba(79, 70, 229, 0.02);
 }
 
 .errorSection {

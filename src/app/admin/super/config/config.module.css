@@ -48,7 +48,7 @@
 
 .navLink:hover {
   color: var(--light-text);
-  background-color: rgba(15, 45, 82, 0.05);
+  background-color: rgba(79, 70, 229, 0.05);
 }
 
 .logoutBtn {
@@ -58,8 +58,8 @@
   font-weight: 600;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
-  background-color: rgba(196, 164, 132, 0.08);
-  border: 1px solid rgba(196, 164, 132, 0.2);
+  background-color: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
   transition: all 0.2s ease;
 }
 
@@ -198,7 +198,7 @@
   border-radius: 14px;
   background: var(--light-surface);
   border: 1px solid var(--light-border);
-  box-shadow: 0 4px 6px -1px rgba(15, 45, 82, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.05);
   transition: transform 0.2s ease;
 }
 

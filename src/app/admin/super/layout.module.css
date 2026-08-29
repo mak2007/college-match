@@ -72,8 +72,8 @@
 
 .navLinkActive {
   color: #ffffff;
-  background-color: rgba(196, 164, 132, 0.2);
-  border-color: rgba(196, 164, 132, 0.4);
+  background-color: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.4);
 }
 
 .loadingOverlay {
@@ -113,8 +113,8 @@
   font-weight: 600;
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  background-color: rgba(196, 164, 132, 0.1);
-  border: 1px solid rgba(196, 164, 132, 0.3);
+  background-color: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
   text-align: center;
   transition: all 0.2s ease;
 }

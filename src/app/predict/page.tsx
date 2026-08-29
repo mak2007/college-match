@@ -451,8 +451,8 @@ export default function Predictor() {
             <h2 className={styles.questionTitle}>Tuition & Hostel Budget</h2>
             <p className={styles.questionSubtitle}>Set your maximum budget constraint or allow any budget</p>
 
-            <div style={{ marginBottom: "1.5rem", background: "white", padding: "1.25rem", borderRadius: "12px", border: "1.5px solid #e5e3dc" }}>
-              <label style={{ display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer", fontSize: "1.05rem", fontWeight: 700, color: "#0F2D52" }}>
+            <div style={{ marginBottom: "1.5rem", background: "white", padding: "1.25rem", borderRadius: "12px", border: "1.5px solid #e2e8f0" }}>
+              <label style={{ display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer", fontSize: "1.05rem", fontWeight: 700, color: "#4f46e5" }}>
                 <input
                   type="checkbox"
                   checked={!isBudgetConstraint}
@@ -547,7 +547,7 @@ export default function Predictor() {
         </div>
       </div>
 
-      <footer className={styles.header} style={{ marginTop: "auto", borderTop: "1px solid #e5e3dc", borderBottom: "none", padding: "2rem 0" }}>
+      <footer className={styles.header} style={{ marginTop: "auto", borderTop: "1px solid #e2e8f0", borderBottom: "none", padding: "2rem 0" }}>
         <div className={styles.headerContainer} style={{ height: "auto" }}>
           <p style={{ color: "#8b9588", fontSize: "0.85rem" }}>© 2026 kollegio. All rights reserved.</p>
           <p style={{ color: "#8b9588", fontSize: "0.85rem", fontStyle: "italic" }}>Data-backed college selection engine</p>

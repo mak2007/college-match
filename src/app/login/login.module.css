@@ -2,8 +2,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #FFFAF0;
-  color: #1A1A1A;
+  background-color: #fcfbfe;
+  color: #0f172a;
   font-family: var(--font-outfit), sans-serif;
 }
 
@@ -20,7 +20,7 @@
 .logo {
   font-weight: 700;
   font-size: 1.25rem;
-  color: #0F2D52;
+  color: #4f46e5;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -42,13 +42,13 @@
   padding: 2.5rem;
   width: 100%;
   max-width: 440px;
-  box-shadow: 0 10px 30px rgba(15, 45, 82, 0.02);
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.02);
 }
 
 .title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #0F2D52;
+  color: #4f46e5;
   margin-bottom: 0.5rem;
   text-align: center;
 }
@@ -110,7 +110,7 @@
 }
 
 .formGroup input:focus {
-  border-color: #0F2D52;
+  border-color: #4f46e5;
   background: white;
 }
 
@@ -126,14 +126,14 @@
   background: white;
   font-weight: 600;
   font-size: 0.95rem;
-  color: #1A1A1A;
+  color: #0f172a;
   cursor: pointer;
   transition: background 0.2s ease;
   font-family: inherit;
 }
 
 .googleBtn:hover {
-  background: #f4eee2;
+  background: #f5f3ff;
 }
 
 .googleBtn:disabled {
@@ -145,7 +145,7 @@
   display: flex;
   align-items: center;
   text-align: center;
-  color: #8c8c8c;
+  color: #64748b;
   font-size: 0.8rem;
   margin: 1.5rem 0;
 }
@@ -170,7 +170,7 @@
   padding: 0.85rem;
   border: none;
   border-radius: 8px;
-  background: #0F2D52;
+  background: #4f46e5;
   color: white;
   font-weight: 600;
   font-size: 0.95rem;
@@ -181,7 +181,7 @@
 }
 
 .submitBtn:hover {
-  background: #0A203A;
+  background: #4338ca;
 }
 
 .submitBtn:disabled {
@@ -202,14 +202,14 @@
 }
 
 .modeToggle a {
-  color: #0F2D52;
+  color: #4f46e5;
   font-weight: 700;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .modeToggle a:hover {
-  color: #C4A484;
+  color: #8b5cf6;
   text-decoration: underline;
 }
 

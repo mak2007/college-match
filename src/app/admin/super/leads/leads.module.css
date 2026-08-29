@@ -34,7 +34,7 @@
   border: 1px solid var(--light-border);
   padding: 1rem 1.5rem;
   border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(15, 45, 82, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.05);
 }
 
 .totalCount {
@@ -70,20 +70,20 @@
   transition: all 0.2s ease;
   font-family: inherit;
   color: var(--light-text);
-  box-shadow: 0 2px 4px rgba(15, 45, 82, 0.02);
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.02);
 }
 
 .pipelineCard:hover {
   background: var(--light-surface);
   border-color: var(--primary-color);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(15, 45, 82, 0.05);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.05);
 }
 
 .pipelineCardActive {
   background: var(--light-surface);
   border-color: var(--primary-color);
-  box-shadow: 0 4px 15px rgba(15, 45, 82, 0.08);
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.08);
   font-weight: 700;
 }
 
@@ -130,7 +130,7 @@
 
 .searchInput:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(15, 45, 82, 0.1);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
 .filterSelect {
@@ -149,7 +149,7 @@
 
 .filterSelect:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(15, 45, 82, 0.1);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
 /* Table */
@@ -179,13 +179,13 @@
   background: var(--light-surface);
   border: 1px solid var(--light-border);
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(15, 45, 82, 0.02);
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.02);
 }
 
 .tableRow:hover {
   background: var(--light-surface);
   border-color: var(--primary-color);
-  box-shadow: 0 4px 12px rgba(15, 45, 82, 0.06);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.06);
 }
 
 .cellStudent {
@@ -366,7 +366,7 @@
   background: var(--light-surface);
   border: 1px solid var(--light-border);
   border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(15, 45, 82, 0.03);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.03);
 }
 
 .emptyIcon {
@@ -401,7 +401,7 @@
   backdrop-filter: blur(12px);
   border: 1px solid;
   max-width: 360px;
-  box-shadow: 0 10px 30px rgba(15, 45, 82, 0.1);
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.1);
 }
 
 .toastSuccess {

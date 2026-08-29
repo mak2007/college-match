@@ -49,10 +49,10 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
 
   if (!studentId) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FFFAF0" }}>
-        <div style={{ maxWidth: "500px", background: "white", border: "1px solid #e6e4dc", borderRadius: "16px", padding: "2.5rem", textAlign: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}>
-          <h2 style={{ color: "#0F2D52" }}>No recommendations found</h2>
-          <p style={{ color: "#4a4a4a", margin: "1rem 0" }}>
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#fcfbfe" }}>
+        <div style={{ maxWidth: "500px", background: "white", border: "1px solid #e2e8f0", borderRadius: "16px", padding: "2.5rem", textAlign: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}>
+          <h2 style={{ color: "#4f46e5" }}>No recommendations found</h2>
+          <p style={{ color: "#475569", margin: "1rem 0" }}>
             It looks like you haven&apos;t filled out the preference quiz yet.
           </p>
           <Link href="/predict" className="btn btn-primary">

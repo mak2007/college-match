@@ -536,10 +536,10 @@ export default function UnifiedCollegeManager() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
         <div>
-          <h1 style={{ fontSize: "1.85rem", fontWeight: 800, color: "#0F2D52", margin: 0 }}>
+          <h1 style={{ fontSize: "1.85rem", fontWeight: 800, color: "#4f46e5", margin: 0 }}>
             College Data Manager
           </h1>
-          <p style={{ color: "#4a4a4a", fontSize: "0.95rem", margin: "0.3rem 0 0" }}>
+          <p style={{ color: "#475569", fontSize: "0.95rem", margin: "0.3rem 0 0" }}>
             Exact NIRF ranks, placement scores, tuition fees & JEE percentiles. Click any college to inspect details.
           </p>
         </div>
@@ -553,7 +553,7 @@ export default function UnifiedCollegeManager() {
             disabled={recomputing}
             style={{
               padding: "0.65rem 1.25rem",
-              background: "#0F2D52",
+              background: "#4f46e5",
               color: "white",
               border: "none",
               borderRadius: "8px",
@@ -570,7 +570,7 @@ export default function UnifiedCollegeManager() {
       <div
         style={{
           background: "white",
-          border: "2px dashed #C4A484",
+          border: "2px dashed #8b5cf6",
           borderRadius: "16px",
           padding: "2rem",
           marginBottom: "2rem",
@@ -579,7 +579,7 @@ export default function UnifiedCollegeManager() {
         }}
       >
         <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>📁</div>
-        <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#0F2D52", margin: "0 0 0.5rem" }}>
+        <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#4f46e5", margin: "0 0 0.5rem" }}>
           Upload Master Spreadsheet (.xlsx / .xls / .csv)
         </h3>
         <p style={{ color: "#666", fontSize: "0.9rem", maxWidth: "600px", margin: "0 auto 1.5rem" }}>
@@ -599,8 +599,8 @@ export default function UnifiedCollegeManager() {
             htmlFor="excel-master-upload"
             style={{
               padding: "0.8rem 1.75rem",
-              background: "#0F2D52",
-              color: "#FFFAF0",
+              background: "#4f46e5",
+              color: "#fcfbfe",
               borderRadius: "10px",
               fontWeight: 700,
               fontSize: "0.95rem",
@@ -619,8 +619,8 @@ export default function UnifiedCollegeManager() {
             style={{
               padding: "0.8rem 1.5rem",
               background: "transparent",
-              color: "#0F2D52",
-              border: "1.5px solid #0F2D52",
+              color: "#4f46e5",
+              border: "1.5px solid #4f46e5",
               borderRadius: "10px",
               fontWeight: 700,
               fontSize: "0.95rem",
@@ -651,13 +651,13 @@ export default function UnifiedCollegeManager() {
       </div>
 
       {/* Category Tabs: Generic vs New-Gen AI */}
-      <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", borderBottom: "2px solid #e5e3dc", paddingBottom: "0.5rem", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", borderBottom: "2px solid #e2e8f0", paddingBottom: "0.5rem", flexWrap: "wrap" }}>
         <button
           onClick={() => setActiveTab("ALL")}
           style={{
             padding: "0.6rem 1.25rem",
-            background: activeTab === "ALL" ? "#0F2D52" : "transparent",
-            color: activeTab === "ALL" ? "white" : "#4a4a4a",
+            background: activeTab === "ALL" ? "#4f46e5" : "transparent",
+            color: activeTab === "ALL" ? "white" : "#475569",
             border: "none",
             borderRadius: "8px",
             fontWeight: 700,
@@ -672,8 +672,8 @@ export default function UnifiedCollegeManager() {
           onClick={() => setActiveTab("GENERIC")}
           style={{
             padding: "0.6rem 1.25rem",
-            background: activeTab === "GENERIC" ? "#0F2D52" : "transparent",
-            color: activeTab === "GENERIC" ? "white" : "#4a4a4a",
+            background: activeTab === "GENERIC" ? "#4f46e5" : "transparent",
+            color: activeTab === "GENERIC" ? "white" : "#475569",
             border: "none",
             borderRadius: "8px",
             fontWeight: 700,
@@ -702,13 +702,13 @@ export default function UnifiedCollegeManager() {
       </div>
 
       {/* Table Box */}
-      <div style={{ background: "white", borderRadius: "16px", border: "1px solid #e5e3dc", padding: "1.5rem", boxShadow: "0 4px 20px rgba(0,0,0,0.02)" }}>
+      <div style={{ background: "white", borderRadius: "16px", border: "1px solid #e2e8f0", padding: "1.5rem", boxShadow: "0 4px 20px rgba(0,0,0,0.02)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", flexWrap: "wrap", gap: "1rem" }}>
           <div>
-            <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#0F2D52", margin: 0 }}>
+            <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#4f46e5", margin: 0 }}>
               {activeTab === "ALL" ? "All Colleges" : activeTab === "GENERIC" ? "Generic Engineering Universities" : "New-Gen & AI Institutes"} ({filtered.length} Total)
             </h3>
-            <span style={{ fontSize: "0.85rem", color: "#8c8c8c" }}>
+            <span style={{ fontSize: "0.85rem", color: "#64748b" }}>
               Click any row to open the complete details & quality scores inspector.
             </span>
           </div>
@@ -733,7 +733,7 @@ export default function UnifiedCollegeManager() {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.9rem" }}>
             <thead>
-              <tr style={{ background: "#f8f9fa", borderBottom: "2px solid #e5e3dc", color: "#0F2D52" }}>
+              <tr style={{ background: "#f8f9fa", borderBottom: "2px solid #e2e8f0", color: "#4f46e5" }}>
                 <th style={{ padding: "0.85rem 1rem" }}>Rank</th>
                 <th style={{ padding: "0.85rem 1rem" }}>College Name</th>
                 <th style={{ padding: "0.85rem 1rem" }}>Category</th>
@@ -752,13 +752,13 @@ export default function UnifiedCollegeManager() {
                     key={col.id}
                     onClick={() => handleOpenDetails(col)}
                     style={{ borderBottom: "1px solid #f1f1f1", cursor: "pointer", transition: "background 0.15s" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "#fdfbf7")}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#f8f7ff")}
                     onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                   >
-                    <td style={{ padding: "1rem", fontWeight: 800, color: "#8c8c8c" }}>
+                    <td style={{ padding: "1rem", fontWeight: 800, color: "#64748b" }}>
                       #{col.rank || "—"}
                     </td>
-                    <td style={{ padding: "1rem", fontWeight: 700, color: "#0F2D52" }}>
+                    <td style={{ padding: "1rem", fontWeight: 700, color: "#4f46e5" }}>
                       {col.name}
                       <div style={{ fontSize: "0.8rem", color: "#666", fontWeight: 400 }}>
                         📍 {col.city}, {col.state}
@@ -792,7 +792,7 @@ export default function UnifiedCollegeManager() {
                         <span style={{ fontSize: "0.75rem", background: "#f0fdf4", color: "#166534", padding: "0.15rem 0.4rem", borderRadius: "4px", fontWeight: 700 }}>
                           P: {col.placementScore}/10
                         </span>
-                        <span style={{ fontSize: "0.75rem", background: "#eff6ff", color: "#1e40af", padding: "0.15rem 0.4rem", borderRadius: "4px", fontWeight: 700 }}>
+                        <span style={{ fontSize: "0.75rem", background: "#eff6ff", color: "#6366f1", padding: "0.15rem 0.4rem", borderRadius: "4px", fontWeight: 700 }}>
                           C: {col.collegeLifeScore}/10
                         </span>
                         <span style={{ fontSize: "0.75rem", background: "#fefce8", color: "#854d0e", padding: "0.15rem 0.4rem", borderRadius: "4px", fontWeight: 700 }}>
@@ -800,13 +800,13 @@ export default function UnifiedCollegeManager() {
                         </span>
                       </div>
                     </td>
-                    <td style={{ padding: "1rem", color: "#4a4a4a" }}>
+                    <td style={{ padding: "1rem", color: "#475569" }}>
                       {branch?.tuitionFeeAnnual && branch.tuitionFeeAnnual > 0 ? `₹${(branch.tuitionFeeAnnual / 100000).toFixed(2)} L` : "Subsidised / Varies"}
                     </td>
                     <td style={{ padding: "1rem", color: "#166534", fontWeight: 700 }}>
                       {branch?.avgSalary && branch.avgSalary > 0 ? `₹${(branch.avgSalary / 100000).toFixed(1)} LPA` : "—"}
                     </td>
-                    <td style={{ padding: "1rem", color: "#4a4a4a" }}>
+                    <td style={{ padding: "1rem", color: "#475569" }}>
                       {branch?.minJeePercentileCutoff && branch.minJeePercentileCutoff > 0 ? `${branch.minJeePercentileCutoff}%ile` : "Direct / Merit"}
                     </td>
                     <td style={{ padding: "1rem", textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
@@ -815,9 +815,9 @@ export default function UnifiedCollegeManager() {
                           onClick={() => handleOpenDetails(col)}
                           style={{
                             padding: "0.4rem 0.75rem",
-                            background: "#FFFAF0",
-                            color: "#0F2D52",
-                            border: "1.5px solid #C4A484",
+                            background: "#fcfbfe",
+                            color: "#4f46e5",
+                            border: "1.5px solid #8b5cf6",
                             borderRadius: "6px",
                             fontWeight: 700,
                             cursor: "pointer",
@@ -884,10 +884,10 @@ export default function UnifiedCollegeManager() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem", borderBottom: "1px solid #eee", paddingBottom: "1rem" }}>
               <div>
-                <span style={{ fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "#8c8c8c", fontWeight: 700 }}>
+                <span style={{ fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700 }}>
                   College Profile & Scoring Inspector
                 </span>
-                <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#0F2D52", margin: "0.2rem 0 0" }}>
+                <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#4f46e5", margin: "0.2rem 0 0" }}>
                   {selectedCollege.name}
                 </h2>
               </div>
@@ -901,12 +901,12 @@ export default function UnifiedCollegeManager() {
 
             <form onSubmit={handleSaveCollege}>
               {/* Basic Information */}
-              <h4 style={{ fontSize: "1rem", fontWeight: 800, color: "#0F2D52", marginBottom: "0.75rem" }}>
+              <h4 style={{ fontSize: "1rem", fontWeight: 800, color: "#4f46e5", marginBottom: "0.75rem" }}>
                 1. Basic Details & Categorization
               </h4>
               <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: "1rem", marginBottom: "1.25rem" }}>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>College Name</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>College Name</label>
                   <input
                     type="text"
                     required
@@ -916,7 +916,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>Category</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>Category</label>
                   <select
                     value={editForm.isNewGen ? "NEWGEN" : "GENERIC"}
                     onChange={(e) => setEditForm({ ...editForm, isNewGen: e.target.value === "NEWGEN" })}
@@ -927,7 +927,7 @@ export default function UnifiedCollegeManager() {
                   </select>
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>National Rank</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>National Rank</label>
                   <input
                     type="number"
                     min="1"
@@ -940,7 +940,7 @@ export default function UnifiedCollegeManager() {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>City</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>City</label>
                   <input
                     type="text"
                     required
@@ -950,7 +950,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>State</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>State</label>
                   <input
                     type="text"
                     required
@@ -960,7 +960,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>Official Website</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>Official Website</label>
                   <input
                     type="text"
                     value={editForm.website}
@@ -969,7 +969,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>Apply URL</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>Apply URL</label>
                   <input
                     type="text"
                     value={editForm.officialApplyUrl}
@@ -980,12 +980,12 @@ export default function UnifiedCollegeManager() {
               </div>
 
               {/* Quality Scores */}
-              <h4 style={{ fontSize: "1rem", fontWeight: 800, color: "#0F2D52", marginBottom: "0.75rem" }}>
+              <h4 style={{ fontSize: "1rem", fontWeight: 800, color: "#4f46e5", marginBottom: "0.75rem" }}>
                 2. Quality & Performance Scores (0 to 10 Scale)
               </h4>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>📈 Placement (0-10)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>📈 Placement (0-10)</label>
                   <input
                     type="number"
                     step="0.1"
@@ -997,7 +997,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>🏫 Campus Life (0-10)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>🏫 Campus Life (0-10)</label>
                   <input
                     type="number"
                     step="0.1"
@@ -1009,7 +1009,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>📚 Curriculum (0-10)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>📚 Curriculum (0-10)</label>
                   <input
                     type="number"
                     step="0.1"
@@ -1021,7 +1021,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>🏗️ Infra (0-10)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>🏗️ Infra (0-10)</label>
                   <input
                     type="number"
                     step="0.1"
@@ -1033,7 +1033,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>🚀 Startup Ecosystem (0-10)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>🚀 Startup Ecosystem (0-10)</label>
                   <input
                     type="number"
                     step="0.1"
@@ -1045,7 +1045,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>⚽ Sports & Extra (0-10)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>⚽ Sports & Extra (0-10)</label>
                   <input
                     type="number"
                     step="0.1"
@@ -1057,7 +1057,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>🌐 Global Exposure (0-10)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>🌐 Global Exposure (0-10)</label>
                   <input
                     type="number"
                     step="0.1"
@@ -1069,7 +1069,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div style={{ display: "flex", alignItems: "center", paddingTop: "1.2rem" }}>
-                  <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9rem", fontWeight: 700, color: "#0F2D52", cursor: "pointer" }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9rem", fontWeight: 700, color: "#4f46e5", cursor: "pointer" }}>
                     <input
                       type="checkbox"
                       checked={editForm.isPartner}
@@ -1082,12 +1082,12 @@ export default function UnifiedCollegeManager() {
               </div>
 
               {/* Branch Cutoffs & Packages */}
-              <h4 style={{ fontSize: "1rem", fontWeight: 800, color: "#0F2D52", marginBottom: "0.75rem" }}>
+              <h4 style={{ fontSize: "1rem", fontWeight: 800, color: "#4f46e5", marginBottom: "0.75rem" }}>
                 3. Branch Details, Cutoffs & Financials (CSE / Benchmark Branch)
               </h4>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem", marginBottom: "1.75rem" }}>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>Annual Tuition (INR)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>Annual Tuition (INR)</label>
                   <input
                     type="number"
                     min="0"
@@ -1097,7 +1097,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>Annual Hostel (INR)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>Annual Hostel (INR)</label>
                   <input
                     type="number"
                     min="0"
@@ -1107,7 +1107,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>Avg Package (INR)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>Avg Package (INR)</label>
                   <input
                     type="number"
                     min="0"
@@ -1117,7 +1117,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>Highest Package (INR)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>Highest Package (INR)</label>
                   <input
                     type="number"
                     min="0"
@@ -1127,7 +1127,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>Min JEE Cutoff (%ile)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>Min JEE Cutoff (%ile)</label>
                   <input
                     type="number"
                     step="0.1"
@@ -1139,7 +1139,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>Min 12th Board Cutoff (%)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>Min 12th Board Cutoff (%)</label>
                   <input
                     type="number"
                     step="0.1"
@@ -1151,7 +1151,7 @@ export default function UnifiedCollegeManager() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#4a4a4a", marginBottom: "0.3rem" }}>Placement Rate (%)</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#475569", marginBottom: "0.3rem" }}>Placement Rate (%)</label>
                   <input
                     type="number"
                     step="0.1"
@@ -1204,7 +1204,7 @@ export default function UnifiedCollegeManager() {
                     type="submit"
                     style={{
                       padding: "0.7rem 2rem",
-                      background: "#0F2D52",
+                      background: "#4f46e5",
                       color: "white",
                       border: "none",
                       borderRadius: "8px",

@@ -486,7 +486,7 @@ export default function StudentDashboard() {
         {activeTab === "matches" && (
           <div className={styles.tabContent}>
             {recommendations.length === 0 ? (
-              <div style={{ background: "white", border: "1px solid #e6e4dc", borderRadius: "20px", padding: "4rem 2rem", textAlign: "center" }}>
+              <div style={{ background: "white", border: "1px solid #e2e8f0", borderRadius: "20px", padding: "4rem 2rem", textAlign: "center" }}>
                 <h3>No match results yet</h3>
                 <p style={{ color: "var(--text-secondary)", margin: "1rem 0 2rem" }}>
                   Run the CollegeMatch wizard or Live Matcher to generate your personalised recommendations.
@@ -595,7 +595,7 @@ export default function StudentDashboard() {
         {activeTab === "leads" && (
           <div className={styles.tabContent}>
             {leads.length === 0 ? (
-              <div style={{ background: "white", border: "1px solid #e6e4dc", borderRadius: "20px", padding: "4rem 2rem", textAlign: "center" }}>
+              <div style={{ background: "white", border: "1px solid #e2e8f0", borderRadius: "20px", padding: "4rem 2rem", textAlign: "center" }}>
                 <h3>No applications tracked yet</h3>
                 <p style={{ color: "var(--text-secondary)", margin: "1rem 0 2rem" }}>
                   Click "Apply via CollegeMatch" on any matched college to start tracking your application pipeline.

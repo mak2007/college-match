@@ -7,7 +7,7 @@
 }
 
 .header {
-  border-bottom: 1px solid #e6e4dc;
+  border-bottom: 1px solid #e2e8f0;
   background-color: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   position: sticky;
@@ -73,7 +73,7 @@
   overflow-y: auto;
   padding: 1.75rem;
   background-color: #ffffff;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e2e8f0;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
@@ -86,21 +86,21 @@
   background: transparent;
 }
 .sidebar::-webkit-scrollbar-thumb {
-  background: #e6e4dc;
+  background: #e2e8f0;
   border-radius: 2px;
 }
 
 .panelTitle {
   font-size: 1.2rem;
   font-weight: 700;
-  border-bottom: 1px solid #e6e4dc;
+  border-bottom: 1px solid #e2e8f0;
   padding-bottom: 0.75rem;
   margin-bottom: 0.5rem;
   color: #0c2e1b;
 }
 
 .filterSection {
-  border-bottom: 1px solid #e6e4dc;
+  border-bottom: 1px solid #e2e8f0;
   padding-bottom: 1.25rem;
 }
 
@@ -138,7 +138,7 @@
 .rangeSlider {
   width: 100%;
   accent-color: #10b981;
-  background-color: #e6e4dc;
+  background-color: #e2e8f0;
   height: 6px;
   border-radius: 3px;
   outline: none;
@@ -165,7 +165,7 @@
 
 .branchBtn {
   background-color: #ffffff;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e2e8f0;
   color: #4a5d4e;
   padding: 0.5rem;
   border-radius: 6px;
@@ -194,7 +194,7 @@
   min-width: 0;
   padding: 0.5rem;
   background-color: #ffffff;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e2e8f0;
   color: #0c2e1b;
   font-size: 0.85rem;
   border-radius: 6px;
@@ -266,7 +266,7 @@
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
   padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
@@ -358,7 +358,7 @@
 
 .collegeCard {
   background-color: #ffffff;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e2e8f0;
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   padding: 1.75rem;
@@ -432,7 +432,7 @@
   align-items: center;
   gap: 0.75rem;
   background-color: #f7f5ef;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e2e8f0;
   padding: 0.5rem 1rem;
   border-radius: 8px;
   width: fit-content;
@@ -459,8 +459,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  border-top: 1px dashed #e6e4dc;
-  border-bottom: 1px dashed #e6e4dc;
+  border-top: 1px dashed #e2e8f0;
+  border-bottom: 1px dashed #e2e8f0;
   padding: 1.25rem 0;
 }
 
@@ -468,7 +468,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  border-right: 1px dashed #e6e4dc;
+  border-right: 1px dashed #e2e8f0;
   padding-right: 1.5rem;
 }
 
@@ -498,7 +498,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.9rem;
-  border-top: 1px solid #e6e4dc;
+  border-top: 1px solid #e2e8f0;
   padding-top: 0.4rem;
   margin-top: 0.25rem;
 }
@@ -531,7 +531,7 @@
 .badgeTarget {
   background-color: rgba(30, 64, 175, 0.08);
   border: 1px solid rgba(30, 64, 175, 0.15);
-  color: #1e40af;
+  color: #6366f1;
 }
 
 .badgeDream {
@@ -566,7 +566,7 @@
   background-color: #f5f3ec;
   padding: 0.3rem 0.6rem;
   border-radius: 4px;
-  border: 1px solid #e6e4dc;
+  border: 1px solid #e2e8f0;
 }
 
 .actionBlock {
@@ -599,7 +599,7 @@
   }
   .paramSection {
     border-right: none;
-    border-bottom: 1px dashed #e6e4dc;
+    border-bottom: 1px dashed #e2e8f0;
     padding-right: 0;
     padding-bottom: 1rem;
   }

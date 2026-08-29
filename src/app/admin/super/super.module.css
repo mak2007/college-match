@@ -62,8 +62,8 @@
   font-weight: 600;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
-  background-color: rgba(196, 164, 132, 0.08);
-  border: 1px solid rgba(196, 164, 132, 0.2);
+  background-color: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
   transition: all 0.2s ease;
 }
 
