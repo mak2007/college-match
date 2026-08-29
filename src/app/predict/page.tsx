@@ -123,11 +123,14 @@ export default function Predictor() {
       const data = await res.json();
       if (res.ok && data.student_id) {
         localStorage.removeItem(PROGRESS_KEY);
-        router.push(`/results?student_id=${data.student_id}`);
+        window.location.href = `/results?student_id=${data.student_id}`;
         return;
+      } else {
+        alert(data.error || "Failed to calculate recommendations. Please try again.");
       }
     } catch (e) {
       console.error("Error submitting quiz:", e);
+      alert("Network error while generating results. Please check your connection.");
     }
     setLoading(false);
   };

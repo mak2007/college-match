@@ -99,9 +99,14 @@ function mapCandidate(b: any): CollegeCandidate {
 export async function POST(request: Request) {
   try {
     // 1. Get user session or generate guest identifier
-    const cookieStore = await cookies();
-    const token = cookieStore.get("cm_auth_token")?.value;
-    const session = token ? await verifyToken(token) : null;
+    let session = null;
+    try {
+      const cookieStore = await cookies();
+      const token = cookieStore.get("cm_auth_token")?.value;
+      if (token) session = await verifyToken(token);
+    } catch {
+      session = null;
+    }
 
     // 2. Parse quiz data from request body
     const body = await request.json();
