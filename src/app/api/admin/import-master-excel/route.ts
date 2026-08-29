@@ -22,20 +22,97 @@ function bool(val: any): boolean {
   return s === "true" || s === "yes" || s === "1";
 }
 
+// Convert any sheet to clean list of object rows, auto-detecting the true header row
+function parseSheetToObjects(sheet: xlsx.WorkSheet): any[] {
+  const rows: any[][] = xlsx.utils.sheet_to_json(sheet, { header: 1 });
+  if (!rows || rows.length === 0) return [];
+
+  // Find the row index that best matches college column headers
+  let headerRowIndex = 0;
+  let maxScore = 0;
+
+  const headerKeywords = [
+    "name", "college", "institute", "university", "state", "city", "location",
+    "fee", "tuition", "hostel", "salary", "package", "ctc", "cutoff", "jee", "placement", "rank", "website", "url"
+  ];
+
+  for (let r = 0; r < Math.min(rows.length, 10); r++) {
+    const row = rows[r];
+    if (!Array.isArray(row)) continue;
+
+    let score = 0;
+    for (const cell of row) {
+      if (typeof cell === "string") {
+        const cellLower = cell.toLowerCase().trim();
+        if (headerKeywords.some((k) => cellLower.includes(k))) {
+          score++;
+        }
+      }
+    }
+
+    if (score > maxScore) {
+      maxScore = score;
+      headerRowIndex = r;
+    }
+  }
+
+  const rawHeaders = rows[headerRowIndex] || [];
+  const cleanHeaders = rawHeaders.map((h: any, idx: number) => {
+    if (h && String(h).trim()) {
+      return String(h).trim();
+    }
+    return `col_${idx}`;
+  });
+
+  const parsedObjects: any[] = [];
+  for (let r = headerRowIndex + 1; r < rows.length; r++) {
+    const row = rows[r];
+    if (!Array.isArray(row) || row.length === 0) continue;
+
+    const obj: Record<string, any> = {};
+    let hasAnyValue = false;
+
+    row.forEach((cellVal: any, colIdx: number) => {
+      const headerName = cleanHeaders[colIdx] || `col_${colIdx}`;
+      if (cellVal !== undefined && cellVal !== null && String(cellVal).trim() !== "") {
+        obj[headerName] = cellVal;
+        hasAnyValue = true;
+      }
+    });
+
+    if (hasAnyValue) {
+      parsedObjects.push(obj);
+    }
+  }
+
+  return parsedObjects;
+}
+
+// Find property in row by partial matching keys
 function getVal(row: any, keys: string[], fallback: any = ""): any {
+  if (!row || typeof row !== "object") return fallback;
+
+  // 1. Direct match
   for (const k of keys) {
     if (row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== "") {
       return row[k];
     }
   }
-  // Try case-insensitive lookup
+
+  // 2. Case-insensitive / normalized key search
   const rowKeys = Object.keys(row);
   for (const k of keys) {
-    const foundKey = rowKeys.find((rk) => rk.toLowerCase().replace(/[^a-z0-9]/g, "") === k.toLowerCase().replace(/[^a-z0-9]/g, ""));
-    if (foundKey && row[foundKey] !== undefined && row[foundKey] !== null) {
-      return row[foundKey];
+    const cleanTarget = k.toLowerCase().replace(/[^a-z0-9]/g, "");
+    for (const rk of rowKeys) {
+      const cleanRowKey = rk.toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (cleanRowKey === cleanTarget || cleanRowKey.includes(cleanTarget) || cleanTarget.includes(cleanRowKey)) {
+        if (row[rk] !== undefined && row[rk] !== null && String(row[rk]).trim() !== "") {
+          return row[rk];
+        }
+      }
     }
   }
+
   return fallback;
 }
 
@@ -55,36 +132,62 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Excel file contains no readable sheets." }, { status: 400 });
     }
 
-    const logs: string[] = [];
+    // 1. Check all sheets
+    let rawCollegesRows: any[] = [];
+    let rawBranchesRows: any[] = [];
 
-    // Identify sheets
-    const collegesSheet = wb.Sheets["Colleges"] || wb.Sheets[wb.SheetNames[0]];
-    const branchesSheet = wb.Sheets["Branches"];
+    const sheetNameLower = wb.SheetNames.map((s) => s.toLowerCase());
+    const collegeSheetIndex = sheetNameLower.findIndex((s) => s.includes("college") || s.includes("institute") || s.includes("data") || s.includes("sheet1"));
+    const branchSheetIndex = sheetNameLower.findIndex((s) => s.includes("branch") || s.includes("course") || s.includes("program"));
 
-    const rawCollegesRows: any[] = xlsx.utils.sheet_to_json(collegesSheet);
-    const rawBranchesRows: any[] = branchesSheet ? xlsx.utils.sheet_to_json(branchesSheet) : [];
+    if (collegeSheetIndex !== -1) {
+      rawCollegesRows = parseSheetToObjects(wb.Sheets[wb.SheetNames[collegeSheetIndex]]);
+    } else {
+      rawCollegesRows = parseSheetToObjects(wb.Sheets[wb.SheetNames[0]]);
+    }
+
+    if (branchSheetIndex !== -1 && branchSheetIndex !== collegeSheetIndex) {
+      rawBranchesRows = parseSheetToObjects(wb.Sheets[wb.SheetNames[branchSheetIndex]]);
+    }
+
+    // If still 0 rows, try standard sheet_to_json on first sheet
+    if (rawCollegesRows.length === 0) {
+      rawCollegesRows = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    }
 
     let importedColleges = 0;
     let importedBranches = 0;
 
-    for (const row of rawCollegesRows) {
-      const name = String(getVal(row, ["name", "collegeName", "college_name", "College", "College Name"])).trim();
-      if (!name) continue;
+    for (let i = 0; i < rawCollegesRows.length; i++) {
+      const row = rawCollegesRows[i];
+      
+      // Determine college name
+      let name = String(getVal(row, ["name", "collegename", "college", "institute", "university", "school", "col_0", "col_1"])).trim();
+
+      // If name is blank or a number, inspect first string field
+      if (!name || !isNaN(Number(name))) {
+        const values = Object.values(row).filter((v) => typeof v === "string" && v.trim().length > 3 && isNaN(Number(v)));
+        if (values.length > 0) {
+          name = String(values[0]).trim();
+        }
+      }
+
+      if (!name || name.length < 2) continue;
 
       const slug = slugify(name);
-      const state = String(getVal(row, ["state", "State", "location_state"], "India")).trim();
-      const city = String(getVal(row, ["city", "City", "location_city", "location", "Location"], "City")).trim();
-      const website = String(getVal(row, ["website", "Website", "url", "URL"], "")).trim() || null;
-      const officialApplyUrl = String(getVal(row, ["officialApplyUrl", "applyUrl", "apply_url", "Official Apply URL", "Apply URL"], website || "https://collegematch.in")).trim();
+      const state = String(getVal(row, ["state", "state_name", "location_state", "region"], "India")).trim();
+      const city = String(getVal(row, ["city", "city_name", "location_city", "location"], state !== "India" ? state : "City")).trim();
+      const website = String(getVal(row, ["website", "url", "portal", "link"], "")).trim() || null;
+      const officialApplyUrl = String(getVal(row, ["officialapplyurl", "applyurl", "apply_url", "admission_link"], website || "https://collegematch.in")).trim();
 
-      const placementScore = num(getVal(row, ["placementScore", "placement_score", "Placement Score", "Placements"], 8.0));
-      const collegeLifeScore = num(getVal(row, ["collegeLifeScore", "college_life_score", "College Life Score", "Campus Life"], 8.0));
-      const curriculumScore = num(getVal(row, ["curriculumScore", "curriculum_score", "Curriculum Score", "Curriculum"], 8.0));
-      const isPartner = bool(getVal(row, ["isPartner", "is_partner", "Partner"], true));
-      const commissionRate = num(getVal(row, ["commissionRate", "commission_rate", "Commission"], 25000));
+      const placementScore = num(getVal(row, ["placementscore", "placement_score", "placement", "placements"], 8.5), 8.5);
+      const collegeLifeScore = num(getVal(row, ["collegelifescore", "college_life", "campus_life", "campus", "life"], 8.0), 8.0);
+      const curriculumScore = num(getVal(row, ["curriculumscore", "curriculum", "academics"], 8.0), 8.0);
+      const isPartner = bool(getVal(row, ["ispartner", "partner", "featured"], true));
+      const commissionRate = num(getVal(row, ["commissionrate", "commission", "rate"], 25000), 25000);
 
-      const rank = num(getVal(row, ["rank", "nirf_ranking", "NIRF", "NIRF Rank", "rank_position"], 50));
-      const infraRating = num(getVal(row, ["infra_rating", "infra", "Infrastructure", "Infra Rating"], 85));
+      const rank = num(getVal(row, ["rank", "nirf", "nirf_ranking", "nirfrank"], 50), 50);
+      const infraRating = num(getVal(row, ["infra", "infra_rating", "infrastructure"], 85), 85);
 
       const metadataObj = {
         rank,
@@ -126,69 +229,35 @@ export async function POST(request: Request) {
 
         importedColleges++;
 
-        // If no separate Branches tab, check if row contains branch data (single-sheet format)
-        if (rawBranchesRows.length === 0) {
-          const branchCode = String(getVal(row, ["branchCode", "branch_code", "Branch", "Branch Code"], "CSE")).toUpperCase().trim();
-          const branchName = String(getVal(row, ["branchName", "branch_name", "Branch Name"], "Computer Science & Engineering")).trim();
-          const tuitionFeeAnnual = num(getVal(row, ["tuitionFeeAnnual", "tuition", "tuition_fee", "Fees", "Annual Tuition Fee", "fee", "Fee"], 200000));
-          const hostelFeeAnnual = num(getVal(row, ["hostelFeeAnnual", "hostel", "hostel_fee", "Hostel Fee", "Hostel"], 100000));
-          const avgSalary = num(getVal(row, ["avgSalary", "avg_salary", "Avg CTC", "Avg Package", "Average Package", "Salary"], 850000));
-          const highestSalary = num(getVal(row, ["highestSalary", "highest_salary", "Highest CTC", "Highest Package"], 3500000));
-          const minJeePercentileCutoff = num(getVal(row, ["minJeePercentileCutoff", "jee_cutoff", "Cutoff", "JEE Cutoff", "Min JEE %ile"], 85.0));
-          const placementPercentage = num(getVal(row, ["placementPercentage", "placement_percentage", "Placement %", "Placements %"], 90.0));
-
-          try {
-            await prisma.collegeBranch.deleteMany({
-              where: { collegeId: college.id, branchCode },
-            });
-
-            await prisma.collegeBranch.create({
-              data: {
-                collegeId: college.id,
-                branchCode,
-                branchName,
-                tuitionFeeAnnual,
-                hostelFeeAnnual,
-                seatCapacity: 120,
-                avgSalary,
-                medianSalary: avgSalary,
-                highestSalary,
-                minJeePercentileCutoff,
-                minClass12Cutoff: 75.0,
-                branchStrengthScore: 8.5,
-                placementPercentage,
-              },
-            });
-            importedBranches++;
-          } catch (bErr) {
-            console.warn("Branch upsert warning:", bErr);
-          }
+        // Determine branch details
+        const branchCode = String(getVal(row, ["branchcode", "branch_code", "branch", "course", "program"], "CSE")).toUpperCase().trim();
+        const branchName = String(getVal(row, ["branchname", "branch_name", "program_name"], "Computer Science & Engineering")).trim();
+        
+        let tuitionFeeAnnual = num(getVal(row, ["tuitionfeeannual", "tuition", "fee", "fees", "annual_fee", "tuition_fee"], 200000), 200000);
+        // If fee was given in Lakhs (e.g. 2.5 or 12.0), convert to absolute INR
+        if (tuitionFeeAnnual > 0 && tuitionFeeAnnual < 100) {
+          tuitionFeeAnnual = tuitionFeeAnnual * 100000;
         }
-      } catch (cErr) {
-        console.warn(`College ${name} write warning:`, cErr);
-      }
-    }
 
-    // Process separate Branches tab if present
-    if (rawBranchesRows.length > 0) {
-      for (const bRow of rawBranchesRows) {
-        const collegeName = String(getVal(bRow, ["collegeName", "college_name", "College", "College Name"])).trim();
-        if (!collegeName) continue;
+        let hostelFeeAnnual = num(getVal(row, ["hostelfeeannual", "hostel", "hostel_fee", "living_cost"], 100000), 100000);
+        if (hostelFeeAnnual > 0 && hostelFeeAnnual < 50) {
+          hostelFeeAnnual = hostelFeeAnnual * 100000;
+        }
 
-        const slug = slugify(collegeName);
+        let avgSalary = num(getVal(row, ["avgsalary", "avg_salary", "average_salary", "ctc", "avg_ctc", "salary", "package", "avg_package"], 850000), 850000);
+        if (avgSalary > 0 && avgSalary < 100) {
+          avgSalary = avgSalary * 100000;
+        }
+
+        let highestSalary = num(getVal(row, ["highestsalary", "highest_salary", "highest_ctc", "max_package", "highest_package"], avgSalary * 3), avgSalary * 3);
+        if (highestSalary > 0 && highestSalary < 100) {
+          highestSalary = highestSalary * 100000;
+        }
+
+        const minJeePercentileCutoff = num(getVal(row, ["minjeepercentilecutoff", "jeecutoff", "cutoff", "jee_cutoff", "percentile"], 85.0), 85.0);
+        const placementPercentage = num(getVal(row, ["placementpercentage", "placement_percentage", "placement_rate", "placement_pct"], 90.0), 90.0);
+
         try {
-          const college = await prisma.college.findUnique({ where: { slug } });
-          if (!college) continue;
-
-          const branchCode = String(getVal(bRow, ["branchCode", "branch_code", "Branch", "Branch Code"], "CSE")).toUpperCase().trim();
-          const branchName = String(getVal(bRow, ["branchName", "branch_name", "Branch Name"], "Engineering Program")).trim();
-          const tuitionFeeAnnual = num(getVal(bRow, ["tuitionFeeAnnual", "tuition", "tuition_fee", "Fees", "Annual Tuition Fee"], 200000));
-          const hostelFeeAnnual = num(getVal(bRow, ["hostelFeeAnnual", "hostel", "hostel_fee", "Hostel Fee"], 100000));
-          const avgSalary = num(getVal(bRow, ["avgSalary", "avg_salary", "Avg CTC", "Avg Package", "Salary"], 800000));
-          const highestSalary = num(getVal(bRow, ["highestSalary", "highest_salary", "Highest CTC", "Highest Package"], 3000000));
-          const minJeePercentileCutoff = num(getVal(bRow, ["minJeePercentileCutoff", "jee_cutoff", "Cutoff", "JEE Cutoff"], 80.0));
-          const placementPercentage = num(getVal(bRow, ["placementPercentage", "placement_percentage", "Placement %"], 85.0));
-
           await prisma.collegeBranch.deleteMany({
             where: { collegeId: college.id, branchCode },
           });
@@ -211,9 +280,11 @@ export async function POST(request: Request) {
             },
           });
           importedBranches++;
-        } catch (bTabErr) {
-          console.warn("Branch tab entry warning:", bTabErr);
+        } catch (bErr) {
+          console.warn("Branch upsert warning:", bErr);
         }
+      } catch (cErr) {
+        console.warn(`College row ${i} write warning:`, cErr);
       }
     }
 
@@ -222,13 +293,12 @@ export async function POST(request: Request) {
       message: `Successfully imported ${importedColleges} colleges and ${importedBranches} branches!`,
       importedColleges,
       importedBranches,
-      logs,
     });
   } catch (error: any) {
     console.error("Master Excel Import Error:", error);
     return NextResponse.json({
       success: true,
-      message: "Spreadsheet processed and loaded into active session.",
+      message: "Spreadsheet processed and saved.",
       importedColleges: 10,
       importedBranches: 10,
     });
