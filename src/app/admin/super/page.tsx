@@ -115,21 +115,22 @@ export default function UnifiedCollegeManager() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load verified dataset
+  // Load verified dataset with backend sync priority
   const fetchColleges = useCallback(async () => {
     try {
-      const local = localStorage.getItem("cm_admin_colleges_v4");
-      if (local) {
-        const parsed = JSON.parse(local);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setColleges(parsed);
+      const res = await fetch("/api/admin/colleges");
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setColleges(data);
+          localStorage.setItem("cm_admin_colleges_v6", JSON.stringify(data));
           return;
         }
       }
-
-      setColleges(baseCollegesData as College[]);
-      localStorage.setItem("cm_admin_colleges_v4", JSON.stringify(baseCollegesData));
     } catch {}
+
+    setColleges(baseCollegesData as College[]);
+    localStorage.setItem("cm_admin_colleges_v6", JSON.stringify(baseCollegesData));
   }, []);
 
   useEffect(() => {

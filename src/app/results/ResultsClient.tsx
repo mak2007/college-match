@@ -664,9 +664,47 @@ export default function ResultsClient({
             </div>
           ) : (
             <div className={styles.separateBoxesContainer}>
+              {/* ─── 0. ALL MATCHES / COMBINED TOP RECOMMENDATIONS ─── */}
+              {categoryTab === "all" && (
+                <div style={{ marginBottom: "2.5rem" }}>
+                  <div className={styles.resultsList}>
+                    {paginated.map((rec, idx) => renderCard(rec, (currentPage - 1) * pageSize + idx, Boolean(rec.college?.isNewGen)))}
+                  </div>
+
+                  {/* Pagination for All Matches */}
+                  {filtered.length > pageSize && (
+                    <div className={styles.pagination} style={{ marginTop: "1.5rem", marginBottom: "2rem" }}>
+                      <button
+                        onClick={() => {
+                          setCurrentPage((p) => Math.max(1, p - 1));
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        }}
+                        disabled={currentPage === 1}
+                        className={styles.pageBtn}
+                      >
+                        ← Previous Page
+                      </button>
+                      <span className={styles.pageInfo}>
+                        Page <strong>{currentPage}</strong> of {Math.ceil(filtered.length / pageSize)}
+                      </span>
+                      <button
+                        onClick={() => {
+                          setCurrentPage((p) => Math.min(Math.ceil(filtered.length / pageSize), p + 1));
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        }}
+                        disabled={currentPage === Math.ceil(filtered.length / pageSize)}
+                        className={styles.pageBtn}
+                      >
+                        Next Page →
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* ─── 1. NEW-GEN COLLEGES SECTION ─── */}
               {(categoryTab === "all" || categoryTab === "new_gen") && (
-                <div className={styles.newGenSectionBox}>
+                <div className={styles.newGenSectionBox} style={{ marginTop: categoryTab === "all" ? "2.5rem" : "0" }}>
                   <div className={styles.sectionHeader}>
                     <div className={styles.sectionHeaderLeft}>
                       <h2 className={styles.sectionTitle}>
@@ -702,7 +740,7 @@ export default function ResultsClient({
                         🏫 2. Generic Overall Ranking
                       </h2>
                       <p className={styles.sectionSubtitle}>
-                        Established universities and institutes ranked by your academic cutoffs, NIRF standing, and placement records.
+                        All traditional engineering colleges ranked strictly from highest match score down to lowest.
                       </p>
                     </div>
                     <span style={{ background: "#f4eee2", color: "#0F2D52", padding: "0.35rem 0.85rem", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700 }}>
@@ -721,35 +759,6 @@ export default function ResultsClient({
                   )}
                 </div>
               )}
-            </div>
-          )}
-
-          {/* Pagination Controls */}
-          {filtered.length > pageSize && (
-            <div className={styles.pagination}>
-              <button
-                onClick={() => {
-                  setCurrentPage((p) => Math.max(1, p - 1));
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                disabled={currentPage === 1}
-                className={styles.pageBtn}
-              >
-                ← Previous Page
-              </button>
-              <span className={styles.pageInfo}>
-                Page <strong>{currentPage}</strong> of {Math.ceil(filtered.length / pageSize)}
-              </span>
-              <button
-                onClick={() => {
-                  setCurrentPage((p) => Math.min(Math.ceil(filtered.length / pageSize), p + 1));
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                disabled={currentPage === Math.ceil(filtered.length / pageSize)}
-                className={styles.pageBtn}
-              >
-                Next Page →
-              </button>
             </div>
           )}
         </main>
