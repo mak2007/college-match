@@ -75,21 +75,41 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
 
   if (!dbRecommendations || dbRecommendations.length === 0) {
     try {
-      const colleges = await prisma.college.findMany({
+      let colleges = await prisma.college.findMany({
         include: { branches: true },
-        take: 20,
+        take: 36,
       });
-      dbRecommendations = (colleges || []).map((c: any, idx: number) => ({
-        id: `rec_${idx}`,
-        collegeId: c.id,
-        branchCode: c.branches?.[0]?.branchCode || "CSE",
-        matchScore: Math.max(55, 96 - idx * 2.2),
-        qualityScore: c.placementScore || 85,
-        admissionProbability: idx < 3 ? "SAFE" : idx < 8 ? "TARGET" : "REACH",
-        rankPosition: idx + 1,
-        reasons: JSON.stringify(["Strong career alignment", "High ROI rating"]),
-        college: c,
-      }));
+
+      if (!colleges || colleges.length === 0) {
+        const baseData = require("@/lib/base-colleges.json");
+        colleges = baseData.map((c: any) => ({
+          ...c,
+          branches: c.branches || [],
+        }));
+      }
+
+      dbRecommendations = (colleges || []).map((c: any, idx: number) => {
+        const branch = c.branches?.[0] || {
+          branchCode: "CSE",
+          branchName: "Computer Science & Engineering",
+          tuitionFeeAnnual: 250000,
+          hostelFeeAnnual: 100000,
+          avgSalary: 900000,
+          minJeePercentileCutoff: 85,
+        };
+        const prob = idx < 5 ? 85 : idx < 15 ? 60 : 30;
+        return {
+          id: `rec_${idx}`,
+          collegeId: c.id,
+          branchCode: branch.branchCode || "CSE",
+          matchScore: Math.max(50, Math.round(96 - idx * 1.5)),
+          qualityScore: c.placementScore ? c.placementScore * 10 : 85,
+          admissionProbability: prob,
+          rankPosition: idx + 1,
+          reasons: JSON.stringify(["Strong career alignment", "High ROI rating", "Top NIRF rank"]),
+          college: c,
+        };
+      });
     } catch (fallbackErr) {
       console.warn("Fallback recommendation generation error:", fallbackErr);
     }

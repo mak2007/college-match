@@ -220,35 +220,39 @@ export default function ResultsClient({
   };
 
   const enriched = useMemo(() => {
-    console.log("Enriching recommendations:", recommendations.length);
     return recommendations.map((rec) => {
-      const branch = rec.college?.branches?.find((b) => b.branchCode === rec.branchCode);
-      const category = rec.admissionProbability >= 80 ? "Safe" : rec.admissionProbability >= 40 ? "Target" : rec.admissionProbability >= 10 ? "Dream" : "Out of Reach";
-      return { ...rec, category, admissionProb: rec.admissionProbability ?? 0 };
+      let prob = typeof rec.admissionProbability === "number" ? rec.admissionProbability : 50;
+      if (typeof rec.admissionProbability === "string") {
+        const s = (rec.admissionProbability as string).toUpperCase();
+        if (s.includes("SAFE") || s.includes("HIGH")) prob = 85;
+        else if (s.includes("TARGET") || s.includes("MED")) prob = 60;
+        else if (s.includes("DREAM") || s.includes("REACH") || s.includes("LOW")) prob = 25;
+      }
+      
+      const category = rec.admissionCompetitiveness?.category || (prob >= 75 ? "Safe" : prob >= 35 ? "Target" : "Dream");
+      return { ...rec, category, admissionProb: prob };
     });
   }, [recommendations]);
 
   const filtered = useMemo(() => {
-    const allChecked = admissionFilter.high && admissionFilter.medium && admissionFilter.low;
     let result = enriched;
 
-    if (sortMode === "best_fit") {
-      result = enriched.filter((r) => r.admissionProb >= 40);
-    } else if (sortMode === "all") {
-      result = enriched.filter((r) => r.admissionProb >= 10);
-    }
-
-    if (!allChecked) {
+    // Check admission probability checkbox filters
+    if (!admissionFilter.high || !admissionFilter.medium || !admissionFilter.low) {
       const allowed: string[] = [];
       if (admissionFilter.high) allowed.push("Safe");
       if (admissionFilter.medium) allowed.push("Target");
-      if (admissionFilter.low) allowed.push("Dream");
+      if (admissionFilter.low) allowed.push("Dream", "Reach", "Out of Reach");
       result = result.filter((r) => allowed.includes(r.category));
     }
 
-    return result.sort((a, b) => {
+    if (result.length === 0 && enriched.length > 0) {
+      result = enriched;
+    }
+
+    return [...result].sort((a, b) => {
       if (sortMode === "admission_chance") return b.admissionProb - a.admissionProb;
-      return b.matchScore - a.matchScore;
+      return (a.rankPosition || 0) - (b.rankPosition || 0) || (b.matchScore || 0) - (a.matchScore || 0);
     });
   }, [enriched, sortMode, admissionFilter]);
 
