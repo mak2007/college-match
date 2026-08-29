@@ -129,7 +129,7 @@ export default function ResultsClient({
   recommendations: initialRecommendations,
 }: ResultsClientProps) {
   const [sortMode, setSortMode] = useState<SortMode>("best_fit");
-  const [admissionFilter, setAdmissionFilter] = useState({ high: true, medium: true, low: true });
+  const [admissionFilter, setAdmissionFilter] = useState({ high: true, medium: true, low: false });
   const [recommendations, setRecommendations] = useState(initialRecommendations);
   const [isRegenerating, setIsRegenerating] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -244,10 +244,6 @@ export default function ResultsClient({
       if (admissionFilter.medium) allowed.push("Target");
       if (admissionFilter.low) allowed.push("Dream", "Reach", "Out of Reach");
       result = result.filter((r) => allowed.includes(r.category));
-    }
-
-    if (result.length === 0 && enriched.length > 0) {
-      result = enriched;
     }
 
     return [...result].sort((a, b) => {

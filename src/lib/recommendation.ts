@@ -610,27 +610,8 @@ export function generateRecommendations(
       if (!isLocationMatched) continue;
     }
 
-    // --- STAGE 2: BUDGET PENALTY ---
-    let budgetPenaltyVal = 0;
+    // --- STAGE 2: PENALTIES (Zero penalties applied) ---
     const appliedPenalties: AppliedModifier[] = [];
-
-    if (config.budgetPenalty.active && student.isBudgetConstraint && student.budgetLimit && student.budgetLimit > 0) {
-      const limit = student.budgetLimit;
-      const multiplier = config.budgetPenalty.thresholdMultiplier || 1.5;
-
-      if (total4YrCost > limit) {
-        const range = Math.max(1, (multiplier - 1.0) * limit);
-        budgetPenaltyVal =
-          Math.pow(Math.min(multiplier * limit, total4YrCost - limit) / range, config.budgetPenalty.exponent || 2.0) *
-          (config.budgetPenalty.basePenaltyWeight || 30.0);
-        appliedPenalties.push({
-          id: "budget_overrun",
-          type: "PENALTY",
-          value: Math.round(budgetPenaltyVal * 10) / 10,
-          reason: `Total cost (₹${(total4YrCost / 100000).toFixed(1)}L) exceeds budget limit (₹${(limit / 100000).toFixed(1)}L)`,
-        });
-      }
-    }
 
     // --- STAGE 3: ACADEMIC FIT (admission probability via sigmoid curve) ---
     // Calculate admission probability using sigmoid curve
@@ -647,12 +628,6 @@ export function generateRecommendations(
       if (admissionCalc.category === "Out of Reach") {
         category = "Dream";
         badgeText = "Aspirational / Reach";
-        appliedPenalties.push({
-          id: "academic_reach",
-          type: "PENALTY",
-          value: 20.0,
-          reason: `JEE cutoff (${c.minJeePercentileCutoff}%ile) is higher than current score`,
-        });
       } else {
         category = admissionCalc.category as "Dream" | "Target" | "Safe" | "Out of Reach";
         badgeText = admissionBadgeText(admissionCalc.category, admissionCalc.probability);
@@ -756,9 +731,9 @@ export function generateRecommendations(
     }
 
     // ==========================================
-    // 4. FINAL CALCULATION
+    // 4. FINAL CALCULATION (Zero penalties)
     // ==========================================
-    const finalScoreVal = Math.min(100, Math.max(0, Math.round((baseScoreVal + goalBonus - budgetPenaltyVal) * 10) / 10));
+    const finalScoreVal = Math.min(100, Math.max(0, Math.round((baseScoreVal + goalBonus) * 10) / 10));
 
     // Generate explainability text highlights
     const keyReasons: string[] = [];
