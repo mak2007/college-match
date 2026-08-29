@@ -288,6 +288,31 @@ export default function UnifiedCollegeManager() {
     }
   };
 
+  // Toggle category between Generic and New-Gen AI
+  const handleToggleCategory = async (collegeId: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const updated = colleges.map((c) => {
+      if (c.id === collegeId) {
+        return { ...c, isNewGen: !c.isNewGen };
+      }
+      return c;
+    });
+
+    setColleges(updated);
+    localStorage.setItem("cm_admin_colleges_v3", JSON.stringify(updated));
+
+    const targetCol = updated.find((c) => c.id === collegeId);
+    if (targetCol) {
+      try {
+        await fetch("/api/admin/colleges", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ collegeId, isNewGen: targetCol.isNewGen }),
+        });
+      } catch {}
+    }
+  };
+
   // Delete / Remove a College
   const handleDeleteCollege = async (collegeId: string, collegeName: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -712,16 +737,28 @@ export default function UnifiedCollegeManager() {
                         📍 {col.city}, {col.state}
                       </div>
                     </td>
-                    <td style={{ padding: "1rem" }}>
-                      {col.isNewGen ? (
-                        <span style={{ fontSize: "0.75rem", background: "#fef3c7", color: "#b45309", padding: "0.2rem 0.5rem", borderRadius: "6px", fontWeight: 700 }}>
-                          🚀 New-Gen AI
-                        </span>
-                      ) : (
-                        <span style={{ fontSize: "0.75rem", background: "#e0f2fe", color: "#0369a1", padding: "0.2rem 0.5rem", borderRadius: "6px", fontWeight: 700 }}>
-                          🏫 Generic
-                        </span>
-                      )}
+                    <td style={{ padding: "1rem" }} onClick={(e) => e.stopPropagation()}>
+                      <button
+                        onClick={(e) => handleToggleCategory(col.id, e)}
+                        title={`Click to move this college to ${col.isNewGen ? "Generic" : "New-Gen AI"}`}
+                        style={{
+                          fontSize: "0.78rem",
+                          background: col.isNewGen ? "#fef3c7" : "#e0f2fe",
+                          color: col.isNewGen ? "#b45309" : "#0369a1",
+                          border: col.isNewGen ? "1.5px solid #fcd34d" : "1.5px solid #bae6fd",
+                          padding: "0.3rem 0.65rem",
+                          borderRadius: "8px",
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "0.35rem",
+                          boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+                          transition: "all 0.15s ease",
+                        }}
+                      >
+                        {col.isNewGen ? "🚀 New-Gen AI ⇄" : "🏫 Generic ⇄"}
+                      </button>
                     </td>
                     <td style={{ padding: "1rem" }}>
                       <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
