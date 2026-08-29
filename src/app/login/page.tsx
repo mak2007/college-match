@@ -67,6 +67,7 @@ function StudentLoginContent() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, name }),
+        credentials: "include",
       });
       const data = await res.json();
 
@@ -75,8 +76,9 @@ function StudentLoginContent() {
       }
 
       const finalRedirect = await handlePostAuth();
-      router.push(finalRedirect);
-      router.refresh();
+      if (typeof window !== "undefined") {
+        window.location.href = finalRedirect;
+      }
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again.");
       setLoading(false);

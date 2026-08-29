@@ -109,8 +109,10 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
       customScoringAttributes: [],
     };
 
-    const candidates = dbRecommendations.map((rec) => {
-      const branch = rec.college.branches.find((b: any) => b.branchCode === rec.branchCode);
+    const candidates = (dbRecommendations || []).map((rec) => {
+      if (!rec?.college) return null;
+      const branches = rec.college.branches || [];
+      const branch = branches.find((b: any) => b.branchCode === rec.branchCode) || branches[0];
       if (!branch) return null;
       return {
         id: rec.college.id,
