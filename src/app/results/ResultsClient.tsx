@@ -657,7 +657,7 @@ export default function ResultsClient({
                 onClick={() => setCategoryTab("generic")}
               >
                 <span>🏫 Generic Colleges</span>
-                <span className={styles.categoryCountBadge}>{genericList.length}</span>
+                <span className={styles.categoryCountBadge}>{fixedMasterRanking.length}</span>
               </button>
             </div>
           </div>
@@ -750,7 +750,7 @@ export default function ResultsClient({
                 </div>
               )}
 
-              {/* ─── 2. GENERIC OVERALL RANKING SECTION (FIXED RIGID MASTER LIST) ─── */}
+              {/* ─── 2. GENERIC OVERALL RANKING SECTION ─── */}
               {(categoryTab === "all" || categoryTab === "generic") && (
                 <div className={styles.categorySectionBox}>
                   <div className={styles.sectionHeader}>
@@ -759,11 +759,11 @@ export default function ResultsClient({
                         🏫 2. Generic Overall Ranking
                       </h2>
                       <p className={styles.sectionSubtitle}>
-                        Fixed master ranking of all {fixedMasterRanking.length} colleges in India (including New-Gen institutes), strictly sorted from Rank #1 to #{fixedMasterRanking.length} unaffected by quiz inputs.
+                        National overall ranking of top engineering colleges in India ranked from #1 to #{fixedMasterRanking.length}.
                       </p>
                     </div>
                     <span style={{ background: "#f4eee2", color: "#0F2D52", padding: "0.35rem 0.85rem", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700 }}>
-                      {fixedMasterRanking.length} Colleges (Fixed Master Ranking)
+                      {fixedMasterRanking.length} Colleges
                     </span>
                   </div>
 
@@ -823,7 +823,7 @@ export default function ResultsClient({
 
                           <div className={styles.cardFooter}>
                             <div className={styles.reasonsList}>
-                              <div className={styles.reasonItem}>Fixed Master Ranking: Rank #{col.rank} in India</div>
+                              <div className={styles.reasonItem}>National Rank: #{col.rank} in India</div>
                               {branch.minJeePercentileCutoff > 0 && (
                                 <div className={styles.reasonItem}>JEE Equivalent Cutoff: {branch.minJeePercentileCutoff}%ile</div>
                               )}
