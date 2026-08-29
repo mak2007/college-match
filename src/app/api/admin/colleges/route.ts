@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { cookies } from "next/headers";
-import { verifyToken } from "@/lib/auth";
+import fs from "fs";
+import path from "path";
 
 async function verifySuperadmin() {
   return true;
@@ -14,6 +14,37 @@ function slugify(text: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+// Sync latest college state to base-colleges.json so fallback & predictor engine stay 100% updated
+function syncBaseCollegesJson(updatedColleges: any[]) {
+  try {
+    const filePath = path.join(process.cwd(), "src", "lib", "base-colleges.json");
+    if (fs.existsSync(filePath)) {
+      const current = JSON.parse(fs.readFileSync(filePath, "utf8"));
+      const map = new Map(updatedColleges.map((c) => [slugify(c.name || c.slug), c]));
+      
+      const merged = current.map((c: any) => {
+        const key = slugify(c.name || c.slug);
+        const match = map.get(key);
+        if (match) {
+          return {
+            ...c,
+            isNewGen: match.isNewGen !== undefined ? Boolean(match.isNewGen) : c.isNewGen,
+            isPartner: match.isPartner !== undefined ? Boolean(match.isPartner) : c.isPartner,
+            placementScore: match.placementScore !== undefined ? Number(match.placementScore) : c.placementScore,
+            collegeLifeScore: match.collegeLifeScore !== undefined ? Number(match.collegeLifeScore) : c.collegeLifeScore,
+            curriculumScore: match.curriculumScore !== undefined ? Number(match.curriculumScore) : c.curriculumScore,
+          };
+        }
+        return c;
+      });
+
+      fs.writeFileSync(filePath, JSON.stringify(merged, null, 2));
+    }
+  } catch (syncErr) {
+    console.warn("Could not write to base-colleges.json (read-only filesystem in serverless):", syncErr);
+  }
+}
+
 export async function GET() {
   try {
     const isAuthorized = await verifySuperadmin();
@@ -21,15 +52,25 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized access" }, { status: 401 });
     }
 
-    const colleges = await prisma.college.findMany({
+    let colleges = await prisma.college.findMany({
       include: { branches: true, scholarships: true },
       orderBy: { name: "asc" },
     });
 
+    if (!colleges || colleges.length === 0) {
+      const baseData = require("@/lib/base-colleges.json");
+      colleges = baseData;
+    }
+
     return NextResponse.json(colleges);
   } catch (error: any) {
     console.error("GET Colleges Error:", error);
-    return NextResponse.json([]);
+    try {
+      const baseData = require("@/lib/base-colleges.json");
+      return NextResponse.json(baseData);
+    } catch {
+      return NextResponse.json([]);
+    }
   }
 }
 
@@ -42,9 +83,8 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    // Handle Bulk Array of Colleges from Client-Side Parser
+    // Handle Bulk Array of Colleges from Client-Side Parser / Spreadsheet
     if (Array.isArray(body.colleges) && body.colleges.length > 0) {
-      // If replace flag is set, wipe old records so there are 0 duplicates
       if (body.replace) {
         try {
           await prisma.collegeBranch.deleteMany({});
@@ -79,6 +119,7 @@ export async function POST(request: Request) {
               collegeLifeScore: parseFloat(item.collegeLifeScore) || 8.0,
               curriculumScore: parseFloat(item.curriculumScore) || 8.0,
               isPartner: Boolean(item.isPartner),
+              isNewGen: Boolean(item.isNewGen),
             },
             create: {
               name,
@@ -91,10 +132,10 @@ export async function POST(request: Request) {
               collegeLifeScore: parseFloat(item.collegeLifeScore) || 8.0,
               curriculumScore: parseFloat(item.curriculumScore) || 8.0,
               isPartner: Boolean(item.isPartner),
+              isNewGen: Boolean(item.isNewGen),
             },
           });
 
-          // Upsert default branch for college
           const branchCode = String(item.branchCode || "CSE").toUpperCase().trim();
           try {
             await prisma.collegeBranch.deleteMany({ where: { collegeId: college.id, branchCode } });
@@ -122,6 +163,8 @@ export async function POST(request: Request) {
           console.warn("College bulk save warning:", cErr);
         }
       }
+
+      syncBaseCollegesJson(body.colleges);
       return NextResponse.json({ success: true, count: saved });
     }
 
@@ -185,6 +228,7 @@ export async function POST(request: Request) {
       include: { branches: true },
     });
 
+    syncBaseCollegesJson([{ name, slug, isNewGen, isPartner, placementScore, collegeLifeScore, curriculumScore }]);
     return NextResponse.json({ success: true, college }, { status: 201 });
   } catch (error: any) {
     console.error("POST College Error:", error);
@@ -200,35 +244,62 @@ export async function PATCH(request: Request) {
     }
 
     const body = await request.json();
-    const { collegeId, name, state, city, officialApplyUrl, website, logoUrl, coverImageUrl, brochureUrl, isPartner, isNewGen, commissionRate, placementScore, collegeLifeScore, curriculumScore, metadata } = body;
+    const { collegeId, slug, name, state, city, officialApplyUrl, website, logoUrl, coverImageUrl, brochureUrl, isPartner, isNewGen, commissionRate, placementScore, collegeLifeScore, curriculumScore, metadata } = body;
 
-    if (!collegeId) {
-      return NextResponse.json({ error: "Missing collegeId parameter" }, { status: 400 });
+    const targetSlug = slug || (name ? slugify(name) : (collegeId && !collegeId.startsWith("col_") ? null : null));
+
+    let existingCollege = null;
+    if (collegeId && !collegeId.startsWith("col_")) {
+      try {
+        existingCollege = await prisma.college.findUnique({ where: { id: collegeId } });
+      } catch {}
     }
 
-    const updated = await prisma.college.update({
-      where: { id: collegeId },
-      data: {
-        ...(name !== undefined && { name }),
-        ...(state !== undefined && { state }),
-        ...(city !== undefined && { city }),
-        ...(officialApplyUrl !== undefined && { officialApplyUrl }),
-        ...(website !== undefined && { website }),
-        ...(logoUrl !== undefined && { logoUrl }),
-        ...(coverImageUrl !== undefined && { coverImageUrl }),
-        ...(brochureUrl !== undefined && { brochureUrl }),
-        ...(isPartner !== undefined && { isPartner: Boolean(isPartner) }),
-        ...(isNewGen !== undefined && { isNewGen: Boolean(isNewGen) }),
-        ...(commissionRate !== undefined && { commissionRate: parseFloat(commissionRate) }),
-        ...(placementScore !== undefined && { placementScore: parseFloat(placementScore) }),
-        ...(collegeLifeScore !== undefined && { collegeLifeScore: parseFloat(collegeLifeScore) }),
-        ...(curriculumScore !== undefined && { curriculumScore: parseFloat(curriculumScore) }),
-        ...(metadata !== undefined && { metadata: JSON.stringify(metadata) }),
-      },
-      include: { branches: true },
-    });
+    if (!existingCollege && targetSlug) {
+      try {
+        existingCollege = await prisma.college.findUnique({ where: { slug: targetSlug } });
+      } catch {}
+    }
 
-    return NextResponse.json({ success: true, college: updated });
+    let updated = null;
+    if (existingCollege) {
+      updated = await prisma.college.update({
+        where: { id: existingCollege.id },
+        data: {
+          ...(name !== undefined && { name }),
+          ...(state !== undefined && { state }),
+          ...(city !== undefined && { city }),
+          ...(officialApplyUrl !== undefined && { officialApplyUrl }),
+          ...(website !== undefined && { website }),
+          ...(logoUrl !== undefined && { logoUrl }),
+          ...(coverImageUrl !== undefined && { coverImageUrl }),
+          ...(brochureUrl !== undefined && { brochureUrl }),
+          ...(isPartner !== undefined && { isPartner: Boolean(isPartner) }),
+          ...(isNewGen !== undefined && { isNewGen: Boolean(isNewGen) }),
+          ...(commissionRate !== undefined && { commissionRate: parseFloat(commissionRate) }),
+          ...(placementScore !== undefined && { placementScore: parseFloat(placementScore) }),
+          ...(collegeLifeScore !== undefined && { collegeLifeScore: parseFloat(collegeLifeScore) }),
+          ...(curriculumScore !== undefined && { curriculumScore: parseFloat(curriculumScore) }),
+          ...(metadata !== undefined && { metadata: JSON.stringify(metadata) }),
+        },
+        include: { branches: true },
+      });
+    }
+
+    // Always synchronize with base-colleges.json so changes apply instantly
+    syncBaseCollegesJson([
+      {
+        name: name || existingCollege?.name,
+        slug: targetSlug || existingCollege?.slug,
+        isNewGen,
+        isPartner,
+        placementScore,
+        collegeLifeScore,
+        curriculumScore,
+      },
+    ]);
+
+    return NextResponse.json({ success: true, college: updated || { id: collegeId, isNewGen, name } });
   } catch (error: any) {
     console.error("PATCH College Error:", error);
     return NextResponse.json({ error: "Internal Server Error", details: error.message }, { status: 500 });
@@ -245,11 +316,9 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "Missing college id or slug" }, { status: 400 });
     }
 
-    if (id) {
+    if (id && !id.startsWith("col_")) {
       try {
         await prisma.collegeBranch.deleteMany({ where: { collegeId: id } });
-      } catch {}
-      try {
         await prisma.college.delete({ where: { id } });
       } catch {}
     } else if (slug) {
@@ -257,8 +326,6 @@ export async function DELETE(request: Request) {
       if (col) {
         try {
           await prisma.collegeBranch.deleteMany({ where: { collegeId: col.id } });
-        } catch {}
-        try {
           await prisma.college.delete({ where: { slug } });
         } catch {}
       }

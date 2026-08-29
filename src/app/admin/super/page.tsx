@@ -311,7 +311,7 @@ export default function UnifiedCollegeManager() {
   const handleToggleCategory = async (collegeId: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     const updated = colleges.map((c) => {
-      if (c.id === collegeId) {
+      if (c.id === collegeId || c.slug === collegeId) {
         return { ...c, isNewGen: !c.isNewGen };
       }
       return c;
@@ -320,15 +320,22 @@ export default function UnifiedCollegeManager() {
     setColleges(updated);
     localStorage.setItem("cm_admin_colleges_v4", JSON.stringify(updated));
 
-    const targetCol = updated.find((c) => c.id === collegeId);
+    const targetCol = updated.find((c) => c.id === collegeId || c.slug === collegeId);
     if (targetCol) {
       try {
         await fetch("/api/admin/colleges", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ collegeId, isNewGen: targetCol.isNewGen }),
+          body: JSON.stringify({
+            collegeId: targetCol.id,
+            slug: targetCol.slug,
+            name: targetCol.name,
+            isNewGen: targetCol.isNewGen,
+          }),
         });
-      } catch {}
+      } catch (err) {
+        console.error("Toggle category error:", err);
+      }
     }
   };
 
