@@ -14,7 +14,7 @@ interface Recommendation {
   branchCode: string;
   reasons: string;
   admissionCompetitiveness?: {
-    category: "Dream" | "Target" | "Safe";
+    category: "Dream" | "Target" | "Safe" | "Out of Reach";
     badgeText: string;
     jeeGap: number | null;
   };
