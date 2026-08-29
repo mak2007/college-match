@@ -255,7 +255,7 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
         locations: (student.locations || []).map((l: any) => ({ state: l.state, city: l.city })),
         priorities: (student.priorities || []).map((p: any) => ({ criteria: p.criteria, rankOrder: p.rankOrder })),
       }}
-      recommendations={finalRecommendations}
+      recommendations={finalRecommendations as any}
     />
   );
 }
