@@ -655,49 +655,61 @@ export default function ResultsClient({
             </div>
           ) : (
             <div className={styles.separateBoxesContainer}>
-              {/* ─── 1. NEXT-GEN AI COLLEGES BOX ─── */}
-              {(categoryTab === "all" || categoryTab === "new_gen") && newGenList.length > 0 && (
+              {/* ─── 1. NEW-GEN COLLEGES SECTION ─── */}
+              {(categoryTab === "all" || categoryTab === "new_gen") && (
                 <div className={styles.newGenSectionBox}>
                   <div className={styles.sectionHeader}>
                     <div className={styles.sectionHeaderLeft}>
                       <h2 className={styles.sectionTitle}>
-                        🚀 Next-Gen AI & Modern Tech Institutes
+                        🚀 1. New-Gen Colleges
                       </h2>
                       <p className={styles.sectionSubtitle}>
                         Colleges offering practical project-first curriculum, Gen AI labs, industry mentorship, and modern tech pedagogy.
                       </p>
                     </div>
                     <span className={styles.newGenHighlightBadge}>
-                      ✨ {newGenList.length} AI Institutes
+                      ✨ {newGenList.length} New-Gen Colleges
                     </span>
                   </div>
 
-                  <div className={styles.resultsList}>
-                    {newGenList.map((rec, idx) => renderCard(rec, idx, true))}
-                  </div>
+                  {newGenList.length === 0 ? (
+                    <div style={{ padding: "1.5rem", textAlign: "center", color: "#8c8c8c", fontStyle: "italic" }}>
+                      No New-Gen Colleges match your active filters.
+                    </div>
+                  ) : (
+                    <div className={styles.resultsList}>
+                      {newGenList.map((rec, idx) => renderCard(rec, idx, true))}
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* ─── 2. GENERIC / TRADITIONAL COLLEGES BOX ─── */}
-              {(categoryTab === "all" || categoryTab === "generic") && genericList.length > 0 && (
+              {/* ─── 2. GENERIC OVERALL RANKING SECTION ─── */}
+              {(categoryTab === "all" || categoryTab === "generic") && (
                 <div className={styles.categorySectionBox}>
                   <div className={styles.sectionHeader}>
                     <div className={styles.sectionHeaderLeft}>
                       <h2 className={styles.sectionTitle}>
-                        🏫 Generic & Traditional Engineering Colleges
+                        🏫 2. Generic Overall Ranking
                       </h2>
                       <p className={styles.sectionSubtitle}>
                         Established universities and institutes ranked by your academic cutoffs, NIRF standing, and placement records.
                       </p>
                     </div>
                     <span style={{ background: "#f4eee2", color: "#0F2D52", padding: "0.35rem 0.85rem", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700 }}>
-                      {genericList.length} Colleges
+                      {genericList.length} Generic Colleges
                     </span>
                   </div>
 
-                  <div className={styles.resultsList}>
-                    {genericList.map((rec, idx) => renderCard(rec, idx, false))}
-                  </div>
+                  {genericList.length === 0 ? (
+                    <div style={{ padding: "1.5rem", textAlign: "center", color: "#8c8c8c", fontStyle: "italic" }}>
+                      No Generic Colleges match your active filters.
+                    </div>
+                  ) : (
+                    <div className={styles.resultsList}>
+                      {genericList.map((rec, idx) => renderCard(rec, idx, false))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
