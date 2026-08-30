@@ -245,8 +245,8 @@ export default function Predictor() {
           },
           {
             id: "NOT_SURE",
-            icon: "🌐",
-            bgColor: "#e0f2fe",
+            icon: "🤔",
+            bgColor: "#fef3c7",
             title: "Not Sure Yet",
             desc: "Keep all options open with balanced recommendations",
           },
