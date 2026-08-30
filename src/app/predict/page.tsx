@@ -388,11 +388,11 @@ export default function Predictor() {
         );
       case 4:
         const itemsMap = {
-          placements: { label: "Placements & Salaries", icon: "💼", desc: "Top recruiters, package statistics, and career growth" },
-          extracurriculars: { label: "Extracurricular activities and sports", icon: "⚽", desc: "Clubs, student chapters, athletic events, and active groups" },
-          campus_life: { label: "Campus Life & crowd", icon: "🌴", desc: "Modern hostels, food courts, diverse student body, and events" },
-          research: { label: "Startup ecosystem", icon: "🚀", desc: "Incubation center, funding support, startup culture, and entrepreneurial resources" },
-          curriculum: { label: "Modern Course Standards", icon: "📖", desc: "Updated syllabus, industry readiness, and faculty standards" }
+          placements: { label: "Placements & Salaries", icon: "💼", bgColor: "#eef2ff", desc: "Top recruiters, package statistics, and career growth" },
+          curriculum: { label: "Modern Course Standards", icon: "📖", bgColor: "#f3e8ff", desc: "Updated syllabus, industry readiness, and faculty standards" },
+          campus_life: { label: "Campus Life & crowd", icon: "🌴", bgColor: "#ecfdf5", desc: "Modern hostels, food courts, diverse student body, and events" },
+          research: { label: "Startup ecosystem", icon: "🚀", bgColor: "#fee2e2", desc: "Incubation center, funding support, startup culture, and entrepreneurial resources" },
+          extracurriculars: { label: "Extracurricular activities and sports", icon: "⚽", bgColor: "#e0f2fe", desc: "Clubs, student chapters, athletic events, and active groups" }
         };
 
         const moveItem = (index: number, direction: "up" | "down") => {
@@ -447,21 +447,22 @@ export default function Predictor() {
                     }}
                   >
                     <div className={styles.rankBadge}>
-                      {rankNum}
+                      <span className={styles.rankNumber}>{rankNum}</span>
                       <span className={styles.rankSuffix}>
-                        {rankNum === 1 ? "st" : rankNum === 2 ? "nd" : rankNum === 3 ? "rd" : "th"}
+                        {rankNum === 1 ? "ST" : rankNum === 2 ? "ND" : rankNum === 3 ? "RD" : "TH"}
                       </span>
                     </div>
 
-                    <div className={styles.rankingDragHandle}>
+                    <div className={styles.rankingDragHandle} title="Drag to reorder">
                       <span className={styles.dragIcon}>⋮⋮</span>
                     </div>
 
+                    <div className={styles.priorityIconBox} style={{ backgroundColor: item.bgColor }}>
+                      <span>{item.icon}</span>
+                    </div>
+
                     <div className={styles.rankingContent}>
-                      <div className={styles.rankingTitleRow}>
-                        <span className={styles.rankingIcon}>{item.icon}</span>
-                        <h4 className={styles.rankingItemTitle}>{item.label}</h4>
-                      </div>
+                      <h4 className={styles.rankingItemTitle}>{item.label}</h4>
                       <p className={styles.rankingItemDesc}>{item.desc}</p>
                     </div>
 
@@ -472,6 +473,7 @@ export default function Predictor() {
                         disabled={idx === 0}
                         onClick={() => moveItem(idx, "up")}
                         title="Move Up"
+                        aria-label="Move Up"
                       >
                         ▲
                       </button>
@@ -481,6 +483,7 @@ export default function Predictor() {
                         disabled={idx === ranking.length - 1}
                         onClick={() => moveItem(idx, "down")}
                         title="Move Down"
+                        aria-label="Move Down"
                       >
                         ▼
                       </button>
