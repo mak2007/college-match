@@ -182,7 +182,9 @@ export default function Predictor() {
       case 1:
         return (
           <div className={styles.questionGroup}>
-            <h2 className={styles.questionTitle}>Your Academic Profile</h2>
+            <h2 className={styles.questionTitle}>
+              Your <span className={styles.titleHighlight}>Academic Profile</span>
+            </h2>
             <p className={styles.questionSubtitle}>Provide scores to calculate your target admissibility cutoff fit</p>
 
             <div className={styles.sliderContainer}>
@@ -220,29 +222,69 @@ export default function Predictor() {
         );
       case 2:
         const CAREER_GOALS = [
-          { id: "PLACEMENT", icon: "💼", title: "Get Placed", desc: "Secure a high-paying job right after graduation" },
-          { id: "STARTUP", icon: "🚀", title: "Start a Startup", desc: "Build entrepreneurial skills and access incubation" },
-          { id: "HIGHER_STUDIES", icon: "🎓", title: "Higher Studies", desc: "Prepare for MS/M.Tech/PhD and research opportunities" },
-          { id: "NOT_SURE", icon: "🤔", title: "Not Sure Yet", desc: "Keep all options open with balanced recommendations" },
+          {
+            id: "PLACEMENT",
+            icon: "💼",
+            bgColor: "#eef2ff",
+            title: "Get Placed",
+            desc: "Secure a high-paying job right after graduation",
+          },
+          {
+            id: "STARTUP",
+            icon: "🚀",
+            bgColor: "#fee2e2",
+            title: "Start a Startup",
+            desc: "Build entrepreneurial skills and access incubation",
+          },
+          {
+            id: "HIGHER_STUDIES",
+            icon: "🎓",
+            bgColor: "#ecfdf5",
+            title: "Higher Studies",
+            desc: "Pursue M.Tech, MS or research opportunities",
+          },
+          {
+            id: "NOT_SURE",
+            icon: "🌐",
+            bgColor: "#e0f2fe",
+            title: "Explore & Discover",
+            desc: "Explore opportunities across diverse domains",
+          },
         ];
 
         return (
           <div className={styles.questionGroup}>
-            <h2 className={styles.questionTitle}>What is your career goal after B.Tech?</h2>
-            <p className={styles.questionSubtitle}>This is the primary factor driving your college recommendations</p>
+            <h2 className={styles.questionTitle}>
+              What is your <span className={styles.titleHighlight}>career goal</span> after B.Tech?
+            </h2>
+            <p className={styles.questionSubtitle}>
+              This is the primary factor driving your college recommendations
+            </p>
 
-            <div className={styles.optionsGrid}>
-              {CAREER_GOALS.map((goal) => (
-                <div
-                  key={goal.id}
-                  className={`${styles.optionCard} ${careerGoal === goal.id ? styles.optionCardActive : ""}`}
-                  onClick={() => setCareerGoal(goal.id)}
-                >
-                  <span style={{ fontSize: "2rem" }}>{goal.icon}</span>
-                  <span className={styles.optionTitle}>{goal.title}</span>
-                  <span className={styles.optionDesc}>{goal.desc}</span>
-                </div>
-              ))}
+            <div className={styles.careerGoalList}>
+              {CAREER_GOALS.map((goal) => {
+                const isSelected = careerGoal === goal.id;
+                return (
+                  <div
+                    key={goal.id}
+                    className={`${styles.careerCard} ${isSelected ? styles.careerCardActive : ""}`}
+                    onClick={() => setCareerGoal(goal.id)}
+                  >
+                    <div className={styles.careerIconBox} style={{ backgroundColor: goal.bgColor }}>
+                      <span>{goal.icon}</span>
+                    </div>
+                    <div className={styles.careerContent}>
+                      <h3 className={styles.careerTitle}>{goal.title}</h3>
+                      <p className={styles.careerDesc}>{goal.desc}</p>
+                    </div>
+                    <div className={`${styles.careerArrowCircle} ${isSelected ? styles.careerArrowCircleActive : ""}`}>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         );
@@ -256,7 +298,9 @@ export default function Predictor() {
 
         return (
           <div className={styles.questionGroup}>
-            <h2 className={styles.questionTitle}>Where do you prefer to study?</h2>
+            <h2 className={styles.questionTitle}>
+              Where do you <span className={styles.titleHighlight}>prefer to study</span>?
+            </h2>
             <p className={styles.questionSubtitle}>Select specific states or choose All India</p>
 
             <div className={styles.locationSelectionContainer}>
@@ -364,7 +408,9 @@ export default function Predictor() {
 
         return (
           <div className={styles.questionGroup}>
-            <h2 className={styles.questionTitle}>Rank Your Priorities</h2>
+            <h2 className={styles.questionTitle}>
+              Rank Your <span className={styles.titleHighlight}>Priorities</span>
+            </h2>
             <p className={styles.questionSubtitle}>Drag items or use the arrows to rank from Most Important (1st) to Least Important (5th)</p>
 
             <div className={styles.rankingList}>
@@ -448,7 +494,9 @@ export default function Predictor() {
       case 5:
         return (
           <div className={styles.questionGroup}>
-            <h2 className={styles.questionTitle}>Tuition & Hostel Budget</h2>
+            <h2 className={styles.questionTitle}>
+              Tuition & <span className={styles.titleHighlight}>Hostel Budget</span>
+            </h2>
             <p className={styles.questionSubtitle}>Set your maximum budget constraint or allow any budget</p>
 
             <div style={{ marginBottom: "1.5rem", background: "white", padding: "1.25rem", borderRadius: "12px", border: "1.5px solid #e2e8f0" }}>
@@ -489,7 +537,9 @@ export default function Predictor() {
       case 6:
         return (
           <div className={styles.questionGroup}>
-            <h2 className={styles.questionTitle}>Preferred B.Tech Branches</h2>
+            <h2 className={styles.questionTitle}>
+              Preferred <span className={styles.titleHighlight}>B.Tech Branches</span>
+            </h2>
             <p className={styles.questionSubtitle}>Select the engineering specializations you are open to</p>
 
             <div className={styles.optionsGrid}>
