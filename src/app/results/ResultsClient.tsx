@@ -238,6 +238,12 @@ export default function ResultsClient({
     });
   }, [recommendations]);
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedBranchChip, setSelectedBranchChip] = useState<string>("ALL");
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
+  const BRANCH_CHIPS = ["ALL", "CSE", "AI", "ML", "Data Science", "ECE", "IT"];
+
   const filtered = useMemo(() => {
     let result = enriched;
 
@@ -250,18 +256,42 @@ export default function ResultsClient({
       result = result.filter((r) => allowed.includes(r.category));
     }
 
+    // Search query filter
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter((r) => {
+        const nameMatch = r.college.name?.toLowerCase().includes(q);
+        const cityMatch = r.college.city?.toLowerCase().includes(q);
+        const stateMatch = r.college.state?.toLowerCase().includes(q);
+        const branchMatch = r.branchCode?.toLowerCase().includes(q) ||
+          (r.college.branches && r.college.branches.some((b: any) => b.branchName?.toLowerCase().includes(q) || b.branchCode?.toLowerCase().includes(q)));
+        return nameMatch || cityMatch || stateMatch || branchMatch;
+      });
+    }
+
+    // Quick branch chip filter
+    if (selectedBranchChip !== "ALL") {
+      const chip = selectedBranchChip.toLowerCase();
+      result = result.filter((r) => {
+        const code = (r.branchCode || "").toLowerCase();
+        const name = (r.college.branches?.[0]?.branchName || "").toLowerCase();
+        return code.includes(chip) || name.includes(chip) ||
+          (r.college.branches && r.college.branches.some((b: any) => b.branchCode?.toLowerCase().includes(chip) || b.branchName?.toLowerCase().includes(chip)));
+      });
+    }
+
     return [...result].sort((a, b) => {
       if (sortMode === "admission_chance") return b.admissionProb - a.admissionProb;
       return (b.matchScore || 0) - (a.matchScore || 0);
     });
-  }, [enriched, sortMode, admissionFilter]);
+  }, [enriched, sortMode, admissionFilter, searchQuery, selectedBranchChip]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [sortMode, admissionFilter, recommendations]);
+  }, [sortMode, admissionFilter, recommendations, searchQuery, selectedBranchChip]);
 
   const paginated = useMemo(() => {
     return filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -291,8 +321,24 @@ export default function ResultsClient({
   }, [searchParams]);
 
   const fixedMasterRanking = useMemo(() => {
-    return [...(baseCollegesData as any[])].sort((a, b) => (a.rank || 999) - (b.rank || 999));
-  }, []);
+    let list = [...(baseCollegesData as any[])].sort((a, b) => (a.rank || 999) - (b.rank || 999));
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter((c: any) =>
+        c.name.toLowerCase().includes(q) ||
+        (c.city && c.city.toLowerCase().includes(q)) ||
+        (c.state && c.state.toLowerCase().includes(q)) ||
+        (c.branches && c.branches.some((b: any) => b.branchName?.toLowerCase().includes(q) || b.branchCode?.toLowerCase().includes(q)))
+      );
+    }
+    if (selectedBranchChip !== "ALL") {
+      const chip = selectedBranchChip.toLowerCase();
+      list = list.filter((c: any) =>
+        c.branches && c.branches.some((b: any) => b.branchCode?.toLowerCase().includes(chip) || b.branchName?.toLowerCase().includes(chip))
+      );
+    }
+    return list;
+  }, [searchQuery, selectedBranchChip]);
 
   const genericList = useMemo(() => {
     return filtered
@@ -436,8 +482,12 @@ export default function ResultsClient({
       <Navbar />
 
       <div className={styles.layout}>
-        {/* ─── SIDEBAR ──────────────────────────────────── */}
-        <aside className={styles.sidebar}>
+        {/* ─── SIDEBAR (Desktop Sticky / Mobile Drawer) ──── */}
+        <aside className={`${styles.sidebar} ${mobileFilterOpen ? styles.sidebarMobileOpen : ""}`}>
+          <div className={styles.mobileFilterHeader}>
+            <h3>Filters & Preferences</h3>
+            <button onClick={() => setMobileFilterOpen(false)} className={styles.closeFilterBtn} aria-label="Close filters">✕</button>
+          </div>
           <div className={styles.sidebarInner}>
             {/* RECOMMENDATION MODE */}
             <div className={styles.sidebarSection}>
@@ -627,6 +677,11 @@ export default function ResultsClient({
               </div>
             </div>
           </div>
+          <div className={styles.mobileFilterFooter}>
+            <button onClick={() => setMobileFilterOpen(false)} className={styles.applyFilterBtn}>
+              Show {filtered.length} Results
+            </button>
+          </div>
         </aside>
 
         {/* ─── MAIN CONTENT ────────────────────────────── */}
@@ -641,6 +696,50 @@ export default function ResultsClient({
                   : "No Limit"}
               </strong>
             </p>
+
+            {/* ─── SEARCH & FILTER CONTROLS (Image 3 Inspiration) ─── */}
+            <div className={styles.searchAndFilterRow}>
+              <div className={styles.searchBarContainer}>
+                <svg className={styles.searchIcon} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search by college, city, or branch..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className={styles.searchInput}
+                />
+                {searchQuery && (
+                  <button onClick={() => setSearchQuery("")} className={styles.clearSearchBtn} aria-label="Clear search">×</button>
+                )}
+              </div>
+
+              <button
+                className={styles.filterToggleBtn}
+                onClick={() => setMobileFilterOpen(true)}
+                aria-label="Open filter options"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />
+                </svg>
+                <span>Filter</span>
+              </button>
+            </div>
+
+            {/* ─── QUICK BRANCH CHIPS (Image 3 Inspiration) ─── */}
+            <div className={styles.branchChipsBar}>
+              {BRANCH_CHIPS.map((chip) => (
+                <button
+                  key={chip}
+                  onClick={() => setSelectedBranchChip(chip)}
+                  className={`${styles.branchChip} ${selectedBranchChip === chip ? styles.branchChipActive : ""}`}
+                >
+                  {chip === "ALL" ? "All Branches" : chip}
+                </button>
+              ))}
+            </div>
 
             {/* ─── CATEGORY TABS ─── */}
             <div className={styles.categoryTabsWrapper}>
