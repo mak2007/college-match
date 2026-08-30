@@ -728,19 +728,19 @@ export default function ResultsClient({
               )}
 
               {/* ─── 1. NEW-GEN COLLEGES SECTION ─── */}
-              {(categoryTab === "all" || categoryTab === "new_gen") && (
-                <div className={styles.newGenSectionBox} style={{ marginTop: categoryTab === "all" ? "2.5rem" : "0" }}>
+              {categoryTab === "new_gen" && (
+                <div className={styles.newGenSectionBox}>
                   <div className={styles.sectionHeader}>
                     <div className={styles.sectionHeaderLeft}>
                       <h2 className={styles.sectionTitle}>
-                        🚀 1. New-Gen Colleges
+                        🚀 Next-Gen AI & Tech Colleges
                       </h2>
                       <p className={styles.sectionSubtitle}>
                         Colleges offering practical project-first curriculum, Gen AI labs, industry mentorship, and modern tech pedagogy.
                       </p>
                     </div>
                     <span className={styles.newGenHighlightBadge}>
-                      ✨ {newGenList.length} New-Gen Colleges
+                      ✨ {newGenList.length} Next-Gen Colleges
                     </span>
                   </div>
 
@@ -757,12 +757,12 @@ export default function ResultsClient({
               )}
 
               {/* ─── 2. GENERIC OVERALL RANKING SECTION ─── */}
-              {(categoryTab === "all" || categoryTab === "generic") && (
+              {categoryTab === "generic" && (
                 <div className={styles.categorySectionBox}>
                   <div className={styles.sectionHeader}>
                     <div className={styles.sectionHeaderLeft}>
                       <h2 className={styles.sectionTitle}>
-                        🏫 2. Generic Overall Ranking
+                        🏫 Generic Colleges Ranking
                       </h2>
                       <p className={styles.sectionSubtitle}>
                         National overall ranking of top engineering colleges in India ranked from #1 to #{fixedMasterRanking.length}.
