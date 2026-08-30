@@ -454,7 +454,14 @@ export default function Predictor() {
                     </div>
 
                     <div className={styles.rankingDragHandle} title="Drag to reorder">
-                      <span className={styles.dragIcon}>⋮⋮</span>
+                      <svg width="12" height="18" viewBox="0 0 12 18" fill="currentColor">
+                        <circle cx="3" cy="3" r="1.5" />
+                        <circle cx="9" cy="3" r="1.5" />
+                        <circle cx="3" cy="9" r="1.5" />
+                        <circle cx="9" cy="9" r="1.5" />
+                        <circle cx="3" cy="15" r="1.5" />
+                        <circle cx="9" cy="15" r="1.5" />
+                      </svg>
                     </div>
 
                     <div className={styles.priorityIconBox} style={{ backgroundColor: item.bgColor }}>
@@ -466,26 +473,32 @@ export default function Predictor() {
                       <p className={styles.rankingItemDesc}>{item.desc}</p>
                     </div>
 
-                    <div className={styles.rankingActions}>
+                    {/* Minimalist Unified Capsule Reorder Control */}
+                    <div className={styles.minimalReorderControl}>
                       <button
                         type="button"
-                        className={styles.rankArrowBtn}
+                        className={styles.minimalChevronBtn}
                         disabled={idx === 0}
                         onClick={() => moveItem(idx, "up")}
                         title="Move Up"
                         aria-label="Move Up"
                       >
-                        ▲
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="18 15 12 9 6 15" />
+                        </svg>
                       </button>
+                      <div className={styles.reorderDivider} />
                       <button
                         type="button"
-                        className={styles.rankArrowBtn}
+                        className={styles.minimalChevronBtn}
                         disabled={idx === ranking.length - 1}
                         onClick={() => moveItem(idx, "down")}
                         title="Move Down"
                         aria-label="Move Down"
                       >
-                        ▼
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="6 9 12 15 18 9" />
+                        </svg>
                       </button>
                     </div>
                   </div>
