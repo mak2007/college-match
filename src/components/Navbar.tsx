@@ -134,8 +134,9 @@ export default function Navbar() {
             className={styles.mobileToggle}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle navigation menu"
+            aria-expanded={mobileOpen}
           >
-            <div className={styles.hamburgerIcon}>
+            <div className={`${styles.hamburgerIcon} ${mobileOpen ? styles.hamburgerIconOpen : ""}`}>
               <span />
               <span />
               <span />

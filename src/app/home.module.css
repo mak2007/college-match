@@ -138,12 +138,13 @@
 
 /* Main Editorial Headline */
 .heroHeadline {
-  font-size: 3.85rem;
+  font-size: clamp(2.1rem, 6.2vw, 3.85rem);
   font-weight: 800;
-  line-height: 1.08;
+  line-height: 1.12;
   color: #0f172a;
   letter-spacing: -0.035em;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+  word-break: break-word;
 }
 
 .gradientText {
@@ -576,41 +577,115 @@
 
 @media (max-width: 768px) {
   .mainContainer {
-    padding: 1.5rem 1.25rem 3.5rem 1.25rem;
+    padding: 1.25rem clamp(16px, 4vw, 24px) 3.5rem clamp(16px, 4vw, 24px);
+  }
+
+  .heroSection {
+    padding: 0.5rem 0 2rem 0;
+  }
+
+  .heroGrid {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+
+  .heroLeft {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .heroPill {
+    margin-bottom: 1.25rem;
   }
 
   .heroHeadline {
-    font-size: 2.5rem;
+    font-size: clamp(2.1rem, 8vw, 2.75rem);
+    line-height: 1.15;
+    margin-bottom: 1rem;
   }
 
   .hideOnMobile {
     display: none;
   }
 
+  .heroDescription {
+    font-size: 1rem;
+    line-height: 1.55;
+    margin-bottom: 1.5rem;
+    color: #475569;
+  }
+
+  .heroBtnsRow {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .primaryHeroBtn,
+  .secondaryHeroBtn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.85rem 1.5rem;
+    font-size: 0.98rem;
+    min-height: 48px;
+  }
+
   .campusImageFrame {
-    height: 320px;
-    border-top-left-radius: 80px;
+    height: clamp(230px, 55vw, 340px);
+    border-top-left-radius: clamp(50px, 15vw, 90px);
+    border-bottom-left-radius: 28px;
+    border-top-right-radius: 28px;
+    border-bottom-right-radius: 28px;
   }
 
   .floatingBenefitsPanel {
     position: static;
     grid-template-columns: 1fr;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    padding: 1.25rem;
-    border-radius: 18px;
+    gap: 0.85rem;
+    margin-top: 1.25rem;
+    padding: 1.15rem 1.25rem;
+    border-radius: 20px;
+    width: 100%;
+  }
+
+  .benefitItem {
+    gap: 0.85rem;
+  }
+
+  .benefitIconBox {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+  }
+
+  .benefitTitle {
+    font-size: 0.95rem;
+  }
+
+  .benefitSubtitle {
+    font-size: 0.82rem;
   }
 
   .featureCardsSection {
-    margin-top: 2.5rem;
+    margin-top: 3rem;
   }
 
   .featureCardsGrid {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .featureCard {
+    padding: 1.15rem 1.1rem;
+    border-radius: 18px;
+    min-height: 68px;
   }
 
   .footerContainer {
     flex-direction: column;
     text-align: center;
+    gap: 1rem;
+    padding: 1.5rem 1rem;
   }
 }

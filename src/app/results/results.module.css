@@ -926,3 +926,87 @@
   box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
 }
 
+/* ========================================================
+   RESPONSIVE DESIGN FOR RESULTS PAGE
+   ======================================================== */
+
+@media (max-width: 960px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .mainContent {
+    padding: 1.5rem clamp(14px, 4vw, 24px);
+    max-width: 100%;
+  }
+
+  .categoryTabsWrapper {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  .categoryTabsWrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .categoryTab {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .resultsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .collegeCard {
+    padding: 1.25rem 1rem;
+    border-radius: 18px;
+  }
+
+  .cardTop {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .scoreBadgeWrapper {
+    align-self: flex-start;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+  }
+
+  .actionsRow {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.65rem;
+  }
+
+  .actionsRow > * {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+
