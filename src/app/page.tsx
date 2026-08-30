@@ -82,7 +82,7 @@ export default function Home() {
                   <span>Find My Match</span>
                   <span className={styles.btnArrow}>→</span>
                 </Link>
-                <Link href="/discover" className={styles.secondaryHeroBtn}>
+                <Link href="/rankings" className={styles.secondaryHeroBtn}>
                   <span>Explore Colleges</span>
                   <span className={styles.playIconBox}>
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
@@ -169,47 +169,44 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ─── 4 PREMIUM FEATURE CARDS (BELOW HERO) ─── */}
+        {/* ─── 3 PREMIUM FEATURE CARDS (BELOW HERO) ─── */}
         <section className={styles.featureCardsSection}>
           <div className={styles.featureCardsGrid}>
-            {/* Card 1: Discover Colleges */}
-            <Link href="/discover" className={styles.featureCard}>
-              <div className={`${styles.featureCardIcon} ${styles.iconColorSearch}`}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              </div>
-              <div className={styles.featureCardMeta}>
-                <h3 className={styles.featureCardTitle}>Discover Colleges</h3>
-                <p className={styles.featureCardDesc}>Filter by Placements & ROI</p>
-              </div>
-              <div className={styles.cardArrowCircle}>
-                <span>→</span>
-              </div>
-            </Link>
-
-            {/* Card 2: Predictor Quiz */}
+            {/* Card 1: College Predictor */}
             <Link href="/predict" className={styles.featureCard}>
               <div className={`${styles.featureCardIcon} ${styles.iconColorTrophy}`}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-                  <path d="M4 22h16" />
-                  <path d="M10 14.66V17c0 .55-.45 1-1 1H7v2h10v-2h-2c-.55 0-1-.45-1-1v-2.34" />
-                  <path d="M18 4H6v7a6 6 0 0 0 12 0V4Z" />
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="6" />
+                  <circle cx="12" cy="12" r="2" />
                 </svg>
               </div>
               <div className={styles.featureCardMeta}>
-                <h3 className={styles.featureCardTitle}>Predictor Quiz</h3>
-                <p className={styles.featureCardDesc}>Admissions Competitiveness</p>
+                <h3 className={styles.featureCardTitle}>College Predictor</h3>
+                <p className={styles.featureCardDesc}>Get personalized match scores & chances</p>
               </div>
               <div className={styles.cardArrowCircle}>
                 <span>→</span>
               </div>
             </Link>
 
-            {/* Card 3: Colleges Rankings */}
+            {/* Card 2: New-Gen Colleges */}
+            <Link href="/results?tab=new_gen" className={styles.featureCard}>
+              <div className={`${styles.featureCardIcon} ${styles.iconColorSearch}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+              </div>
+              <div className={styles.featureCardMeta}>
+                <h3 className={styles.featureCardTitle}>New-Gen Colleges</h3>
+                <p className={styles.featureCardDesc}>Modern AI & practical tech institutes</p>
+              </div>
+              <div className={styles.cardArrowCircle}>
+                <span>→</span>
+              </div>
+            </Link>
+
+            {/* Card 3: Overall College Rankings */}
             <Link href="/rankings" className={styles.featureCard}>
               <div className={`${styles.featureCardIcon} ${styles.iconColorChart}`}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -219,28 +216,8 @@ export default function Home() {
                 </svg>
               </div>
               <div className={styles.featureCardMeta}>
-                <h3 className={styles.featureCardTitle}>Colleges Rankings</h3>
-                <p className={styles.featureCardDesc}>ROI Flagship Analysis</p>
-              </div>
-              <div className={styles.cardArrowCircle}>
-                <span>→</span>
-              </div>
-            </Link>
-
-            {/* Card 4: Compare Colleges */}
-            <Link href="/compare" className={styles.featureCard}>
-              <div className={`${styles.featureCardIcon} ${styles.iconColorCompare}`}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <line x1="16" y1="13" x2="8" y2="13" />
-                  <line x1="16" y1="17" x2="8" y2="17" />
-                  <polyline points="10 9 9 9 8 9" />
-                </svg>
-              </div>
-              <div className={styles.featureCardMeta}>
-                <h3 className={styles.featureCardTitle}>Compare Colleges</h3>
-                <p className={styles.featureCardDesc}>Compare Side-by-Side</p>
+                <h3 className={styles.featureCardTitle}>Overall College Rankings</h3>
+                <p className={styles.featureCardDesc}>Complete national engineering rankings</p>
               </div>
               <div className={styles.cardArrowCircle}>
                 <span>→</span>
