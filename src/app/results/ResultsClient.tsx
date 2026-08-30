@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import styles from "./results.module.css";
 import Navbar from "@/components/Navbar";
 import NewGenBadge from "@/components/NewGenBadge";
@@ -272,7 +273,22 @@ export default function ResultsClient({
     return counts;
   }, [enriched]);
 
-  const [categoryTab, setCategoryTab] = useState<"all" | "generic" | "new_gen">("all");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams?.get("tab");
+
+  const [categoryTab, setCategoryTab] = useState<"all" | "generic" | "new_gen">(() => {
+    if (tabParam === "generic" || tabParam === "new_gen" || tabParam === "all") {
+      return tabParam;
+    }
+    return "all";
+  });
+
+  useEffect(() => {
+    const currentTab = searchParams?.get("tab");
+    if (currentTab === "generic" || currentTab === "new_gen" || currentTab === "all") {
+      setCategoryTab(currentTab);
+    }
+  }, [searchParams]);
 
   const fixedMasterRanking = useMemo(() => {
     return [...(baseCollegesData as any[])].sort((a, b) => (a.rank || 999) - (b.rank || 999));

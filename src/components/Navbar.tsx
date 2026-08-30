@@ -36,7 +36,7 @@ const KollegioLogoIcon = () => (
 const STUDENT_LINKS = [
   { href: "/predict", icon: "🎯", title: "College Predictor", desc: "Get personalized match scores" },
   { href: "/results?tab=new_gen", icon: "🚀", title: "New-Gen Colleges", desc: "Modern AI & practical tech institutes" },
-  { href: "/rankings", icon: "📊", title: "Overall College Rankings", desc: "Complete national engineering rankings" },
+  { href: "/results?tab=generic", icon: "📊", title: "Overall College Rankings", desc: "Complete national engineering rankings" },
 ];
 
 export default function Navbar() {

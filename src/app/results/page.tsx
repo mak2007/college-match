@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 import ResultsClient from "./ResultsClient";
@@ -47,39 +48,25 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
   const params = await searchParams;
   const studentId = params.student_id;
 
-  if (!studentId) {
-    return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#fcfbfe" }}>
-        <div style={{ maxWidth: "500px", background: "white", border: "1px solid #e2e8f0", borderRadius: "16px", padding: "2.5rem", textAlign: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}>
-          <h2 style={{ color: "#4f46e5" }}>No recommendations found</h2>
-          <p style={{ color: "#475569", margin: "1rem 0" }}>
-            It looks like you haven&apos;t filled out the preference quiz yet.
-          </p>
-          <Link href="/predict" className="btn btn-primary">
-            Start Predictor Quiz
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   let student: any = null;
 
-  try {
-    student = await prisma.student.findUnique({
-      where: { id: studentId },
-      include: {
-        locations: true,
-        priorities: { orderBy: { rankOrder: "asc" } },
-      },
-    });
-  } catch (err) {
-    console.error("ResultsPage DB student fetch error:", err);
+  if (studentId) {
+    try {
+      student = await prisma.student.findUnique({
+        where: { id: studentId },
+        include: {
+          locations: true,
+          priorities: { orderBy: { rankOrder: "asc" } },
+        },
+      });
+    } catch (err) {
+      console.error("ResultsPage DB student fetch error:", err);
+    }
   }
 
   if (!student) {
     student = {
-      id: studentId,
+      id: studentId || "guest_student",
       name: "Student",
       jeePercentile: 90,
       class12Percentage: 85,
@@ -242,20 +229,22 @@ export default async function ResultsPage({ searchParams }: ResultsProps) {
   }));
 
   return (
-    <ResultsClient
-      student={{
-        id: student.id,
-        name: student.name,
-        jeePercentile: student.jeePercentile,
-        class12Percentage: student.class12Percentage,
-        budgetLimit: student.budgetLimit,
-        isBudgetConstraint: student.isBudgetConstraint,
-        restrictLocation: student.restrictLocation,
-        careerGoal: student.careerGoal || "NOT_SURE",
-        locations: (student.locations || []).map((l: any) => ({ state: l.state, city: l.city })),
-        priorities: (student.priorities || []).map((p: any) => ({ criteria: p.criteria, rankOrder: p.rankOrder })),
-      }}
-      recommendations={finalRecommendations as any}
-    />
+    <Suspense fallback={<div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#fcfbfe" }}>Loading recommendations...</div>}>
+      <ResultsClient
+        student={{
+          id: student.id,
+          name: student.name,
+          jeePercentile: student.jeePercentile,
+          class12Percentage: student.class12Percentage,
+          budgetLimit: student.budgetLimit,
+          isBudgetConstraint: student.isBudgetConstraint,
+          restrictLocation: student.restrictLocation,
+          careerGoal: student.careerGoal || "NOT_SURE",
+          locations: (student.locations || []).map((l: any) => ({ state: l.state, city: l.city })),
+          priorities: (student.priorities || []).map((p: any) => ({ criteria: p.criteria, rankOrder: p.rankOrder })),
+        }}
+        recommendations={finalRecommendations as any}
+      />
+    </Suspense>
   );
 }

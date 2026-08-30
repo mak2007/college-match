@@ -82,7 +82,7 @@ export default function Home() {
                   <span>Find My Match</span>
                   <span className={styles.btnArrow}>→</span>
                 </Link>
-                <Link href="/rankings" className={styles.secondaryHeroBtn}>
+                <Link href="/results?tab=generic" className={styles.secondaryHeroBtn}>
                   <span>Explore Colleges</span>
                   <span className={styles.playIconBox}>
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
@@ -207,7 +207,7 @@ export default function Home() {
             </Link>
 
             {/* Card 3: Overall College Rankings */}
-            <Link href="/rankings" className={styles.featureCard}>
+            <Link href="/results?tab=generic" className={styles.featureCard}>
               <div className={`${styles.featureCardIcon} ${styles.iconColorChart}`}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="20" x2="18" y2="10" />
