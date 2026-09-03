@@ -33,36 +33,54 @@ export default function Home() {
                 Don’t just find<br />
                 a college,<br />
                 <span className={styles.gradientText}>
-                  find your{" "}
-                  <span className={styles.placeHighlight}>
-                    place.
-                    {/* Curved swoosh underline strictly under the word "place." */}
+                  find{" "}
+                  <span className={styles.yourPlaceHighlight}>
+                    your{" "}
+                    <span className={styles.placeHighlight}>
+                      place.
+                      {/* Refined 3-line gesture accent at upper-right of "place." */}
+                      <svg
+                        className={styles.sparkleTicksSvg}
+                        viewBox="0 0 26 26"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M6 20C7.8 15 10 10 12.5 4.5"
+                          stroke="#6366F1"
+                          strokeWidth="2.6"
+                          strokeLinecap="round"
+                        />
+                        <path
+                          d="M12 18.5C15.5 14.5 19.5 11 23.5 7.5"
+                          stroke="#6366F1"
+                          strokeWidth="2.8"
+                          strokeLinecap="round"
+                        />
+                        <path
+                          d="M16 22C19.5 21 22.5 19.5 25.5 17.5"
+                          stroke="#6366F1"
+                          strokeWidth="2.4"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </span>
+                    {/* Refined organic hand-drawn underline spanning "your place." */}
                     <svg
                       className={styles.placeUnderlineSvg}
-                      viewBox="0 0 140 18"
+                      viewBox="0 0 260 18"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                       preserveAspectRatio="none"
+                      aria-hidden="true"
                     >
                       <path
-                        d="M3 8C40 15 100 14 137 6"
+                        d="M3 9.5C38 14.8 95 16.2 155 15C198 14.1 235 11.2 257 5"
                         stroke="#6366F1"
-                        strokeWidth="3.5"
+                        strokeWidth="3.2"
                         strokeLinecap="round"
-                      />
-                    </svg>
-                    {/* Radiant sparkle ticks at top-right of "place." */}
-                    <svg
-                      className={styles.sparkleTicksSvg}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M5 19L11 12M15 5L16 13M3 9L9 9"
-                        stroke="#6366F1"
-                        strokeWidth="2.6"
-                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                   </span>
